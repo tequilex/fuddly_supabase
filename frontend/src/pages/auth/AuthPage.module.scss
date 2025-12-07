@@ -1,0 +1,88 @@
+.authPage {
+  min-height: calc(100vh - 200px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-xl 0;
+  background: $background-secondary;
+}
+
+.authCard {
+  background: white;
+  padding: $spacing-xl * 2;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-lg;
+  width: 100%;
+  max-width: 450px;
+
+  h1 {
+    margin-bottom: $spacing-xl;
+    text-align: center;
+    color: $primary-color;
+  }
+}
+
+.formGroup {
+  margin-bottom: $spacing-lg;
+
+  label {
+    display: block;
+    margin-bottom: $spacing-sm;
+    font-weight: 500;
+    color: $text-primary;
+  }
+
+  input {
+    width: 100%;
+    padding: $spacing-md;
+    border: 1px solid $border-color;
+    border-radius: $border-radius-md;
+    font-size: $font-size-base;
+
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+    }
+  }
+}
+
+.error {
+  background: rgba($danger-color, 0.1);
+  color: $danger-color;
+  padding: $spacing-md;
+  border-radius: $border-radius-md;
+  margin-bottom: $spacing-lg;
+  text-align: center;
+}
+
+button[type='submit'] {
+  width: 100%;
+  padding: $spacing-md;
+  background: $primary-color;
+  color: white;
+  border: none;
+  border-radius: $border-radius-md;
+  font-size: $font-size-base;
+  font-weight: 600;
+  margin-top: $spacing-md;
+
+  &:hover:not(:disabled) {
+    background: $primary-hover;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.link {
+  text-align: center;
+  margin-top: $spacing-lg;
+  color: $text-secondary;
+
+  a {
+    color: $primary-color;
+    font-weight: 500;
+  }
+}

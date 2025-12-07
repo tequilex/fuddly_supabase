@@ -1,0 +1,45 @@
+import { Link } from 'react-router-dom';
+import { useAppSelector, useAppDispatch } from '@/app/store/hooks';
+import { logout } from '@/app/store/slices/authSlice';
+import styles from './Header.module.scss';
+
+const Header = () => {
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
+
+  const handleLogout = () => {
+    dispatch(logout());
+  };
+
+  return (
+    <header className={styles.header}>
+      <div className="container">
+        <div className={styles.content}>
+          <Link to="/" className={styles.logo}>
+            Fuddly
+          </Link>
+
+          <nav className={styles.nav}>
+            <Link to="/catalog">Каталог</Link>
+            {isAuthenticated && (
+              <>
+                <Link to="/profile">Профиль</Link>
+                <button onClick={handleLogout} className={styles.logoutBtn}>
+                  Выйти
+                </button>
+              </>
+            )}
+            {!isAuthenticated && (
+              <>
+                <Link to="/login">Вход</Link>
+                <Link to="/register">Регистрация</Link>
+              </>
+            )}
+          </nav>
+        </div>
+      </div>
+    </header>
+  );
+};
+
+export default Header;

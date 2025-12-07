@@ -1,0 +1,68 @@
+.homePage {
+  min-height: 100%;
+}
+
+.hero {
+  background: linear-gradient(135deg, $primary-color 0%, $primary-hover 100%);
+  color: white;
+  padding: $spacing-xl * 3 0;
+  text-align: center;
+
+  h1 {
+    font-size: $font-size-3xl;
+    margin-bottom: $spacing-md;
+  }
+
+  p {
+    font-size: $font-size-lg;
+    margin-bottom: $spacing-xl;
+  }
+}
+
+.cta {
+  display: inline-block;
+  background: white;
+  color: $primary-color;
+  padding: $spacing-md $spacing-xl;
+  border-radius: $border-radius-md;
+  font-weight: 600;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.features {
+  padding: $spacing-xl * 2 0;
+  background: $background-secondary;
+
+  h2 {
+    text-align: center;
+    font-size: $font-size-2xl;
+    margin-bottom: $spacing-xl;
+  }
+}
+
+.featureGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: $spacing-xl;
+}
+
+.feature {
+  background: white;
+  padding: $spacing-xl;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-sm;
+
+  h3 {
+    font-size: $font-size-xl;
+    margin-bottom: $spacing-md;
+    color: $primary-color;
+  }
+
+  p {
+    color: $text-secondary;
+  }
+}

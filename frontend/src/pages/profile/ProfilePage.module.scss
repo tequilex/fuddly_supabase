@@ -1,0 +1,148 @@
+.profilePage {
+  padding: $spacing-xl 0;
+}
+
+.header {
+  margin-bottom: $spacing-xl;
+
+  h1 {
+    font-size: $font-size-3xl;
+  }
+}
+
+.userInfo {
+  background: white;
+  padding: $spacing-xl;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-sm;
+  margin-bottom: $spacing-xl;
+
+  h2 {
+    margin-bottom: $spacing-md;
+    font-size: $font-size-2xl;
+  }
+
+  p {
+    margin-bottom: $spacing-sm;
+    color: $text-secondary;
+
+    strong {
+      color: $text-primary;
+    }
+  }
+}
+
+.section {
+  margin-bottom: $spacing-xl;
+
+  h2 {
+    margin-bottom: $spacing-lg;
+    font-size: $font-size-xl;
+  }
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-lg;
+}
+
+.createBtn {
+  padding: $spacing-md $spacing-lg;
+  background: $primary-color;
+  color: white;
+  border: none;
+  border-radius: $border-radius-md;
+  font-weight: 600;
+
+  &:hover {
+    background: $primary-hover;
+  }
+}
+
+.productForm {
+  background: white;
+  padding: $spacing-xl;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-sm;
+  margin-bottom: $spacing-xl;
+
+  .formGroup {
+    margin-bottom: $spacing-lg;
+
+    label {
+      display: block;
+      margin-bottom: $spacing-sm;
+      font-weight: 500;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: $spacing-md;
+      border: 1px solid $border-color;
+      border-radius: $border-radius-md;
+      font-size: $font-size-base;
+
+      &:focus {
+        outline: none;
+        border-color: $primary-color;
+      }
+    }
+
+    textarea {
+      resize: vertical;
+    }
+  }
+}
+
+.submitBtn {
+  width: 100%;
+  padding: $spacing-md;
+  background: $secondary-color;
+  color: white;
+  border: none;
+  border-radius: $border-radius-md;
+  font-size: $font-size-base;
+  font-weight: 600;
+
+  &:hover:not(:disabled) {
+    background: darken($secondary-color, 10%);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.productsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: $spacing-lg;
+}
+
+.productCard {
+  background: white;
+  padding: $spacing-lg;
+  border: 1px solid $border-color;
+  border-radius: $border-radius-md;
+
+  h3 {
+    margin-bottom: $spacing-sm;
+    font-size: $font-size-lg;
+  }
+}
+
+.price {
+  color: $primary-color;
+  font-weight: 700;
+  margin-bottom: $spacing-sm;
+}
+
+.status {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+}
