@@ -36,6 +36,8 @@ const RegisterPage = () => {
           <div className={styles.formGroup}>
             <label>Email *</label>
             <input
+              id="email"
+              name="email"
               type="email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -46,6 +48,8 @@ const RegisterPage = () => {
           <div className={styles.formGroup}>
             <label>Пароль *</label>
             <input
+              id="password"
+              name="password"
               type="password"
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
@@ -57,6 +61,8 @@ const RegisterPage = () => {
           <div className={styles.formGroup}>
             <label>Имя *</label>
             <input
+              id="name"
+              name="name"
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -67,6 +73,8 @@ const RegisterPage = () => {
           <div className={styles.formGroup}>
             <label>Компания</label>
             <input
+              id="company"
+              name="company"
               type="text"
               value={formData.company}
               onChange={(e) => setFormData({ ...formData, company: e.target.value })}
@@ -76,6 +84,8 @@ const RegisterPage = () => {
           <div className={styles.formGroup}>
             <label>Телефон</label>
             <input
+              id="phone"
+              name="phone"
               type="tel"
               value={formData.phone}
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}

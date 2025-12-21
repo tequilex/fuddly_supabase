@@ -33,6 +33,8 @@ const LoginPage = () => {
           <div className={styles.formGroup}>
             <label>Email</label>
             <input
+              id="email"
+              name="email"
               type="email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -43,6 +45,8 @@ const LoginPage = () => {
           <div className={styles.formGroup}>
             <label>Пароль</label>
             <input
+              id="password"
+              name="password"
               type="password"
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
