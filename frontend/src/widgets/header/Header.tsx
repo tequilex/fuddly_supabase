@@ -10,6 +10,7 @@ const Header = () => {
 
   const handleLogout = () => {
     dispatch(logout());
+    console.log(123);
   };
 
   return (
