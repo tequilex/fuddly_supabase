@@ -11,6 +11,7 @@
 - **React Router** - маршрутизация
 - **Vite** - сборщик
 - **SCSS** - стилизация
+- **SCSS** - стилизация
 
 ### Backend
 - **Node.js + Express** - REST API
