@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
-import { fetchProducts } from '@/app/store/slices/productsSlice';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { fetchProducts } from '../../store/slices/productsSlice';
 import { Link } from 'react-router-dom';
-import Loader from '@/shared/components/Loader';
+import Loader from '../../components/Loader/Loader';
 import styles from './CatalogPage.module.scss';
 
 const CatalogPage = () => {

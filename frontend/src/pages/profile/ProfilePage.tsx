@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
-import { fetchMyProducts } from '@/app/store/slices/productsSlice';
-import { productsApi } from '@/shared/api/products';
-import type { UploadResult } from '@/shared/api/storage';
-import Loader from '@/shared/components/Loader';
-import ButtonLoader from '@/shared/components/ButtonLoader';
-import ImageUploader from '@/shared/components/ImageUploader';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { fetchMyProducts } from '../../store/slices/productsSlice';
+import { productsApi } from '../../shared/api/products';
+import type { UploadResult } from '../../shared/api/storage';
+import Loader from '../../components/Loader/Loader';
+import ButtonLoader from '../../components/ButtonLoader/ButtonLoader';
+import ImageUploader from '../../components/ImageUploader/ImageUploader';
 import styles from './ProfilePage.module.scss';
 
 const ProfilePage = () => {

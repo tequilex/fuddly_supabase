@@ -1,5 +1,5 @@
-import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
-import { toggleTheme, selectTheme, selectResolvedTheme } from '@/app/store/slices/uiSlice';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks';
+import { toggleTheme, selectTheme, selectResolvedTheme } from '../../../store/slices/uiSlice';
 import styles from './ThemeToggle.module.scss';
 
 const ThemeToggle = () => {

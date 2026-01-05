@@ -1,7 +1,7 @@
 import { useState, useRef, DragEvent, ChangeEvent } from 'react';
 import imageCompression from 'browser-image-compression';
-import { storage, validateImageFiles, formatFileSize } from '@/shared/api/storage';
-import type { UploadResult } from '@/shared/api/storage';
+import { storage, validateImageFiles, formatFileSize } from '../../shared/api/storage';
+import type { UploadResult } from '../../shared/api/storage';
 import styles from './ImageUploader.module.scss';
 
 interface ImageUploaderProps {

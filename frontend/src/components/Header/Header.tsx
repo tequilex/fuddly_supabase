@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
-import { useAppSelector, useAppDispatch } from '@/app/store/hooks';
-import { logout } from '@/app/store/slices/authSlice';
-import ThemeToggle from './ThemeToggle';
+import { useAppSelector, useAppDispatch } from '../../store/hooks';
+import { logout } from '../../store/slices/authSlice';
+import ThemeToggle from './ThemeToggle/ThemeToggle';
 import styles from './Header.module.scss';
 
 const Header = () => {

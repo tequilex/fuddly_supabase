@@ -1,5 +1,5 @@
 import { apiClient } from './client';
-import { AuthResponse, User } from '@/shared/types';
+import { AuthResponse, User } from '../../types';
 
 export interface RegisterData {
   email: string;

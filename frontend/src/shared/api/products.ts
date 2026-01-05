@@ -1,5 +1,5 @@
 import { apiClient } from './client';
-import { Product } from '@/shared/types';
+import { Product } from '../../types';
 
 export interface ProductFilters {
   category?: string;

@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
-import { fetchProduct } from '@/app/store/slices/productsSlice';
-import Loader from '@/shared/components/Loader';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { fetchProduct } from '../../store/slices/productsSlice';
+import Loader from '../../components/Loader/Loader';
 import styles from './ProductDetailPage.module.scss';
 
 const ProductDetailPage = () => {

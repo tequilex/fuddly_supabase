@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { authApi, LoginData, RegisterData } from '@/shared/api/auth';
-import { User } from '@/shared/types';
+import { authApi, LoginData, RegisterData } from '../../shared/api/auth';
+import { User } from '../../types';
 
 interface AuthState {
   user: User | null;

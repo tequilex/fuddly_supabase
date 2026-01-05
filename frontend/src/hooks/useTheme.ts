@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
-import { selectTheme, updateResolvedTheme } from '@/app/store/slices/uiSlice';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { selectTheme, updateResolvedTheme } from '../store/slices/uiSlice';
 
 /**
  * Hook to manage theme application to DOM

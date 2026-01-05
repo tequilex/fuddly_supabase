@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { productsApi, ProductFilters } from '@/shared/api/products';
-import { Product } from '@/shared/types';
+import { productsApi, ProductFilters } from '../../shared/api/products';
+import { Product } from '../../types';
 
 interface ProductsState {
   products: Product[];

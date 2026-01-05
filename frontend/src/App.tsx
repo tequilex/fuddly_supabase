@@ -2,12 +2,12 @@ import { useEffect } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import { getMe } from './store/slices/authSlice';
-import { useTheme } from '@/shared/hooks/useTheme';
+import { useTheme } from './hooks/useTheme';
 import AnimatedRoutes from './AnimatedRoutes';
 
-// Widgets
-import Header from '@/widgets/header/Header';
-import Footer from '@/widgets/footer/Footer';
+// Components
+import Header from './components/Header/Header';
+import Footer from './components/Footer/Footer';
 
 function App() {
   const dispatch = useAppDispatch();

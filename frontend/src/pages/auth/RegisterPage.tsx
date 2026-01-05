@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
-import { register } from '@/app/store/slices/authSlice';
-import ButtonLoader from '@/shared/components/ButtonLoader';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { register } from '../../store/slices/authSlice';
+import ButtonLoader from '../../components/ButtonLoader/ButtonLoader';
 import styles from './AuthPage.module.scss';
 
 const RegisterPage = () => {

@@ -1,15 +1,15 @@
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { useAppSelector } from './store/hooks';
-import PageTransition from '@/shared/components/PageTransition';
+import PageTransition from './components/PageTransition/PageTransition';
 
 // Pages
-import HomePage from '@/pages/home/HomePage';
-import CatalogPage from '@/pages/catalog/CatalogPage';
-import ProductDetailPage from '@/pages/product-detail/ProductDetailPage';
-import ProfilePage from '@/pages/profile/ProfilePage';
-import LoginPage from '@/pages/auth/LoginPage';
-import RegisterPage from '@/pages/auth/RegisterPage';
+import HomePage from './pages/home/HomePage';
+import CatalogPage from './pages/catalog/CatalogPage';
+import ProductDetailPage from './pages/product-detail/ProductDetailPage';
+import ProfilePage from './pages/profile/ProfilePage';
+import LoginPage from './pages/auth/LoginPage';
+import RegisterPage from './pages/auth/RegisterPage';
 
 const AnimatedRoutes = () => {
   const location = useLocation();
