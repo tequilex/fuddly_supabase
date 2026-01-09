@@ -26,15 +26,19 @@
     <script>
       (function() {
         try {
+          // Отключаем transitions при загрузке
+          document.documentElement.classList.add('no-transitions');
+
           const theme = localStorage.getItem('fuddly-theme');
-          if (theme === 'dark' || theme === 'light') {
+          if (theme === 'light' || theme === 'dark') {
             document.documentElement.setAttribute('data-theme', theme);
-          } else if (!theme || theme === 'system') {
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            if (prefersDark) {
-              document.documentElement.setAttribute('data-theme', 'dark');
-            }
           }
+          // Если темы нет - используем светлую по умолчанию (CSS :root)
+
+          // Включаем transitions после загрузки
+          window.addEventListener('load', function() {
+            document.documentElement.classList.remove('no-transitions');
+          });
         } catch (e) {}
       })();
     </script>

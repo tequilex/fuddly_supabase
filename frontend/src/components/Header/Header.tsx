@@ -44,7 +44,7 @@ export function Header() {
           </Link>
 
           <button className={styles.iconButton} onClick={handleToggleTheme}>
-            {theme === 'light' ? <Moon size={22} /> : <Sun size={22} />}
+            {theme === 'light' ? <Sun size={22} /> : <Moon size={22} />}
           </button>
 
           <UserActions
