@@ -39,31 +39,46 @@ export interface User {
   updated_at?: string;
 }
 
+export interface Review {
+  id: string;
+  author: string;
+  rating: number;
+  date: string;
+  comment: string;
+  avatar?: string;
+}
+
+export interface Seller {
+  id: string;
+  name: string;
+  company?: string;
+  avatar?: string;
+}
+
 export interface Product {
   id: string;
   title: string;
   description: string;
   price: number;
   category: string;
-  images?: string[]; // Опционально для моков
-  region?: string; // Опционально для моков
-  status?: ProductStatus; // Опционально для моков
+  images: string[]; // Опционально для моков
+  region: string; // Опционально для моков
+  status: ProductStatus; // Опционально для моков
   seller_id?: string; // Опционально для моков
-  seller?: {
-    id: string;
-    name: string;
-    company?: string;
-    avatar?: string;
-  };
+  seller: Seller; // Опционально для моков
   created_at?: string; // Опционально для моков
   updated_at?: string; // Опционально для моков
 
+
+
+
+  
   // Поля для дизайна (временные, пока не добавлены в backend)
-  image?: string; // Для совместимости с ProductCard
-  chef?: { name: string; rating?: number }; // Для совместимости с ProductCard
-  rating?: number;
-  reviewsCount?: number;
-  distance?: string;
+  // image?: string; // Для совместимости с ProductCard
+  // chef?: { name: string; rating?: number }; // Для совместимости с ProductCard
+  // rating?: number;
+  // reviewsCount?: number;
+  // distance?: string;
 }
 
 export interface Lead {

@@ -1,0 +1,47 @@
+.descriptionBlock {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border);
+  padding: 2rem;
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 1.25rem 0;
+}
+
+.description {
+  color: var(--color-text-secondary);
+  line-height: 1.75;
+  font-size: 1.05rem;
+  margin: 0;
+}
+
+@media (max-width: 1024px) {
+  
+}
+
+@media (max-width: 768px) {
+  .descriptionBlock {
+    padding: 16px;
+    border-radius: var(--radius-lg);
+  }
+
+  .sectionTitle {
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+
+  .description {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+}
+
+@media (max-width: 480px) {
+  .descriptionBlock {
+    padding: 14px;
+  }
+}
