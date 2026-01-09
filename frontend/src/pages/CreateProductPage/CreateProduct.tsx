@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { 
-  Upload, 
-  X, 
-  ImagePlus, 
-  ChevronDown, 
-  Plus, 
+import React, { useState, useEffect } from 'react';
+import {
+  Upload,
+  X,
+  ImagePlus,
+  ChevronDown,
+  Plus,
   Minus,
   Info,
   MapPin,
@@ -12,6 +12,7 @@ import {
   Users,
   Check
 } from 'lucide-react';
+import { storage, validateImageFiles } from '../../shared/api/storage';
 import styles from './CreateProduct.module.css';
 
 interface CreateProductProps {
@@ -58,8 +59,20 @@ const deliveryOptions = [
   { id: 'delivery', label: 'Доставка', icon: MapPin }
 ];
 
+interface ImageState {
+  preview: string;      // Blob URL для превью
+  url?: string;         // Реальный URL из Supabase (после загрузки)
+  path?: string;        // Storage path для удаления
+  file: File;           // Оригинальный файл
+  progress: number;     // 0-100
+  error?: string;       // Ошибка загрузки
+  uploaded: boolean;    // Флаг успешной загрузки
+}
+
 export function CreateProduct({ onBack, onPublish, isLoading }: CreateProductProps) {
-  const [images, setImages] = useState<string[]>([]);
+  const [imageStates, setImageStates] = useState<ImageState[]>([]);
+  const [uploadErrors, setUploadErrors] = useState<string[]>([]);
+  const [isUploading, setIsUploading] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     category: '',
@@ -79,16 +92,103 @@ export function CreateProduct({ onBack, onPublish, isLoading }: CreateProductPro
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isDraft, setIsDraft] = useState(false);
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (files) {
-      const newImages = Array.from(files).map(file => URL.createObjectURL(file));
-      setImages(prev => [...prev, ...newImages].slice(0, 10));
+    if (!files || isUploading) return;
+
+    const fileArray = Array.from(files);
+
+    // Проверка лимита
+    if (imageStates.length + fileArray.length > 10) {
+      setUploadErrors(prev => [...prev, 'Максимум 10 фотографий']);
+      return;
     }
+
+    // Валидация через storage API
+    const validationErrors = validateImageFiles(fileArray, 10);
+    if (validationErrors.length > 0) {
+      setUploadErrors(prev => [...prev, ...validationErrors.map(e => `${e.fileName}: ${e.error}`)]);
+      return;
+    }
+
+    setIsUploading(true);
+
+    // Создаем ImageState для каждого файла
+    const newImageStates: ImageState[] = fileArray.map(file => ({
+      preview: URL.createObjectURL(file),
+      file,
+      progress: 0,
+      uploaded: false,
+    }));
+
+    setImageStates(prev => [...prev, ...newImageStates]);
+
+    // Загружаем каждый файл
+    for (const imageState of newImageStates) {
+      try {
+        const result = await storage.uploadImage(
+          imageState.file,
+          'products',
+          (progress) => {
+            // Обновляем прогресс
+            setImageStates(prev =>
+              prev.map(img =>
+                img.preview === imageState.preview
+                  ? { ...img, progress: progress.percentage }
+                  : img
+              )
+            );
+          }
+        );
+
+        // Успешная загрузка - сохранить URL и path
+        setImageStates(prev =>
+          prev.map(img =>
+            img.preview === imageState.preview
+              ? {
+                  ...img,
+                  url: result.url,
+                  path: result.path,
+                  uploaded: true,
+                  progress: 100
+                }
+              : img
+          )
+        );
+      } catch (error: any) {
+        // Ошибка загрузки
+        setImageStates(prev =>
+          prev.map(img =>
+            img.preview === imageState.preview
+              ? { ...img, error: error.message, progress: 0 }
+              : img
+          )
+        );
+        setUploadErrors(prev => [...prev, `${imageState.file.name}: ${error.message}`]);
+      }
+    }
+
+    setIsUploading(false);
   };
 
-  const removeImage = (index: number) => {
-    setImages(prev => prev.filter((_, i) => i !== index));
+  const removeImage = async (index: number) => {
+    const imageState = imageStates[index];
+
+    // Если изображение загружено, удалить из Supabase
+    if (imageState.uploaded && imageState.path) {
+      try {
+        await storage.deleteImage(imageState.path);
+      } catch (error) {
+        console.error('Failed to delete image from storage:', error);
+        // Не блокируем удаление из UI даже если backend не удалил
+      }
+    }
+
+    // Освободить blob URL
+    URL.revokeObjectURL(imageState.preview);
+
+    // Удалить из state
+    setImageStates(prev => prev.filter((_, i) => i !== index));
   };
 
   const handleInputChange = (field: string, value: string) => {
@@ -120,9 +220,13 @@ export function CreateProduct({ onBack, onPublish, isLoading }: CreateProductPro
     if (!formData.price || parseFloat(formData.price) <= 0) {
       newErrors.price = 'Укажите корректную цену';
     }
-    if (images.length === 0) {
+
+    // Проверить uploadedImages вместо images
+    const uploadedImages = imageStates.filter(img => img.uploaded);
+    if (uploadedImages.length === 0) {
       newErrors.images = 'Добавьте хотя бы одну фотографию';
     }
+
     if (!formData.description.trim() || formData.description.length < 50) {
       newErrors.description = 'Описание должно содержать минимум 50 символов';
     }
@@ -143,6 +247,23 @@ export function CreateProduct({ onBack, onPublish, isLoading }: CreateProductPro
       return;
     }
 
+    // Проверить что все изображения загружены
+    const uploadingImages = imageStates.filter(img => !img.uploaded && !img.error);
+    if (uploadingImages.length > 0) {
+      setErrors(prev => ({ ...prev, images: 'Дождитесь завершения загрузки всех изображений' }));
+      return;
+    }
+
+    // Собрать URLs успешно загруженных изображений
+    const uploadedUrls = imageStates
+      .filter(img => img.uploaded && img.url)
+      .map(img => img.url!);
+
+    if (uploadedUrls.length === 0 && !saveAsDraft) {
+      setErrors(prev => ({ ...prev, images: 'Добавьте хотя бы одну фотографию' }));
+      return;
+    }
+
     setIsDraft(saveAsDraft);
 
     // Формируем данные для отправки
@@ -152,7 +273,7 @@ export function CreateProduct({ onBack, onPublish, isLoading }: CreateProductPro
       price: parseFloat(formData.price),
       category: formData.category,
       region: formData.address, // address используется как region
-      images: images.length > 0 ? images : undefined,
+      images: uploadedUrls, // Массив реальных URLs из Supabase
     };
 
     // Вызываем callback для публикации
@@ -165,6 +286,15 @@ export function CreateProduct({ onBack, onPublish, isLoading }: CreateProductPro
       }, 500);
     }
   };
+
+  // Очистка blob URLs при размонтировании
+  useEffect(() => {
+    return () => {
+      imageStates.forEach(img => {
+        URL.revokeObjectURL(img.preview);
+      });
+    };
+  }, [imageStates]);
 
   return (
     <div className={styles.createProductPage}>
@@ -203,36 +333,74 @@ export function CreateProduct({ onBack, onPublish, isLoading }: CreateProductPro
               )}
 
               <div className={styles.imagesGrid}>
-                {images.map((image, index) => (
-                  <div key={index} className={styles.imagePreview}>
-                    <img src={image} alt={`Preview ${index + 1}`} />
+                {imageStates.map((imageState, index) => (
+                  <div key={imageState.preview} className={styles.imagePreview}>
+                    <img src={imageState.preview} alt={`Preview ${index + 1}`} />
+
+                    {/* Прогресс загрузки */}
+                    {!imageState.uploaded && !imageState.error && (
+                      <div className={styles.progressOverlay}>
+                        <div className={styles.progressBar}>
+                          <div
+                            className={styles.progressFill}
+                            style={{ width: `${imageState.progress}%` }}
+                          />
+                        </div>
+                        <span className={styles.progressText}>{imageState.progress}%</span>
+                      </div>
+                    )}
+
+                    {/* Ошибка */}
+                    {imageState.error && (
+                      <div className={styles.errorOverlay}>
+                        <span className={styles.errorText}>Ошибка</span>
+                      </div>
+                    )}
+
+                    {/* Успешная загрузка */}
+                    {imageState.uploaded && (
+                      <div className={styles.successIndicator}>✓</div>
+                    )}
+
                     <button
                       className={styles.removeImageButton}
                       onClick={() => removeImage(index)}
                       type="button"
+                      disabled={!imageState.uploaded && !imageState.error}
                     >
                       <X size={16} />
                     </button>
+
                     {index === 0 && (
                       <div className={styles.mainBadge}>Обложка</div>
                     )}
                   </div>
                 ))}
 
-                {images.length < 10 && (
-                  <label className={styles.uploadButton}>
+                {imageStates.length < 10 && (
+                  <label className={`${styles.uploadButton} ${isUploading ? styles.uploadButtonDisabled : ''}`}>
                     <input
                       type="file"
                       accept="image/*"
                       multiple
                       onChange={handleImageUpload}
                       style={{ display: 'none' }}
+                      disabled={isUploading || imageStates.length >= 10}
                     />
                     <ImagePlus size={32} />
-                    <span>Добавить фото</span>
+                    <span>{isUploading ? 'Загрузка...' : 'Добавить фото'}</span>
                   </label>
                 )}
               </div>
+
+              {/* Ошибки загрузки */}
+              {uploadErrors.length > 0 && (
+                <div className={styles.uploadErrorsList}>
+                  {uploadErrors.map((error, idx) => (
+                    <div key={idx} className={styles.uploadError}>{error}</div>
+                  ))}
+                </div>
+              )}
             </section>
 
             {/* Основная информация */}

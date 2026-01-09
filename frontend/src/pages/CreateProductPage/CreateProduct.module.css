@@ -610,3 +610,111 @@
     display: inline;
   }
 }
+
+/* ============================================ */
+/* Стили для загрузки изображений */
+/* ============================================ */
+
+/* Прогресс загрузки */
+.progressOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  z-index: 1;
+}
+
+.progressBar {
+  width: 80%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--color-accent-primary);
+  transition: width 0.3s ease;
+}
+
+.progressText {
+  font-size: 13px;
+  color: white;
+  font-weight: 600;
+}
+
+/* Ошибка загрузки */
+.errorOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(239, 68, 68, 0.9);
+  z-index: 1;
+}
+
+.errorText {
+  font-size: 13px;
+  color: white;
+  font-weight: 600;
+}
+
+/* Индикатор успеха */
+.successIndicator {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #10b981;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+  z-index: 2;
+}
+
+/* Список ошибок загрузки */
+.uploadErrorsList {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.uploadError {
+  padding: 0.75rem;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid #ef4444;
+  border-radius: var(--radius-md);
+  color: #ef4444;
+  font-size: 13px;
+}
+
+/* Отключенная кнопка загрузки */
+.uploadButtonDisabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Отключенная кнопка удаления */
+.removeImageButton:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
