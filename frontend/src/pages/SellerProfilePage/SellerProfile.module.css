@@ -1,0 +1,617 @@
+.sellerProfilePage {
+  min-height: calc(100vh - 70px);
+  background: var(--color-bg-primary);
+  padding-bottom: 2rem;
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* Шапка профиля */
+.profileHeader {
+  background: var(--color-bg-card);
+  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 2rem;
+}
+
+.profileCover {
+  height: 180px;
+  background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+  position: relative;
+}
+
+.profileContent {
+  padding: 0 2rem 2rem;
+}
+
+.profileMain {
+  display: flex;
+  gap: 2rem;
+  margin-top: -60px;
+  margin-bottom: 2rem;
+}
+
+.avatarSection {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.avatar {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  border: 5px solid var(--color-bg-card);
+  object-fit: cover;
+  box-shadow: var(--shadow-lg);
+}
+
+.verifiedBadge {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #4CAF50;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid var(--color-bg-card);
+  box-shadow: var(--shadow-md);
+}
+
+.sellerInfo {
+  flex: 1;
+  padding-top: 20px;
+}
+
+.nameRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.nameRow h1 {
+  font-size: 2rem;
+  margin: 0;
+}
+
+.sellerBadge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--color-accent-primary);
+  color: white;
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.ratingRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ratingValue {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.ratingCount {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+.separator {
+  color: var(--color-text-tertiary);
+}
+
+.orders {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.metaInfo {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+.metaItem svg {
+  color: var(--color-text-tertiary);
+}
+
+.description {
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  max-width: 700px;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 20px;
+}
+
+.messageButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 28px;
+  background: var(--color-accent-primary);
+  color: white;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 15px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.messageButton:hover {
+  background: var(--color-accent-secondary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Статистика */
+.statsCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.statCard {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-lg);
+  transition: all 0.2s;
+}
+
+.statCard:hover {
+  background: var(--color-bg-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.statIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background: var(--color-accent-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.statContent {
+  flex: 1;
+}
+
+.statValue {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.statLabel {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+/* Табы */
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin: 0 2rem 2rem;
+  border-bottom: 2px solid var(--color-border);
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: transparent;
+  color: var(--color-text-secondary);
+  border: none;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+  transition: all 0.2s;
+  margin-bottom: -2px;
+}
+
+.tab:hover {
+  color: var(--color-text-primary);
+  background: var(--color-bg-tertiary);
+}
+
+.tabActive {
+  color: var(--color-accent-primary);
+  border-bottom-color: var(--color-accent-primary);
+}
+
+/* Секция товаров */
+.productsSection {
+  padding: 0 2rem;
+}
+
+.productsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.productCard {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.productCard:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px);
+}
+
+.productImage {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+}
+
+.productImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.productCard:hover .productImage img {
+  transform: scale(1.05);
+}
+
+.favoriteButton {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  backdrop-filter: blur(4px);
+}
+
+.favoriteButton:hover {
+  background: white;
+  color: var(--color-accent-primary);
+  transform: scale(1.1);
+}
+
+.productContent {
+  padding: 1.25rem;
+}
+
+.productCategory {
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+}
+
+.productName {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: var(--color-text-primary);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.5rem;
+}
+
+.productRating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 0.75rem;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.reviewsCount {
+  color: var(--color-text-tertiary);
+  font-weight: 400;
+}
+
+.productPrice {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-accent-primary);
+}
+
+/* Секция отзывов */
+.reviewsSection {
+  padding: 0 2rem;
+}
+
+.reviewsHeader {
+  margin-bottom: 2rem;
+}
+
+.reviewsHeader h2 {
+  font-size: 1.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.reviewsSummary {
+  background: var(--color-bg-card);
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.overallRating {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.overallRatingValue {
+  font-size: 4rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  line-height: 1;
+}
+
+.stars {
+  display: flex;
+  gap: 4px;
+}
+
+.reviewsTotal {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.reviewsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.reviewCard {
+  background: var(--color-bg-card);
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s;
+}
+
+.reviewCard:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.reviewHeader {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.reviewAvatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.reviewUserInfo {
+  flex: 1;
+}
+
+.reviewUserName {
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 4px;
+}
+
+.reviewMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.reviewStars {
+  display: flex;
+  gap: 2px;
+}
+
+.reviewDate {
+  font-size: 13px;
+  color: var(--color-text-tertiary);
+}
+
+.reviewProduct {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin-bottom: 0.75rem;
+}
+
+.reviewComment {
+  color: var(--color-text-primary);
+  line-height: 1.6;
+}
+
+/* Адаптивность */
+@media (max-width: 1024px) {
+  .productsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+
+  .statsCards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .sellerProfilePage {
+    min-height: calc(100vh - 60px);
+  }
+
+  .profileCover {
+    height: 120px;
+  }
+
+  .profileContent {
+    padding: 0 1rem 1rem;
+  }
+
+  .profileMain {
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: -50px;
+  }
+
+  .avatar {
+    width: 100px;
+    height: 100px;
+  }
+
+  .verifiedBadge {
+    width: 30px;
+    height: 30px;
+  }
+
+  .sellerInfo {
+    padding-top: 0;
+  }
+
+  .nameRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .nameRow h1 {
+    font-size: 1.5rem;
+  }
+
+  .ratingRow {
+    flex-wrap: wrap;
+  }
+
+  .metaInfo {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .actions {
+    padding-top: 0;
+  }
+
+  .messageButton {
+    width: 100%;
+  }
+
+  .statsCards {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .tabs {
+    margin: 0 1rem 1.5rem;
+    gap: 4px;
+  }
+
+  .tab {
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+
+  .productsSection,
+  .reviewsSection {
+    padding: 0 1rem;
+  }
+
+  .productsGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .productImage {
+    height: 200px;
+  }
+
+  .reviewsHeader h2 {
+    font-size: 1.5rem;
+  }
+
+  .reviewsSummary {
+    padding: 1.5rem;
+  }
+
+  .overallRatingValue {
+    font-size: 3rem;
+  }
+}

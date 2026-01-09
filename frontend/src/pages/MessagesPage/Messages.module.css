@@ -1,0 +1,478 @@
+.messagesPage {
+  min-height: calc(100vh - 70px);
+  background: var(--color-bg-primary);
+  padding: 0;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  height: calc(100vh - 70px);
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  background: var(--color-bg-secondary);
+  box-shadow: var(--shadow-md);
+}
+
+/* Список чатов */
+.chatList {
+  border-right: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg-card);
+}
+
+.chatListHeader {
+  padding: 20px;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg-card);
+}
+
+.chatListHeader h1 {
+  margin-bottom: 16px;
+  font-size: 1.5rem;
+}
+
+.searchBox {
+  position: relative;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-tertiary);
+}
+
+.searchInput {
+  width: 100%;
+  padding: 10px 12px 10px 40px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: var(--color-accent-primary);
+  background: var(--color-bg-card);
+}
+
+.chats {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.chatItem {
+  display: flex;
+  gap: 12px;
+  padding: 16px 20px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--color-border);
+  transition: background 0.2s;
+}
+
+.chatItem:hover {
+  background: var(--color-bg-tertiary);
+}
+
+.chatItemActive {
+  background: var(--color-bg-tertiary);
+  border-left: 3px solid var(--color-accent-primary);
+}
+
+.avatarWrapper {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.onlineIndicator {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 12px;
+  height: 12px;
+  background: var(--color-success);
+  border: 2px solid var(--color-bg-card);
+  border-radius: 50%;
+}
+
+.chatInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.chatHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 4px;
+}
+
+.chatName {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chatTime {
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+  flex-shrink: 0;
+}
+
+.productInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  padding: 6px 8px;
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-sm);
+}
+
+.productImage {
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.productName {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.chatFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.lastMessage {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.unreadBadge {
+  background: var(--color-accent-primary);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 12px;
+  min-width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* Окно чата */
+.chatWindow {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg-primary);
+}
+
+.chatWindowHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  background: var(--color-bg-card);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.backButton {
+  display: none;
+  padding: 8px;
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
+  transition: all 0.2s;
+}
+
+.backButton:hover {
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}
+
+.chatUserInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.chatUserName {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.chatUserStatus {
+  font-size: 13px;
+  color: var(--color-text-tertiary);
+}
+
+.chatActions {
+  display: flex;
+  gap: 8px;
+}
+
+.iconButton {
+  padding: 8px;
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
+  transition: all 0.2s;
+}
+
+.iconButton:hover {
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}
+
+.productCard {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: var(--color-bg-card);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.productCard img {
+  width: 50px;
+  height: 50px;
+  border-radius: var(--radius-md);
+  object-fit: cover;
+}
+
+.productCardInfo {
+  flex: 1;
+}
+
+.productCardInfo h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 2px;
+}
+
+.productCardInfo p {
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+}
+
+.productCardButton {
+  padding: 8px 16px;
+  background: var(--color-accent-primary);
+  color: white;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+
+.productCardButton:hover {
+  background: var(--color-accent-secondary);
+}
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.message {
+  display: flex;
+}
+
+.messageOther {
+  justify-content: flex-start;
+}
+
+.messageOwn {
+  justify-content: flex-end;
+}
+
+.messageBubble {
+  max-width: 70%;
+  padding: 10px 14px;
+  border-radius: var(--radius-lg);
+  position: relative;
+}
+
+.messageOther .messageBubble {
+  background: var(--color-bg-card);
+  color: var(--color-text-primary);
+  border-bottom-left-radius: 4px;
+}
+
+.messageOwn .messageBubble {
+  background: var(--color-accent-primary);
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+
+.messageBubble p {
+  margin-bottom: 4px;
+  word-wrap: break-word;
+}
+
+.messageTime {
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+.messageInput {
+  display: flex;
+  gap: 12px;
+  padding: 16px 20px;
+  background: var(--color-bg-card);
+  border-top: 1px solid var(--color-border);
+}
+
+.messageInput input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+  font-size: 14px;
+}
+
+.messageInput input:focus {
+  outline: none;
+  border-color: var(--color-accent-primary);
+  background: var(--color-bg-card);
+}
+
+.sendButton {
+  padding: 12px 16px;
+  background: var(--color-accent-primary);
+  color: white;
+  border-radius: var(--radius-lg);
+  transition: all 0.2s;
+}
+
+.sendButton:hover:not(:disabled) {
+  background: var(--color-accent-secondary);
+}
+
+.sendButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+  padding: 40px;
+}
+
+.emptyStateIcon {
+  font-size: 64px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.emptyState h2 {
+  margin-bottom: 8px;
+  color: var(--color-text-primary);
+}
+
+.emptyState p {
+  color: var(--color-text-secondary);
+}
+
+/* Адаптивность */
+@media (max-width: 1024px) {
+  .container {
+    grid-template-columns: 320px 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .messagesPage {
+    min-height: calc(100vh - 60px);
+  }
+
+  .container {
+    height: calc(100vh - 60px);
+    grid-template-columns: 1fr;
+  }
+
+  .chatList {
+    border-right: none;
+  }
+
+  .chatListHidden {
+    display: none;
+  }
+
+  .chatWindow {
+    display: none;
+  }
+
+  .chatWindowActive {
+    display: flex;
+  }
+
+  .backButton {
+    display: flex;
+  }
+
+  .chatActions {
+    display: none;
+  }
+
+  .chatListHeader {
+    padding: 16px;
+  }
+
+  .chatItem {
+    padding: 12px 16px;
+  }
+
+  .messageBubble {
+    max-width: 85%;
+  }
+
+  .productCard {
+    padding: 10px 16px;
+  }
+
+  .messages {
+    padding: 16px;
+  }
+
+  .messageInput {
+    padding: 12px 16px;
+  }
+}

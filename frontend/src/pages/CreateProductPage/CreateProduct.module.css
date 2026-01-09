@@ -1,0 +1,612 @@
+.createProductPage {
+  min-height: calc(100vh - 70px);
+  background: var(--color-bg-secondary);
+  padding: 2rem 0 4rem;
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Хлебные крошки */
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.backButton {
+  color: var(--color-accent-primary);
+  transition: opacity 0.2s;
+}
+
+.backButton:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+.separator {
+  color: var(--color-text-tertiary);
+}
+
+/* Заголовок страницы */
+.pageHeader {
+  margin-bottom: 2rem;
+}
+
+.pageHeader h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: var(--color-text-primary);
+}
+
+.pageSubtitle {
+  color: var(--color-text-secondary);
+  font-size: 15px;
+}
+
+/* Макет формы */
+.formLayout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 2rem;
+  align-items: start;
+}
+
+/* Основная форма */
+.mainForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.formSection {
+  background: var(--color-bg-card);
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.sectionHeader h2 {
+  font-size: 1.25rem;
+  color: var(--color-text-primary);
+}
+
+.sectionHint {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.required {
+  color: var(--color-error);
+  font-weight: 600;
+}
+
+/* Сетка изображений */
+.imagesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1rem;
+}
+
+.imagePreview {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--color-bg-tertiary);
+}
+
+.imagePreview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.removeImageButton {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  backdrop-filter: blur(4px);
+}
+
+.removeImageButton:hover {
+  background: var(--color-error);
+  transform: scale(1.1);
+}
+
+.mainBadge {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  padding: 4px 10px;
+  background: var(--color-accent-primary);
+  color: white;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.uploadButton {
+  aspect-ratio: 1;
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--color-text-tertiary);
+  background: var(--color-bg-tertiary);
+}
+
+.uploadButton:hover {
+  border-color: var(--color-accent-primary);
+  color: var(--color-accent-primary);
+  background: var(--color-bg-secondary);
+}
+
+.uploadButton span {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Поля формы */
+.formGroup {
+  margin-bottom: 1.5rem;
+}
+
+.formGroup:last-child {
+  margin-bottom: 0;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--color-text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.label svg {
+  color: var(--color-text-tertiary);
+}
+
+.input,
+.textarea,
+.select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 15px;
+  color: var(--color-text-primary);
+  background: var(--color-bg-primary);
+  transition: all 0.2s;
+}
+
+.input:focus,
+.textarea:focus,
+.select:focus {
+  outline: none;
+  border-color: var(--color-accent-primary);
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+.inputError {
+  border-color: var(--color-error);
+}
+
+.inputError:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 120px;
+  font-family: inherit;
+  line-height: 1.6;
+}
+
+.selectWrapper {
+  position: relative;
+}
+
+.selectIcon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-tertiary);
+  pointer-events: none;
+}
+
+.select {
+  appearance: none;
+  padding-right: 40px;
+  cursor: pointer;
+}
+
+.inputWithUnit {
+  position: relative;
+}
+
+.inputWithUnit .input {
+  padding-right: 50px;
+}
+
+.unit {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-secondary);
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.inputFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5rem;
+  font-size: 13px;
+}
+
+.errorText {
+  color: var(--color-error);
+  font-weight: 500;
+}
+
+.errorMessage {
+  padding: 12px 16px;
+  background: rgba(239, 68, 68, 0.1);
+  border-left: 3px solid var(--color-error);
+  border-radius: var(--radius-sm);
+  color: var(--color-error);
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.charCount {
+  color: var(--color-text-tertiary);
+}
+
+/* Чекбоксы */
+.checkboxGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 12px 16px;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.checkbox:hover {
+  border-color: var(--color-accent-primary);
+  background: var(--color-bg-tertiary);
+}
+
+.checkbox input[type="checkbox"] {
+  display: none;
+}
+
+.checkboxCustom {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--color-border);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  background: var(--color-bg-primary);
+}
+
+.checkbox input[type="checkbox"]:checked ~ .checkboxCustom {
+  background: var(--color-accent-primary);
+  border-color: var(--color-accent-primary);
+  color: white;
+}
+
+.checkbox span:last-child {
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.checkbox svg:not(.checkboxCustom svg) {
+  color: var(--color-text-tertiary);
+  flex-shrink: 0;
+}
+
+/* Боковая панель */
+.sidebar {
+  position: sticky;
+  top: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.helpCard,
+.previewCard {
+  background: var(--color-bg-card);
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.helpIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-secondary));
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.helpCard h3,
+.previewCard h3 {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  color: var(--color-text-primary);
+}
+
+.helpList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.helpList li {
+  padding-left: 1.5rem;
+  position: relative;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.helpList li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--color-accent-primary);
+  font-weight: 700;
+}
+
+.statsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1rem;
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+
+.statNumber {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-accent-primary);
+}
+
+.statLabel {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+/* Кнопки действий */
+.actions {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.5rem 2rem;
+  background: var(--color-bg-card);
+  border-top: 1px solid var(--color-border);
+  box-shadow: var(--shadow-lg);
+  margin: 2rem -2rem -4rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  z-index: 10;
+}
+
+.draftButton,
+.publishButton {
+  padding: 14px 32px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 15px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.draftButton {
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+  border: 2px solid var(--color-border);
+}
+
+.draftButton:hover {
+  background: var(--color-bg-secondary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.publishButton {
+  background: var(--color-accent-primary);
+  color: white;
+}
+
+.publishButton:hover {
+  background: var(--color-accent-secondary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.draftShortText {
+  display: none;
+}
+
+.draftFullText {
+  display: inline;
+}
+
+/* Адаптивность */
+@media (max-width: 1024px) {
+  .formLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: static;
+    order: -1;
+  }
+
+  .helpCard,
+  .previewCard {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .createProductPage {
+    min-height: calc(100vh - 60px);
+    padding: 1rem 0 0;
+    background: var(--color-bg-primary);
+    padding-bottom: 120px; /* Компактная высота панели + нижняя навигация */
+  }
+
+  .container {
+    padding: 0;
+  }
+
+  .breadcrumbs {
+    padding: 0 1rem;
+  }
+
+  .pageHeader {
+    padding: 0 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .pageHeader h1 {
+    font-size: 1.5rem;
+  }
+
+  .formSection {
+    border-radius: 0;
+    box-shadow: none;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: 0.5rem;
+  }
+
+  .formRow {
+    grid-template-columns: 1fr;
+  }
+
+  .imagesGrid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+  }
+
+  .actions {
+    position: fixed;
+    flex-direction: row;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0.75rem;
+    bottom: 79px; /* Высота MobileBottomNav */
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .draftButton,
+  .publishButton {
+    width: 100%;
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+
+  .draftButton {
+    flex: 0 0 auto;
+    width: auto;
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .publishButton {
+    flex: 1;
+  }
+
+  .draftFullText {
+    display: none;
+  }
+
+  .draftShortText {
+    display: inline;
+  }
+}

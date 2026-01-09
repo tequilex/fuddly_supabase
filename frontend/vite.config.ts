@@ -23,6 +23,7 @@ export default defineConfig({
     modules: {
       localsConvention: 'camelCase',
     },
+    postcss: './postcss.config.js',
     preprocessorOptions: {
       scss: {
         additionalData: `@import "@/styles/variables.scss";`,

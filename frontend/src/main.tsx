@@ -3,7 +3,9 @@ import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { store } from './store';
 import App from './App';
-import './styles/global.scss';
+
+// Глобальные стили - сначала globals.css (оранжевая тема), потом Tailwind
+import './styles/globals.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

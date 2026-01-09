@@ -1,0 +1,1033 @@
+.productDetail {
+  background: var(--color-bg-primary);
+  padding: 16px 0 32px;
+  min-height: calc(100vh - 200px);
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* Breadcrumbs */
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: var(--color-text-tertiary);
+}
+
+.breadcrumbLink {
+  color: var(--color-accent-primary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font: inherit;
+}
+
+.breadcrumbLink:hover {
+  color: var(--color-accent-secondary);
+  text-decoration: underline;
+}
+
+.breadcrumbSeparator {
+  color: var(--color-text-tertiary);
+}
+
+.breadcrumbCurrent {
+  color: var(--color-text-secondary);
+}
+
+/* ===== TOP SECTION: Images + Chef/Order ===== */
+.topSection {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+/* Image Gallery */
+.imageSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mainImage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  cursor: zoom-in;
+  transition: transform 0.3s ease;
+}
+
+.mainImage:hover .image {
+  transform: scale(1.02);
+}
+
+.imageActions {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.iconButton {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--color-text-secondary);
+  backdrop-filter: blur(8px);
+}
+
+.iconButton:hover {
+  background: white;
+  transform: scale(1.1);
+}
+
+.iconButton.favorite {
+  color: var(--color-accent-primary);
+}
+
+.thumbnails {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+
+.thumbnail {
+  aspect-ratio: 1;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: var(--color-bg-tertiary);
+  padding: 0;
+}
+
+.thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumbnail:hover {
+  border-color: var(--color-accent-tertiary);
+}
+
+.thumbnail.active {
+  border-color: var(--color-accent-primary);
+}
+
+/* Side Section - Chef & Order */
+.sideSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.sectionTitleSmall {
+  font-weight: 700;
+  color: var(--color-text-primary);
+  font-size: 1.125rem;
+  margin: 0;
+}
+
+/* Chef Card */
+.chefCard {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.chefCardHeader {
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.chefProfile {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.chefImageLarge {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--color-bg-tertiary);
+  flex-shrink: 0;
+}
+
+.chefImageLarge img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.chefInfo {
+  flex: 1;
+}
+
+.chefName {
+  font-size: 1.25rem;
+  margin: 0 0 0.5rem 0;
+  color: var(--color-text-primary);
+}
+
+.chefBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  background: rgba(230, 126, 80, 0.1);
+  color: var(--color-accent-primary);
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.chefStats {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.chefStat {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+}
+
+.chefStat svg {
+  color: var(--color-accent-primary);
+}
+
+.chefBio {
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.viewChefButton {
+  width: 100%;
+  padding: 0.875rem;
+  border: 1.5px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-primary);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+}
+
+.viewChefButton:hover {
+  border-color: var(--color-accent-primary);
+  color: var(--color-accent-primary);
+  background: rgba(230, 126, 80, 0.05);
+}
+
+/* Order Card */
+.orderCard {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-xl);
+  border: 2px solid var(--color-accent-primary);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  box-shadow: var(--shadow-lg);
+}
+
+.orderCardHeader {
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.portionSizes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.portionLabel {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.portionButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.portionButton {
+  padding: 0.875rem 1rem;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-secondary);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--color-text-primary);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.portionButton:hover {
+  border-color: var(--color-accent-tertiary);
+}
+
+.portionButton.active {
+  border-color: var(--color-accent-primary);
+  background: rgba(230, 126, 80, 0.08);
+}
+
+.portionPrice {
+  color: var(--color-accent-primary);
+  font-weight: 700;
+}
+
+.priceBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-lg);
+}
+
+.priceRow,
+.quantityRow,
+.totalRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.priceLabel,
+.quantityLabel {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.price {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.quantitySelector {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.quantityButton {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--color-border);
+  background: var(--color-bg-card);
+  color: var(--color-text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.quantityButton:hover:not(:disabled) {
+  border-color: var(--color-accent-primary);
+  background: var(--color-bg-tertiary);
+}
+
+.quantityButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.quantityValue {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  min-width: 2.5rem;
+  text-align: center;
+}
+
+.totalRow {
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.totalLabel {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.totalPrice {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-accent-primary);
+}
+
+.addToCartButton {
+  padding: 1.125rem 1.5rem;
+  background: var(--color-accent-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  box-shadow: var(--shadow-md);
+}
+
+.addToCartButton:hover {
+  background: var(--color-accent-secondary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ===== BOTTOM SECTION: Product Info Full Width ===== */
+.productInfoSection {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  margin-bottom: 3rem;
+}
+
+/* Product Main Info */
+.productMainInfo {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border);
+  padding: 2rem;
+}
+
+.categoryBadge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.productTitle {
+  font-size: 2rem;
+  margin: 0 0 1rem 0;
+  color: var(--color-text-primary);
+}
+
+.productMeta {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-accent-primary);
+}
+
+.ratingValue {
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: var(--color-text-primary);
+}
+
+.reviewsCount {
+  color: var(--color-text-tertiary);
+  font-size: 0.95rem;
+}
+
+.productDetails {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.detailItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-text-secondary);
+  font-size: 0.95rem;
+}
+
+.detailItem svg {
+  color: var(--color-accent-primary);
+}
+
+/* Description Block */
+.descriptionBlock {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border);
+  padding: 2rem;
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 1.25rem 0;
+}
+
+.description {
+  color: var(--color-text-secondary);
+  line-height: 1.75;
+  font-size: 1.05rem;
+  margin: 0;
+}
+
+/* Ingredients Block */
+.ingredientsBlock {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border);
+  padding: 2rem;
+}
+
+.ingredientsList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0.875rem;
+}
+
+.ingredient {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--color-text-secondary);
+  font-size: 1rem;
+  padding: 0.625rem 0;
+}
+
+.ingredient svg {
+  color: var(--color-accent-primary);
+  flex-shrink: 0;
+}
+
+.allergens {
+  padding: 1.25rem 1.5rem;
+  background: rgba(230, 126, 80, 0.08);
+  border-radius: var(--radius-lg);
+  border-left: 4px solid var(--color-accent-primary);
+  color: var(--color-text-secondary);
+  font-size: 1rem;
+}
+
+/* Reviews Block */
+.reviewsBlock {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border);
+  padding: 2rem;
+}
+
+.reviewsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.overallRating {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.ratingNumber {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--color-accent-primary);
+  line-height: 1;
+}
+
+.stars {
+  display: flex;
+  gap: 0.25rem;
+  color: var(--color-accent-primary);
+  margin-bottom: 0.375rem;
+}
+
+.reviewsCountText {
+  color: var(--color-text-tertiary);
+  font-size: 0.9rem;
+}
+
+.reviewsList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.review {
+  padding: 1.5rem;
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  transition: all 0.2s ease;
+}
+
+.review:hover {
+  box-shadow: var(--shadow-sm);
+  border-color: var(--color-accent-tertiary);
+}
+
+.reviewHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.reviewAuthor {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+}
+
+.reviewAvatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--color-accent-tertiary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.125rem;
+  flex-shrink: 0;
+}
+
+.reviewAuthorName {
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 0.25rem;
+  font-size: 1rem;
+}
+
+.reviewDate {
+  font-size: 0.85rem;
+  color: var(--color-text-tertiary);
+}
+
+.reviewRating {
+  display: flex;
+  gap: 0.25rem;
+  color: var(--color-accent-primary);
+}
+
+.reviewComment {
+  color: var(--color-text-secondary);
+  line-height: 1.65;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.writeReviewButton {
+  width: 100%;
+  max-width: 450px;
+  margin: 0 auto;
+  padding: 1.125rem 1.75rem;
+  border: 2px dashed var(--color-border);
+  background: transparent;
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-lg);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  font-size: 1rem;
+}
+
+.writeReviewButton:hover {
+  border-color: var(--color-accent-primary);
+  color: var(--color-accent-primary);
+  background: rgba(230, 126, 80, 0.05);
+  border-style: solid;
+}
+
+/* ===== SIMILAR PRODUCTS ===== */
+.similarSection {
+  margin-top: 1rem;
+}
+
+.similarGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+/* Not Found */
+.notFound {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  gap: 1.5rem;
+  text-align: center;
+  padding: 3rem;
+}
+
+.backButton {
+  padding: 1rem 2rem;
+  background: var(--color-accent-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-lg);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1rem;
+}
+
+.backButton:hover {
+  background: var(--color-accent-secondary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+  .topSection {
+    grid-template-columns: 1fr;
+  }
+
+  .sideSection {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .reviewsList {
+    grid-template-columns: 1fr;
+  }
+
+  .ingredientsList {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .productDetail {
+    padding: 12px 0 24px;
+  }
+
+  .container {
+    padding: 0 12px;
+  }
+
+  .breadcrumbs {
+    font-size: 12px;
+    margin-bottom: 12px;
+    gap: 6px;
+  }
+
+  .topSection {
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .imageSection {
+    gap: 10px;
+  }
+
+  .mainImage {
+    border-radius: var(--radius-md);
+  }
+
+  .iconButton {
+    width: 36px;
+    height: 36px;
+  }
+
+  .thumbnails {
+    gap: 8px;
+  }
+
+  .sideSection {
+    gap: 12px;
+  }
+
+  .chefCard,
+  .orderCard {
+    padding: 16px;
+    gap: 12px;
+    border-radius: var(--radius-lg);
+  }
+
+  .chefImageLarge {
+    width: 60px;
+    height: 60px;
+  }
+
+  .chefName {
+    font-size: 18px;
+    margin-bottom: 6px;
+  }
+
+  .chefBadge {
+    font-size: 11px;
+    padding: 4px 10px;
+    margin-bottom: 8px;
+  }
+
+  .chefStat {
+    font-size: 12px;
+  }
+
+  .chefBio {
+    font-size: 13px;
+  }
+
+  .portionButton {
+    padding: 12px 14px;
+    font-size: 13px;
+  }
+
+  .quantityButton {
+    width: 32px;
+    height: 32px;
+  }
+
+  .quantityValue {
+    font-size: 18px;
+  }
+
+  .price {
+    font-size: 20px;
+  }
+
+  .totalPrice {
+    font-size: 24px;
+  }
+
+  .addToCartButton {
+    padding: 14px;
+    font-size: 14px;
+  }
+
+  .productInfoSection {
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .productMainInfo,
+  .descriptionBlock,
+  .ingredientsBlock,
+  .reviewsBlock {
+    padding: 16px;
+    border-radius: var(--radius-lg);
+  }
+
+  .categoryBadge {
+    font-size: 11px;
+    padding: 6px 12px;
+    margin-bottom: 10px;
+  }
+
+  .productTitle {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+
+  .productMeta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .ratingValue {
+    font-size: 16px;
+  }
+
+  .reviewsCount {
+    font-size: 13px;
+  }
+
+  .detailItem {
+    font-size: 13px;
+  }
+
+  .sectionTitle {
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+
+  .description {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .ingredientsList {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+
+  .ingredient {
+    font-size: 13px;
+    padding: 6px 0;
+  }
+
+  .allergens {
+    padding: 12px;
+    font-size: 13px;
+  }
+
+  .reviewsHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+  }
+
+  .ratingNumber {
+    font-size: 32px;
+  }
+
+  .reviewsCountText {
+    font-size: 12px;
+  }
+
+  .reviewsList {
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .review {
+    padding: 14px;
+  }
+
+  .reviewAvatar {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+
+  .reviewAuthorName {
+    font-size: 14px;
+  }
+
+  .reviewDate {
+    font-size: 12px;
+  }
+
+  .reviewComment {
+    font-size: 13px;
+  }
+
+  .writeReviewButton {
+    padding: 14px;
+    font-size: 14px;
+  }
+
+  .similarSection {
+    margin-top: 8px;
+  }
+
+  .similarGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 10px;
+  }
+
+  .productDetail {
+    padding: 10px 0 20px;
+  }
+
+  .thumbnails {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  .chefProfile {
+    gap: 12px;
+  }
+
+  .productDetails {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .productMainInfo,
+  .descriptionBlock,
+  .ingredientsBlock,
+  .reviewsBlock {
+    padding: 14px;
+  }
+}

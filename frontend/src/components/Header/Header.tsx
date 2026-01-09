@@ -1,48 +1,59 @@
-import { Link } from 'react-router-dom';
-import { useAppSelector, useAppDispatch } from '../../store/hooks';
+import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Search, Sun, Moon } from 'lucide-react';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { logout } from '../../store/slices/authSlice';
-import ThemeToggle from './ThemeToggle/ThemeToggle';
-import styles from './Header.module.scss';
+import { toggleTheme } from '../../store/slices/uiSlice';
+import { UserActions } from '../UserActions/UserActions';
+import styles from './Header.module.css';
 
-const Header = () => {
-  const { isAuthenticated } = useAppSelector((state) => state.auth);
+export function Header() {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const { isAuthenticated, user } = useAppSelector((state) => state.auth);
+  const theme = useAppSelector((state) => state.ui.theme);
 
   const handleLogout = () => {
     dispatch(logout());
-    console.log(123);
+    navigate('/auth');
+  };
+
+  const handleToggleTheme = () => {
+    dispatch(toggleTheme());
   };
 
   return (
     <header className={styles.header}>
-      <div className="container">
-        <div className={styles.content}>
-          <Link to="/info" className={styles.logo}>
-            Fuddly
+      <div className={styles.container}>
+        <Link to="/" className={styles.logo}>
+          Fuddly
+        </Link>
+
+        <div className={styles.search}>
+          <Search className={styles.searchIcon} size={20} />
+          <input
+            type="text"
+            placeholder="Найти домашнюю еду..."
+            className={styles.searchInput}
+          />
+        </div>
+
+        <nav className={styles.nav}>
+          <Link to="/" className={styles.navLink}>
+            Каталог
           </Link>
 
-          <nav className={styles.nav}>
-            <Link to="/">Каталог</Link>
-            {isAuthenticated && (
-              <>
-                <Link to="/profile">Профиль</Link>
-                <button onClick={handleLogout} className={styles.logoutBtn}>
-                  Выйти
-                </button>
-              </>
-            )}
-            {!isAuthenticated && (
-              <>
-                <Link to="/login">Вход</Link>
-                <Link to="/register">Регистрация</Link>
-              </>
-            )}
-            <ThemeToggle />
-          </nav>
-        </div>
+          <button className={styles.iconButton} onClick={handleToggleTheme}>
+            {theme === 'light' ? <Moon size={22} /> : <Sun size={22} />}
+          </button>
+
+          <UserActions
+            isAuthenticated={isAuthenticated}
+            user={user}
+            onLogout={handleLogout}
+          />
+        </nav>
       </div>
     </header>
   );
-};
-
-export default Header;
+}

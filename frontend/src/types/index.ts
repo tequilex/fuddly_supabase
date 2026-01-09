@@ -34,6 +34,7 @@ export interface User {
   avatar?: string;
   status: UserStatus;
   is_admin?: boolean;
+  role?: 'buyer' | 'seller'; // Добавлено для дизайна
   created_at: string;
   updated_at?: string;
 }
@@ -44,18 +45,25 @@ export interface Product {
   description: string;
   price: number;
   category: string;
-  images: string[];
-  region: string;
-  status: ProductStatus;
-  seller_id: string;
+  images?: string[]; // Опционально для моков
+  region?: string; // Опционально для моков
+  status?: ProductStatus; // Опционально для моков
+  seller_id?: string; // Опционально для моков
   seller?: {
     id: string;
     name: string;
     company?: string;
     avatar?: string;
   };
-  created_at: string;
-  updated_at: string;
+  created_at?: string; // Опционально для моков
+  updated_at?: string; // Опционально для моков
+
+  // Поля для дизайна (временные, пока не добавлены в backend)
+  image?: string; // Для совместимости с ProductCard
+  chef?: { name: string; rating?: number }; // Для совместимости с ProductCard
+  rating?: number;
+  reviewsCount?: number;
+  distance?: string;
 }
 
 export interface Lead {
