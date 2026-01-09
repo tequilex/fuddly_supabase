@@ -26,7 +26,7 @@ interface ProductDetailProps {
   similarProducts?: Product[]; // Похожие товары из Redux
 }
 
-export function ProductDetail({ productId, onBack, onProductClick, onSellerClick, product, similarProducts}: ProductDetailProps) {
+export function ProductDetail({ onBack, onProductClick, onSellerClick, product, similarProducts}: ProductDetailProps) {
   const [selectedImage, setSelectedImage] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
