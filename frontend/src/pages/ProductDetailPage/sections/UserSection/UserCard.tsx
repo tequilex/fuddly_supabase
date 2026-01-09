@@ -1,6 +1,6 @@
 import React from "react";
 import { ChefHat, Star, ShoppingCart, MapPin } from "lucide-react";
-import styles from "./UserCard.module.css";
+import styles from "./UserCard.module.scss";
 import { Seller } from "@/types";
 
 interface UserCardProps {

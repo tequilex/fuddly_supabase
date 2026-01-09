@@ -82,6 +82,30 @@
   --radius-lg: 12px;
   --radius-xl: 16px;
   --radius-full: 9999px;
+
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+  --spacing-3xl: 64px;
+
+  /* Font sizes */
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 30px;
+
+  /* Breakpoints (для документации, не используются в runtime) */
+  /* --breakpoint-xs: 480px;  - Mobile */
+  /* --breakpoint-md: 768px;  - Tablet */
+  /* --breakpoint-lg: 1024px; - Desktop */
+  /* --breakpoint-xl: 1280px; - Large Desktop */
 }
 
 [data-theme="dark"] {

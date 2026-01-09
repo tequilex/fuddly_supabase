@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Search, ArrowLeft, Send, MoreVertical, Phone, Video } from 'lucide-react';
-import styles from './Messages.module.css';
+import styles from './Messages.module.scss';
 
 interface Message {
   id: string;

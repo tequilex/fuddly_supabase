@@ -6,7 +6,7 @@ import { ProductCard } from '../../components/ProductCard/ProductCard';
 import { Filters, FilterState } from '../../components/Filters/Filters';
 import { CategoriesBar } from '../../components/CategoriesBar/CategoriesBar';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import styles from './Catalog.module.css';
+import styles from './Catalog.module.scss';
 
 export default function Catalog() {
   const navigate = useNavigate();

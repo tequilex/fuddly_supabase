@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Github } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { login, register } from '../../store/slices/authSlice';
-import styles from './Auth.module.css';
+import styles from './Auth.module.scss';
 
 type AuthMode = 'login' | 'register';
 

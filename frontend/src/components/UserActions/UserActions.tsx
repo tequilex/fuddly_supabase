@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User, MessageCircle, Heart, LogOut, Plus, ChevronDown } from 'lucide-react';
-import styles from './UserActions.module.css';
+import styles from './UserActions.module.scss';
 
 interface UserActionsProps {
   isAuthenticated: boolean;

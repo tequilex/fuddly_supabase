@@ -2,7 +2,7 @@ import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Home, Heart, Plus, MessageCircle, User } from 'lucide-react';
 import { useAppSelector } from '../../store/hooks';
-import styles from './MobileBottomNav.module.css';
+import styles from './MobileBottomNav.module.scss';
 
 export function MobileBottomNav() {
   const navigate = useNavigate();

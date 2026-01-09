@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { logout } from '../../store/slices/authSlice';
 import { toggleTheme } from '../../store/slices/uiSlice';
 import { UserActions } from '../UserActions/UserActions';
-import styles from './Header.module.css';
+import styles from './Header.module.scss';
 
 export function Header() {
   const dispatch = useAppDispatch();

@@ -1,5 +1,5 @@
 import { Star, Clock, Award } from "lucide-react";
-import styles from "./ProductInfo.module.css";
+import styles from "./ProductInfo.module.scss";
 import { Product } from "@/types";
 
 interface ProductInfoProps {

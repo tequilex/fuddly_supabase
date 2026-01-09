@@ -1,6 +1,6 @@
 import React from 'react';
 import { LucideIcon } from 'lucide-react';
-import styles from './CategoryTile.module.css';
+import styles from './CategoryTile.module.scss';
 
 interface CategoryTileProps {
   name: string;

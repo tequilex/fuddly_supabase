@@ -13,7 +13,7 @@ import {
   Check
 } from 'lucide-react';
 import { storage, validateImageFiles } from '../../shared/api/storage';
-import styles from './CreateProduct.module.css';
+import styles from './CreateProduct.module.scss';
 
 interface CreateProductProps {
   onBack?: () => void;

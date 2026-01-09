@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { SlidersHorizontal } from 'lucide-react';
-import styles from './Filters.module.css';
+import styles from './Filters.module.scss';
 
 export interface FilterState {
   categories: string[];

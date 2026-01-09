@@ -1,6 +1,6 @@
 import { Product } from "../../../../types";
 import { ProductCard } from "../../../../components/ProductCard/ProductCard";
-import styles from "./SimilarProducts.module.css";
+import styles from "./SimilarProducts.module.scss";
 
 interface SimilarProductsProps {
   products: Product[];

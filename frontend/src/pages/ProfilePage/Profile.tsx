@@ -19,7 +19,7 @@ import {
   MessageSquare
 } from 'lucide-react';
 import { Product as ReduxProduct } from '../../types';
-import styles from './Profile.module.css';
+import styles from './Profile.module.scss';
 
 interface ProfileProduct {
   id: string;

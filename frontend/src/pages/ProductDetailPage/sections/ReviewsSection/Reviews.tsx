@@ -1,5 +1,5 @@
 import { MessageCircle } from 'lucide-react';
-import styles from './Reviews.module.css';
+import styles from './Reviews.module.scss';
 import { Product } from '@/types';
 
 interface ProductProps {

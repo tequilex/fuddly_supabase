@@ -1,7 +1,7 @@
 import React from 'react';
 import { Star, MapPin, ChefHat } from 'lucide-react';
 import { Product } from '../../types';
-import styles from './ProductCard.module.css';
+import styles from './ProductCard.module.scss';
 
 interface ProductCardProps {
   product: Product;

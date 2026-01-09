@@ -10,7 +10,7 @@ import {
   TrendingUp,
   ThumbsUp
 } from 'lucide-react';
-import styles from './SellerProfile.module.css';
+import styles from './SellerProfile.module.scss';
 
 interface Product {
   id: string;

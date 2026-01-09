@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Heart, Trash2, ShoppingCart } from 'lucide-react';
 import { ProductCard } from '../../components/ProductCard/ProductCard';
 import { Product } from '../../types';
-import styles from './Favorites.module.css';
+import styles from './Favorites.module.scss';
 
 const mockFavorites: Product[] = [
   {

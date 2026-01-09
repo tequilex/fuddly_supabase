@@ -1,5 +1,5 @@
 import { Product } from "@/types";
-import styles from "./Breadcrumbs.module.css";
+import styles from "./Breadcrumbs.module.scss";
 
 interface BreadcrumbsProps {
   product: Product;

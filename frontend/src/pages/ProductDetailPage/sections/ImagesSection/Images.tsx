@@ -1,6 +1,6 @@
 import { Heart, Share2 } from "lucide-react";
 import { Product } from "../../../../types";
-import styles from "./Images.module.css";
+import styles from "./Images.module.scss";
 
 interface ImagesProps {
   product: Product;

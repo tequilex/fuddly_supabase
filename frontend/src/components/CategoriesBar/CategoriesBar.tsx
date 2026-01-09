@@ -13,7 +13,7 @@ import {
   LucideIcon
 } from 'lucide-react';
 import { CategoryTile } from '../CategoryTile/CategoryTile';
-import styles from './CategoriesBar.module.css';
+import styles from './CategoriesBar.module.scss';
 
 export interface Category {
   id: string;
