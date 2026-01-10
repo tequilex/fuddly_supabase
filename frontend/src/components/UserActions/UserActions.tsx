@@ -2,20 +2,25 @@ import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User, MessageCircle, Heart, LogOut, Plus, ChevronDown } from 'lucide-react';
 import styles from './UserActions.module.scss';
+import { BaseSkeleton } from '../skeletons';
+import { useMinimumLoadingTime } from '@/hooks/useMinimumLoadingTime';
 
 interface UserActionsProps {
   isAuthenticated: boolean;
   user: { name: string; role?: string } | null;
   onLogout: () => void;
+  loading: boolean;
 }
 
 export function UserActions({
   isAuthenticated,
   user,
+  loading,
   onLogout
 }: UserActionsProps) {
   const navigate = useNavigate();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const showSkeleton = useMinimumLoadingTime(loading, 1000);
   const menuRef = useRef<HTMLDivElement>(null);
 
   // TODO: получать из Redux когда будут готовы favoritesSlice и messagesSlice
@@ -78,7 +83,13 @@ export function UserActions({
           <div className={styles.userAvatar}>
             <User size={18} />
           </div>
-          <span className={styles.userName}>{user?.name}</span>
+          <div className={styles.userNameContainer}>
+            {showSkeleton ? (
+              <BaseSkeleton width="100%" height={21} variant="text" />
+            ) : (
+              <span className={styles.userName}>{user?.name}</span>
+            )}
+          </div>
           <ChevronDown
             size={16}
             className={`${styles.chevron} ${showProfileMenu ? styles.chevronOpen : ''}`}

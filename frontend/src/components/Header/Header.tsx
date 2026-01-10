@@ -10,7 +10,7 @@ import styles from './Header.module.scss';
 export function Header() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { isAuthenticated, user } = useAppSelector((state) => state.auth);
+  const { isAuthenticated, user, loading } = useAppSelector((state) => state.auth);
   const theme = useAppSelector((state) => state.ui.theme);
 
   const handleLogout = () => {
@@ -51,6 +51,7 @@ export function Header() {
             isAuthenticated={isAuthenticated}
             user={user}
             onLogout={handleLogout}
+            loading={loading}
           />
         </nav>
       </div>

@@ -24,9 +24,10 @@ interface ProductDetailProps {
   onSellerClick: () => void;
   product: Product; // Товар из Redux
   similarProducts?: Product[]; // Похожие товары из Redux
+  similarProductsLoading?: boolean; // Загрузка похожих товаров
 }
 
-export function ProductDetail({ onBack, onProductClick, onSellerClick, product, similarProducts}: ProductDetailProps) {
+export function ProductDetail({ onBack, onProductClick, onSellerClick, product, similarProducts, similarProductsLoading = false}: ProductDetailProps) {
   const [selectedImage, setSelectedImage] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -74,8 +75,12 @@ export function ProductDetail({ onBack, onProductClick, onSellerClick, product, 
           <Reviews product={product} />
         </div>
 
-        {mockProducts.length > 0 && (
-          <SimilarProducts products={mockProducts} onProductClick={onProductClick} />
+        {(mockProducts.length > 0 || similarProductsLoading) && (
+          <SimilarProducts
+            products={mockProducts}
+            onProductClick={onProductClick}
+            loading={similarProductsLoading}
+          />
         )}
       </div>
 

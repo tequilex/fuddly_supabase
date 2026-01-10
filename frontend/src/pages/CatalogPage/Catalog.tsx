@@ -3,15 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchProducts } from '../../store/slices/productsSlice';
 import { ProductCard } from '../../components/ProductCard/ProductCard';
+import { ProductCardSkeleton } from '../../components/skeletons';
 import { Filters, FilterState } from '../../components/Filters/Filters';
 import { CategoriesBar } from '../../components/CategoriesBar/CategoriesBar';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useMinimumLoadingTime } from '../../hooks/useMinimumLoadingTime';
 import styles from './Catalog.module.scss';
 
 export default function Catalog() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { products, loading } = useAppSelector((state) => state.products);
+  const showSkeleton = useMinimumLoadingTime(loading && products.length === 0, 500);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState('popular');
@@ -148,10 +151,11 @@ export default function Catalog() {
             </select>
           </div>
 
-          {loading && products.length === 0 ? (
-            <div className={styles.emptyState}>
-              <h3>Загрузка...</h3>
-              <p>Пожалуйста, подождите</p>
+          {showSkeleton ? (
+            <div className={styles.grid}>
+              {Array.from({ length: 12 }).map((_, i) => (
+                <ProductCardSkeleton key={i} />
+              ))}
             </div>
           ) : currentProducts.length > 0 ? (
             <>

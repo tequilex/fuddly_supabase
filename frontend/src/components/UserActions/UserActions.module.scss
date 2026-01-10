@@ -108,7 +108,7 @@
 .userButton {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
+  gap: var(--spacing-xs);
   padding: 6px var(--spacing-sm) 6px 6px;
   background: var(--color-bg-tertiary);
   color: var(--color-text-primary);
@@ -141,16 +141,21 @@
   flex-shrink: 0;
 }
 
-.userName {
-  font-weight: 500;
+.userNameContainer {
+  min-width: 80px;
   max-width: 120px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 
   @include desktop {
     display: none;
   }
+}
+
+.userName {
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
 }
 
 .chevron {
