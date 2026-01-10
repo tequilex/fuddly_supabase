@@ -54,7 +54,7 @@
     grid-template-columns: repeat(5, minmax(85px, 1fr));
     grid-template-rows: repeat(2, 1fr);
     gap: 10px;
-    padding: 0 var(--spacing-md);
+    padding: 0;
     width: max-content;
   }
 }

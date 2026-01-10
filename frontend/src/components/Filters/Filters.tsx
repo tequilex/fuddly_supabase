@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { SlidersHorizontal } from 'lucide-react';
+import { useScrollLock } from '../../hooks/useScrollLock';
 import styles from './Filters.module.scss';
 
 export interface FilterState {
@@ -19,6 +20,9 @@ export function Filters({ onFilterChange }: FiltersProps) {
   const [selectedCuisines, setSelectedCuisines] = useState<string[]>([]);
   const [minRating, setMinRating] = useState('all');
   const [showMobileFilters, setShowMobileFilters] = useState(false);
+
+  // Блокировка скролла body когда панель фильтров открыта
+  useScrollLock(showMobileFilters);
 
   const categories = [
     'Супы',

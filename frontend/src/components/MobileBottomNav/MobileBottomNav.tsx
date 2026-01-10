@@ -10,8 +10,8 @@ export function MobileBottomNav() {
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
 
   // TODO: получать из Redux когда будут готовы favoritesSlice и messagesSlice
-  const favoriteCount = 0;
-  const messagesCount = 0;
+  const favoriteCount = 100;
+  const messagesCount = 100;
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -77,7 +77,9 @@ export function MobileBottomNav() {
               <div className={styles.iconWrapper}>
                 <Icon size={22} />
                 {item.badge && item.badge > 0 && (
-                  <span className={styles.badge}>{item.badge}</span>
+                  <span className={styles.badge}>
+                    {item.badge > 9 ? '9+' : item.badge}
+                  </span>
                 )}
               </div>
               <span className={styles.label}>{item.label}</span>
