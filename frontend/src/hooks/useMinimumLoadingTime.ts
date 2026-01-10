@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 /**
  * Хук для обеспечения минимальной длительности показа loading состояния
@@ -21,33 +21,26 @@ export function useMinimumLoadingTime(
   minimumDuration: number = 500
 ): boolean {
   const [showLoading, setShowLoading] = useState(false);
-  const [loadingStartTime, setLoadingStartTime] = useState<number | null>(null);
+  const startTimeRef = useRef<number>(0);
 
   useEffect(() => {
     if (isLoading) {
-      // Начало загрузки - запоминаем время и показываем skeleton
+      // Начало загрузки
+      startTimeRef.current = Date.now();
       setShowLoading(true);
-      setLoadingStartTime(Date.now());
-    } else if (loadingStartTime !== null) {
-      // Загрузка завершена - проверяем прошло ли минимальное время
-      const elapsed = Date.now() - loadingStartTime;
-      const remaining = minimumDuration - elapsed;
+    } else if (startTimeRef.current > 0) {
+      // Загрузка завершена
+      const elapsed = Date.now() - startTimeRef.current;
+      const remaining = Math.max(0, minimumDuration - elapsed);
 
-      if (remaining > 0) {
-        // Если прошло меньше минимального времени, ждем оставшееся время
-        const timer = setTimeout(() => {
-          setShowLoading(false);
-          setLoadingStartTime(null);
-        }, remaining);
-
-        return () => clearTimeout(timer);
-      } else {
-        // Минимальное время уже прошло, сразу скрываем skeleton
+      const timer = setTimeout(() => {
         setShowLoading(false);
-        setLoadingStartTime(null);
-      }
+        startTimeRef.current = 0;
+      }, remaining);
+
+      return () => clearTimeout(timer);
     }
-  }, [isLoading, loadingStartTime, minimumDuration]);
+  }, [isLoading, minimumDuration]);
 
   return showLoading;
 }
