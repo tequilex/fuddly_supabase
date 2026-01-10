@@ -1,22 +1,27 @@
 @import '../../styles/variables';
+
 .filters {
   background: var(--color-bg-card);
   border-radius: var(--radius-lg);
-  padding: 1.5rem;
+  padding: var(--spacing-lg);
   box-shadow: var(--shadow-sm);
   position: sticky;
   top: 100px;
+
+  @include desktop {
+    display: none !important;
+  }
 }
 
 .title {
-  font-size: 1.25rem;
+  font-size: var(--font-size-xl);
   font-weight: 600;
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--spacing-lg);
   color: var(--color-text-primary);
 }
 
 .section {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--spacing-lg);
 }
 
 .section:last-child {
@@ -26,20 +31,20 @@
 .sectionTitle {
   font-size: 0.95rem;
   font-weight: 600;
-  margin-bottom: 0.75rem;
+  margin-bottom: var(--spacing-sm);
   color: var(--color-text-primary);
 }
 
 .checkboxGroup {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
 }
 
 .checkbox {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
   cursor: pointer;
 }
 
@@ -58,7 +63,7 @@
 
 .rangeInput {
   width: 100%;
-  margin-top: 0.5rem;
+  margin-top: var(--spacing-sm);
   accent-color: var(--color-accent-primary);
 }
 
@@ -68,12 +73,12 @@
   align-items: center;
   font-size: 0.9rem;
   color: var(--color-text-secondary);
-  margin-top: 0.5rem;
+  margin-top: var(--spacing-sm);
 }
 
 .select {
   width: 100%;
-  padding: 0.75rem;
+  padding: var(--spacing-sm);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   background: var(--color-bg-tertiary);
@@ -90,14 +95,14 @@
 
 .resetButton {
   width: 100%;
-  padding: 0.75rem;
+  padding: var(--spacing-sm);
   background: var(--color-bg-tertiary);
   color: var(--color-text-secondary);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   font-weight: 500;
   transition: all 0.2s ease;
-  margin-top: 1rem;
+  margin-top: var(--spacing-md);
 }
 
 .resetButton:hover {
@@ -114,9 +119,16 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   font-weight: 600;
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-md);
   box-shadow: var(--shadow-sm);
   position: relative;
+
+  @include desktop {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+  }
 }
 
 .mobileFiltersButton:active {
@@ -135,36 +147,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.75rem;
+  font-size: var(--font-size-xs);
   font-weight: 700;
   box-shadow: var(--shadow-md);
 }
 
 .mobileOverlay {
   display: none;
-}
 
-.mobilePanel {
-  display: none;
-}
-
-.applyButton {
-  display: none;
-}
-
-@media (max-width: 1024px) {
-  .filters {
-    display: none !important;
-  }
-  
-  .mobileFiltersButton {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-  }
-
-  .mobileOverlay {
+  @include desktop {
     display: block;
     position: fixed;
     top: 0;
@@ -175,8 +166,12 @@
     z-index: 1000;
     animation: fadeIn 0.2s ease;
   }
+}
 
-  .mobilePanel {
+.mobilePanel {
+  display: none;
+
+  @include desktop {
     display: block;
     position: fixed;
     bottom: 0;
@@ -184,28 +179,32 @@
     right: 0;
     background: var(--color-bg-card);
     border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-    padding: 1.5rem;
+    padding: var(--spacing-lg);
     max-height: 80vh;
     overflow-y: auto;
     animation: slideUp 0.3s ease;
     box-shadow: var(--shadow-lg);
   }
+}
 
-  .applyButton {
+.applyButton {
+  display: none;
+
+  @include desktop {
     display: block;
     width: 100%;
-    padding: 1rem;
+    padding: var(--spacing-md);
     background: var(--color-accent-primary);
     color: white;
     border-radius: var(--radius-lg);
     font-weight: 600;
-    margin-top: 1rem;
+    margin-top: var(--spacing-md);
     transition: all 0.2s ease;
   }
+}
 
-  .applyButton:hover {
-    background: var(--color-accent-secondary);
-  }
+.applyButton:hover {
+  background: var(--color-accent-secondary);
 }
 
 @keyframes fadeIn {

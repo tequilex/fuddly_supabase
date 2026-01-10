@@ -55,13 +55,13 @@
 .clearButton {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--spacing-sm);
   padding: 10px 20px;
   background: var(--color-bg-tertiary);
   color: var(--color-text-secondary);
   border-radius: var(--radius-md);
   font-weight: 600;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   transition: all 0.2s;
   white-space: nowrap;
 }
@@ -83,7 +83,7 @@
 .summaryItem {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--spacing-xs);
 }
 
 .summaryLabel {
@@ -139,7 +139,7 @@
   color: white;
   border-radius: var(--radius-md);
   font-weight: 600;
-  font-size: 16px;
+  font-size: var(--font-size-base);
   transition: all 0.2s;
 }
 
@@ -150,13 +150,13 @@
 }
 
 /* Адаптивность */
-@media (max-width: 1024px) {
+@include desktop {
   .productsGrid {
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   }
 }
 
-@media (max-width: 768px) {
+@include tablet {
   .favoritesPage {
     min-height: calc(100vh - 60px);
     padding: 1rem 0 5rem;

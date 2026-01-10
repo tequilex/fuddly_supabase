@@ -1,35 +1,69 @@
 @import '../../styles/variables';
+
 .catalog {
   max-width: 100%;
   margin: 0 auto;
   padding: 0;
+
+  @include mobile {
+    padding: 10px;
+  }
 }
 
 .header {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem 2rem 1.5rem;
+  padding: var(--spacing-2xl) var(--spacing-2xl) var(--spacing-lg);
+
+  @include tablet {
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+  }
+
+  @include mobile {
+    margin-bottom: var(--spacing-sm);
+  }
 }
 
 .title {
-  font-size: 24px;
+  font-size: var(--font-size-2xl);
   margin-bottom: 6px;
   color: var(--color-text-primary);
+
+  @include tablet {
+    font-size: var(--font-size-xl);
+  }
+
+  @include mobile {
+    font-size: var(--font-size-lg);
+  }
 }
 
 .subtitle {
   color: var(--color-text-secondary);
-  font-size: 14px;
+  font-size: var(--font-size-sm);
+
+  @include tablet {
+    font-size: 13px;
+  }
 }
 
 .content {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 var(--spacing-2xl);
   display: grid;
   grid-template-columns: 260px 1fr;
-  gap: 20px;
+  gap: var(--spacing-lg);
   align-items: start;
+
+  @include desktop {
+    grid-template-columns: 1fr;
+  }
+
+  @include tablet {
+    padding: 0 var(--spacing-md);
+  }
 }
 
 .sidebar {
@@ -40,7 +74,7 @@
 .main {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--spacing-md);
 }
 
 .topBar {
@@ -48,24 +82,34 @@
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: var(--spacing-sm);
+
+  @include tablet {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
 }
 
 .resultsCount {
   color: var(--color-text-secondary);
-  font-size: 14px;
+  font-size: var(--font-size-sm);
 }
 
 .sortSelect {
-  padding: 8px 12px;
+  padding: var(--spacing-sm) var(--spacing-sm);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   background: var(--color-bg-card);
   color: var(--color-text-primary);
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   cursor: pointer;
   transition: all 0.2s ease;
   min-width: 180px;
+
+  @include tablet {
+    width: 100%;
+  }
 }
 
 .sortSelect:focus {
@@ -76,19 +120,42 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 16px;
+  gap: var(--spacing-md);
+
+  @include desktop {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: var(--spacing-md);
+  }
+
+  @include tablet {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  @include mobile {
+    gap: var(--spacing-sm);
+  }
 }
 
 .pagination {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 0.5rem;
-  margin-top: 3rem;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-3xl);
+
+  @include tablet {
+    gap: 6px;
+    margin-top: var(--spacing-lg);
+  }
+
+  @include mobile {
+    margin-top: var(--spacing-md);
+  }
 }
 
 .pageButton {
-  padding: 0.625rem 1rem;
+  padding: 10px var(--spacing-md);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   background: var(--color-bg-card);
@@ -96,6 +163,12 @@
   font-weight: 500;
   transition: all 0.2s ease;
   min-width: 44px;
+
+  @include tablet {
+    padding: var(--spacing-sm) var(--spacing-sm);
+    min-width: 36px;
+    font-size: 13px;
+  }
 }
 
 .pageButton:hover:not(:disabled) {
@@ -116,93 +189,11 @@
 
 .emptyState {
   text-align: center;
-  padding: 4rem 2rem;
+  padding: var(--spacing-3xl) var(--spacing-2xl);
   color: var(--color-text-secondary);
 }
 
 .emptyState h3 {
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--spacing-sm);
   color: var(--color-text-primary);
-}
-
-@media (max-width: 1024px) {
-  .content {
-    grid-template-columns: 1fr;
-  }
-  
-  .grid {
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 1rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .catalog {
-    padding: 0;
-  }
-
-  .header {
-    padding: 1rem;
-    margin-bottom: 1rem;
-  }
-
-  .content {
-    padding: 0 1rem;
-  }
-  
-  .title {
-    font-size: 20px;
-  }
-  
-  .subtitle {
-    font-size: 13px;
-  }
-  
-  .topBar {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
-  }
-  
-  .sortSelect {
-    width: 100%;
-  }
-  
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-  }
-  
-  .pagination {
-    gap: 6px;
-    margin-top: 20px;
-  }
-  
-  .pageButton {
-    padding: 8px 12px;
-    min-width: 36px;
-    font-size: 13px;
-  }
-}
-
-@media (max-width: 480px) {
-  .catalog {
-    padding: 10px;
-  }
-
-  .header {
-    margin-bottom: 12px;
-  }
-
-  .title {
-    font-size: 18px;
-  }
-
-  .grid {
-    gap: 8px;
-  }
-
-  .pagination {
-    margin-top: 16px;
-  }
 }

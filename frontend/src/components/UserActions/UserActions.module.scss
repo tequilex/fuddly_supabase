@@ -1,13 +1,18 @@
 @import '../../styles/variables';
+
 .userActions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--spacing-sm);
+
+  @include tablet {
+    display: none;
+  }
 }
 
 /* Кнопка авторизации */
 .authButton {
-  padding: 10px 20px;
+  padding: 10px var(--spacing-lg);
   background: var(--color-accent-primary);
   color: white;
   border-radius: var(--radius-md);
@@ -15,7 +20,7 @@
   white-space: nowrap;
   font-weight: 600;
   border: none;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   cursor: pointer;
 }
 
@@ -28,7 +33,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 10px 16px;
+  padding: 10px var(--spacing-md);
   background: var(--color-accent-primary);
   color: white;
   border-radius: var(--radius-md);
@@ -36,8 +41,12 @@
   white-space: nowrap;
   font-weight: 600;
   border: none;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   cursor: pointer;
+
+  @include desktop {
+    padding: var(--spacing-sm);
+  }
 }
 
 .addButton:hover {
@@ -46,12 +55,16 @@
 
 .buttonText {
   display: inline;
+
+  @include desktop {
+    display: none;
+  }
 }
 
 /* Иконочные кнопки */
 .iconButton {
   position: relative;
-  padding: 8px;
+  padding: var(--spacing-sm);
   color: var(--color-text-secondary);
   border-radius: var(--radius-md);
   transition: all 0.2s ease;
@@ -95,15 +108,20 @@
 .userButton {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 12px 6px 6px;
+  gap: var(--spacing-sm);
+  padding: 6px var(--spacing-sm) 6px 6px;
   background: var(--color-bg-tertiary);
   color: var(--color-text-primary);
   border-radius: var(--radius-full);
   transition: all 0.2s ease;
   border: 1px solid var(--color-border);
   cursor: pointer;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
+
+  @include desktop {
+    padding: 6px;
+    border-radius: 50%;
+  }
 }
 
 .userButton:hover {
@@ -129,12 +147,20 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+
+  @include desktop {
+    display: none;
+  }
 }
 
 .chevron {
   transition: transform 0.2s ease;
   color: var(--color-text-tertiary);
   flex-shrink: 0;
+
+  @include desktop {
+    display: none;
+  }
 }
 
 .chevronOpen {
@@ -154,14 +180,14 @@
 /* Выпадающее меню */
 .userMenu {
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + var(--spacing-sm));
   right: 0;
   min-width: 240px;
   background: var(--color-bg-card);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-xl);
-  padding: 8px;
+  padding: var(--spacing-sm);
   z-index: 100;
   animation: slideDown 0.2s ease;
 }
@@ -180,8 +206,8 @@
 .userMenuHeader {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 8px;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-sm);
 }
 
 .userMenuAvatar {
@@ -211,20 +237,20 @@
 .userMenuDivider {
   height: 1px;
   background: var(--color-border);
-  margin: 8px 0;
+  margin: var(--spacing-sm) 0;
 }
 
 .userMenuItem {
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 12px;
+  gap: var(--spacing-sm);
+  padding: 10px var(--spacing-sm);
   background: transparent;
   border: none;
   border-radius: var(--radius-md);
   color: var(--color-text-primary);
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   text-align: left;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -265,34 +291,4 @@
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-/* Адаптивность */
-@media (max-width: 1024px) {
-  .buttonText {
-    display: none;
-  }
-
-  .addButton {
-    padding: 8px;
-  }
-
-  .userName {
-    display: none;
-  }
-
-  .userButton {
-    padding: 6px;
-    border-radius: 50%;
-  }
-
-  .chevron {
-    display: none;
-  }
-}
-
-@media (max-width: 768px) {
-  .userActions {
-    display: none;
-  }
 }

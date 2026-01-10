@@ -1,11 +1,18 @@
 @import '../../styles/variables';
+
 .breadcrumbs {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 16px;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
   font-size: 13px;
   color: var(--color-text-tertiary);
+
+  @include tablet {
+    font-size: var(--font-size-xs);
+    margin-bottom: var(--spacing-sm);
+    gap: 6px;
+  }
 }
 
 .breadcrumbLink {
@@ -30,20 +37,4 @@
 
 .breadcrumbCurrent {
   color: var(--color-text-secondary);
-}
-
-@media (max-width: 1024px) {
-  
-}
-
-@media (max-width: 768px) {
-  .breadcrumbs {
-    font-size: 12px;
-    margin-bottom: 12px;
-    gap: 6px;
-  }
-}
-
-@media (max-width: 480px) {
-
 }

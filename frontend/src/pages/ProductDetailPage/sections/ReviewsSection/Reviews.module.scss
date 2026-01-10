@@ -3,7 +3,7 @@
   background: var(--color-bg-card);
   border-radius: var(--radius-xl);
   border: 1px solid var(--color-border);
-  padding: 2rem;
+  padding: var(--spacing-lg);
 }
 
 .sectionTitle {
@@ -50,12 +50,12 @@
 .reviewsList {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 1.5rem;
+  gap: var(--spacing-lg);
   margin-bottom: 2rem;
 }
 
 .review {
-  padding: 1.5rem;
+  padding: var(--spacing-lg);
   background: var(--color-bg-secondary);
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-border);
@@ -71,7 +71,7 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-md);
 }
 
 .reviewAuthor {
@@ -123,7 +123,7 @@
   width: 100%;
   max-width: 450px;
   margin: 0 auto;
-  padding: 1.125rem 1.75rem;
+  padding: var(--spacing-lg) 1.75rem;
   border: 2px dashed var(--color-border);
   background: transparent;
   color: var(--color-text-secondary);
@@ -145,13 +145,13 @@
   border-style: solid;
 }
 
-@media (max-width: 1024px) {
+@include desktop {
   .reviewsList {
     grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 768px) {
+@include tablet {
   .reviewsBlock {
     padding: 16px;
     border-radius: var(--radius-lg);
@@ -166,7 +166,7 @@
   }
 
   .sectionTitle {
-    font-size: 18px;
+    font-size: var(--font-size-lg);
     margin-bottom: 12px;
   }
 
@@ -175,7 +175,7 @@
   }
 
   .reviewsCountText {
-    font-size: 12px;
+    font-size: var(--font-size-xs);
   }
 
   .reviewsList {
@@ -190,15 +190,15 @@
   .reviewAvatar {
     width: 40px;
     height: 40px;
-    font-size: 16px;
+    font-size: var(--font-size-base);
   }
 
   .reviewAuthorName {
-    font-size: 14px;
+    font-size: var(--font-size-sm);
   }
 
   .reviewDate {
-    font-size: 12px;
+    font-size: var(--font-size-xs);
   }
 
   .reviewComment {
@@ -207,10 +207,10 @@
 
   .writeReviewButton {
     padding: 14px;
-    font-size: 14px;
+    font-size: var(--font-size-sm);
   }
 }
 
-@media (max-width: 1024px) {
+@include desktop {
 
 }

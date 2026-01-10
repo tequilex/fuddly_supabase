@@ -113,7 +113,7 @@
   align-items: center;
   gap: 6px;
   color: var(--color-text-secondary);
-  font-size: 14px;
+  font-size: var(--font-size-sm);
 }
 
 .metaItem svg {
@@ -132,7 +132,7 @@
   gap: 6px;
   color: var(--color-accent-primary);
   text-decoration: none;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   font-weight: 500;
   transition: color 0.2s;
 }
@@ -144,7 +144,7 @@
 .settingsButton {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--spacing-sm);
   padding: 10px 20px;
   background: var(--color-bg-tertiary);
   color: var(--color-text-primary);
@@ -206,7 +206,7 @@
   font-weight: 700;
   color: var(--color-text-primary);
   line-height: 1;
-  margin-bottom: 4px;
+  margin-bottom: var(--spacing-xs);
 }
 
 .statLabel {
@@ -222,7 +222,7 @@
 /* Главные табы */
 .mainTabs {
   display: flex;
-  gap: 8px;
+  gap: var(--spacing-sm);
   margin-bottom: 2rem;
   border-bottom: 2px solid var(--color-border);
 }
@@ -230,7 +230,7 @@
 .mainTab {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--spacing-sm);
   padding: 14px 24px;
   background: transparent;
   color: var(--color-text-secondary);
@@ -297,7 +297,7 @@
 /* Табы */
 .tabs {
   display: flex;
-  gap: 8px;
+  gap: var(--spacing-sm);
   margin-bottom: 2rem;
   border-bottom: 2px solid var(--color-border);
 }
@@ -305,7 +305,7 @@
 .tab {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--spacing-sm);
   padding: 12px 24px;
   background: transparent;
   color: var(--color-text-secondary);
@@ -374,7 +374,7 @@
   background: rgba(0, 0, 0, 0.7);
   color: white;
   border-radius: var(--radius-md);
-  font-size: 12px;
+  font-size: var(--font-size-xs);
   font-weight: 600;
 }
 
@@ -418,7 +418,7 @@
 .productStat {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--spacing-xs);
   font-size: 13px;
   color: var(--color-text-secondary);
 }
@@ -429,7 +429,7 @@
 
 .productActions {
   display: flex;
-  gap: 8px;
+  gap: var(--spacing-sm);
   justify-content: flex-end;
 }
 
@@ -500,7 +500,7 @@
 }
 
 /* Адаптивность */
-@media (max-width: 1024px) {
+@include desktop {
   .statsGrid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -510,7 +510,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@include tablet {
   .profilePage {
     min-height: calc(100vh - 60px);
   }
@@ -580,7 +580,7 @@
   }
 
   .mainTabs {
-    gap: 4px;
+    gap: var(--spacing-xs);
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
@@ -592,18 +592,18 @@
 
   .mainTab {
     padding: 12px 16px;
-    font-size: 14px;
+    font-size: var(--font-size-sm);
     white-space: nowrap;
   }
 
   .tabs {
-    gap: 4px;
+    gap: var(--spacing-xs);
     overflow-x: auto;
   }
 
   .tab {
     padding: 10px 16px;
-    font-size: 14px;
+    font-size: var(--font-size-sm);
     white-space: nowrap;
   }
 

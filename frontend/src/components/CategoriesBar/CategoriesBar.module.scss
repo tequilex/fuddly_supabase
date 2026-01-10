@@ -1,64 +1,60 @@
 @import '../../styles/variables';
+
 .categoriesBar {
   background: var(--color-bg-primary);
   border-bottom: 1px solid var(--color-border);
-  padding: 1.25rem 0;
+  padding: var(--spacing-lg) 0;
+
+  @include tablet {
+    padding: var(--spacing-md) 0;
+  }
 }
 
 .container {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 var(--spacing-2xl);
+
+  @include tablet {
+    padding: 0;
+  }
 }
 
 .scrollWrapper {
   overflow: hidden;
+
+  @include tablet {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+}
+
+.scrollWrapper::-webkit-scrollbar {
+  @include tablet {
+    display: none;
+  }
 }
 
 .categoriesGrid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(2, 1fr);
-  gap: 0.75rem;
-}
+  gap: var(--spacing-sm);
 
-/* Мобильная версия */
-@media (max-width: 768px) {
-  .categoriesBar {
-    padding: 1rem 0;
-  }
-
-  .container {
-    padding: 0;
-  }
-
-  .scrollWrapper {
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE and Edge */
-  }
-
-  .scrollWrapper::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
-  }
-
-  .categoriesGrid {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(85px, 1fr));
-    grid-template-rows: repeat(2, 1fr);
-    gap: 0.625rem;
-    padding: 0 1rem;
-    width: max-content;
-  }
-}
-
-/* Планшетная версия */
-@media (min-width: 769px) and (max-width: 1024px) {
-  .categoriesGrid {
+  @include desktop-only {
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    gap: 0.625rem;
+    gap: 10px;
+  }
+
+  @include tablet {
+    grid-template-columns: repeat(5, minmax(85px, 1fr));
+    grid-template-rows: repeat(2, 1fr);
+    gap: 10px;
+    padding: 0 var(--spacing-md);
+    width: max-content;
   }
 }

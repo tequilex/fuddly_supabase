@@ -3,7 +3,7 @@
   background: var(--color-bg-card);
   border-radius: var(--radius-xl);
   border: 1px solid var(--color-border);
-  padding: 2rem;
+  padding: var(--spacing-lg);
 }
 
 .sectionTitle {
@@ -20,28 +20,28 @@
   margin: 0;
 }
 
-@media (max-width: 1024px) {
+@include desktop {
   
 }
 
-@media (max-width: 768px) {
+@include tablet {
   .descriptionBlock {
     padding: 16px;
     border-radius: var(--radius-lg);
   }
 
   .sectionTitle {
-    font-size: 18px;
+    font-size: var(--font-size-lg);
     margin-bottom: 12px;
   }
 
   .description {
-    font-size: 14px;
+    font-size: var(--font-size-sm);
     line-height: 1.6;
   }
 }
 
-@media (max-width: 480px) {
+@include mobile {
   .descriptionBlock {
     padding: 14px;
   }

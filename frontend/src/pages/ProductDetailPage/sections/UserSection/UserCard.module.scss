@@ -10,7 +10,7 @@
   background: var(--color-bg-card);
   border-radius: var(--radius-xl);
   border: 1px solid var(--color-border);
-  padding: 1.5rem;
+  padding: var(--spacing-lg);
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
@@ -23,7 +23,7 @@
 
 .chefProfile {
   display: flex;
-  gap: 1rem;
+  gap: var(--spacing-md);
   align-items: flex-start;
 }
 
@@ -56,7 +56,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
-  padding: 0.375rem 0.75rem;
+  padding: var(--spacing-sm) 0.75rem;
   background: rgba(230, 126, 80, 0.1);
   color: var(--color-accent-primary);
   border-radius: var(--radius-full);
@@ -67,7 +67,7 @@
 
 .chefStats {
   display: flex;
-  gap: 1rem;
+  gap: var(--spacing-md);
   flex-wrap: wrap;
 }
 
@@ -92,7 +92,7 @@
 
 .viewChefButton {
   width: 100%;
-  padding: 0.875rem;
+  padding: var(--spacing-lg);
   border: 1.5px solid var(--color-border);
   background: transparent;
   color: var(--color-text-primary);
@@ -109,7 +109,7 @@
   background: rgba(230, 126, 80, 0.05);
 }
 
-@media (max-width: 768px) {
+@include tablet {
   .chefCard {
     padding: 16px;
     gap: 12px;
@@ -122,7 +122,7 @@
   }
 
   .chefName {
-    font-size: 18px;
+    font-size: var(--font-size-lg);
     margin-bottom: 6px;
   }
 
@@ -133,7 +133,7 @@
   }
 
   .chefStat {
-    font-size: 12px;
+    font-size: var(--font-size-xs);
   }
 
   .chefBio {
@@ -141,7 +141,7 @@
   }
 }
 
-@media (max-width: 480px) {
+@include mobile {
   .chefProfile {
     gap: 12px;
   }
