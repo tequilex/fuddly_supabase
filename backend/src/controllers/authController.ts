@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import { z } from 'zod';
 import { supabase } from '../supabase';
+import { logLoginAttempt } from '../utils/loginLogger';
+import { getClientIp, getUserAgent } from '../utils/requestHelpers';
 
 // Валидация схем с помощью Zod
 const registerSchema = z.object({
@@ -73,6 +75,9 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 
 // Авторизация пользователя
 export const login = async (req: Request, res: Response): Promise<void> => {
+  const ipAddress = getClientIp(req);
+  const userAgent = getUserAgent(req);
+
   try {
     const data = loginSchema.parse(req.body);
 
@@ -83,11 +88,31 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     });
 
     if (authError) {
+      // LOG FAILURE: Invalid credentials
+      logLoginAttempt({
+        userId: null,
+        email: data.email,
+        status: 'failed',
+        failureReason: 'Invalid credentials',
+        ipAddress,
+        userAgent,
+      }).catch(err => console.error('Background logging error:', err));
+
       res.status(401).json({ error: 'Invalid credentials' });
       return;
     }
 
     if (!authData.user) {
+      // LOG FAILURE: Auth succeeded but no user object
+      logLoginAttempt({
+        userId: null,
+        email: data.email,
+        status: 'failed',
+        failureReason: 'Authentication returned no user',
+        ipAddress,
+        userAgent,
+      }).catch(err => console.error('Background logging error:', err));
+
       res.status(401).json({ error: 'Invalid credentials' });
       return;
     }
@@ -100,15 +125,44 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       .single();
 
     if (userError || !userData) {
+      // LOG FAILURE: User exists in auth but not in users table
+      logLoginAttempt({
+        userId: authData.user.id,
+        email: data.email,
+        status: 'failed',
+        failureReason: 'User not found in database',
+        ipAddress,
+        userAgent,
+      }).catch(err => console.error('Background logging error:', err));
+
       res.status(404).json({ error: 'User not found' });
       return;
     }
 
     // Проверка статуса
     if (userData.status === 'BLOCKED') {
+      // LOG FAILURE: Account blocked
+      logLoginAttempt({
+        userId: userData.id,
+        email: data.email,
+        status: 'failed',
+        failureReason: 'Account is blocked',
+        ipAddress,
+        userAgent,
+      }).catch(err => console.error('Background logging error:', err));
+
       res.status(403).json({ error: 'Account is blocked' });
       return;
     }
+
+    // LOG SUCCESS: Everything passed
+    logLoginAttempt({
+      userId: userData.id,
+      email: data.email,
+      status: 'success',
+      ipAddress,
+      userAgent,
+    }).catch(err => console.error('Background logging error:', err));
 
     res.json({
       user: userData,
@@ -116,10 +170,31 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
+      // LOG FAILURE: Validation error
+      logLoginAttempt({
+        userId: null,
+        email: req.body.email || 'unknown',
+        status: 'failed',
+        failureReason: `Validation error: ${JSON.stringify(error.errors)}`,
+        ipAddress,
+        userAgent,
+      }).catch(err => console.error('Background logging error:', err));
+
       res.status(400).json({ error: 'Validation error', details: error.errors });
       return;
     }
     console.error('Login error:', error);
+
+    // LOG FAILURE: Unexpected server error
+    logLoginAttempt({
+      userId: null,
+      email: req.body.email || 'unknown',
+      status: 'failed',
+      failureReason: 'Internal server error',
+      ipAddress,
+      userAgent,
+    }).catch(err => console.error('Background logging error:', err));
+
     res.status(500).json({ error: 'Internal server error' });
   }
 };

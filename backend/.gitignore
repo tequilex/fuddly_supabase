@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.env
+*.log
+
+# MaxMind GeoIP database files
+data/geoip/*.mmdb
+data/geoip/*.tar.gz

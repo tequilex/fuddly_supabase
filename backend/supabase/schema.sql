@@ -208,3 +208,65 @@ CREATE POLICY "Users can delete their own images"
 ON storage.objects FOR DELETE
 TO authenticated
 USING (bucket_id = 'product-images');
+
+-- ═══════════════════════════════════════════════════════════════════════════
+-- LOGIN LOGGING SYSTEM
+-- ═══════════════════════════════════════════════════════════════════════════
+
+-- Login status enum
+CREATE TYPE login_status AS ENUM ('success', 'failed');
+
+-- Login logs table for tracking authentication attempts
+CREATE TABLE IF NOT EXISTS login_logs (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  email TEXT NOT NULL,
+  login_status login_status NOT NULL,
+  failure_reason TEXT,
+  ip_address TEXT,
+  user_agent TEXT,
+  country TEXT,
+  city TEXT,
+  isp TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Indexes for login_logs table
+CREATE INDEX IF NOT EXISTS idx_login_logs_user_id ON login_logs(user_id);
+CREATE INDEX IF NOT EXISTS idx_login_logs_created_at ON login_logs(created_at);
+CREATE INDEX IF NOT EXISTS idx_login_logs_status ON login_logs(login_status);
+CREATE INDEX IF NOT EXISTS idx_login_logs_email ON login_logs(email);
+CREATE INDEX IF NOT EXISTS idx_login_logs_user_created ON login_logs(user_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_login_logs_isp ON login_logs(isp);
+
+-- Comments for documentation
+COMMENT ON COLUMN login_logs.isp IS 'Internet Service Provider name (e.g., "Google LLC", "Rostelecom")';
+
+-- ═══════════════════════════════════════════════════════════════════════════
+-- AUTOMATIC LOG CLEANUP
+-- Автоматическая очистка логов старше 30 дней
+-- ═══════════════════════════════════════════════════════════════════════════
+
+-- Enable pg_cron extension (доступно в Supabase)
+CREATE EXTENSION IF NOT EXISTS pg_cron;
+
+-- Функция для очистки старых логов
+CREATE OR REPLACE FUNCTION cleanup_old_login_logs()
+RETURNS void AS $$
+BEGIN
+  DELETE FROM login_logs
+  WHERE created_at < NOW() - INTERVAL '30 days';
+END;
+$$ LANGUAGE plpgsql;
+
+-- Автоматический запуск очистки каждый день в 2:00 AM
+-- Синтаксис: 'minute hour day month weekday'
+SELECT cron.schedule(
+  'cleanup-old-login-logs',  -- Имя задачи
+  '0 2 * * *',               -- Каждый день в 2:00 AM
+  'SELECT cleanup_old_login_logs();'
+);
+
+-- Для проверки статуса задачи:
+-- SELECT * FROM cron.job;
+-- SELECT * FROM cron.job_run_details WHERE jobid = (SELECT jobid FROM cron.job WHERE jobname = 'cleanup-old-login-logs') ORDER BY start_time DESC LIMIT 10;

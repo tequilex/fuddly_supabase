@@ -79,3 +79,21 @@ export interface Report {
   created_at: string;
   updated_at: string;
 }
+
+export type LoginStatus = 'success' | 'failed';
+
+export interface LoginLog {
+  id: string;
+  user_id: string | null;
+  email: string;
+  login_status: LoginStatus;
+  failure_reason: string | null;
+  ip_address: string | null;
+  user_agent: string | null;
+  country: string | null;
+  city: string | null;
+  isp: string | null;
+  asn: number | null;
+  connection_type: string | null;
+  created_at: string;
+}

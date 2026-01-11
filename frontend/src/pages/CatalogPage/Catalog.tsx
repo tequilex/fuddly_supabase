@@ -22,7 +22,7 @@ export default function Catalog() {
     maxPrice: 100000000, // Большое значение по умолчанию чтобы показывать все товары
     minRating: 'all',
   });
-  const itemsPerPage = 8;
+  const itemsPerPage = 100;
 
   // Загрузка товаров при монтировании
   useEffect(() => {
