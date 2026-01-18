@@ -1,7 +1,7 @@
 {
   "name": "fuddly-frontend",
   "version": "1.0.0",
-  "description": "Fuddly B2B Marketplace Frontend",
+  "description": "Fuddly Marketplace",
   "type": "module",
   "scripts": {
     "dev": "vite",
