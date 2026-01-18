@@ -1,10 +1,12 @@
 import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import { createServer } from 'http';
 import authRoutes from './routes/auth';
 import productRoutes from './routes/products';
 import leadRoutes from './routes/leads';
 import messageRoutes from './routes/messages';
+import { initializeSocket } from './socket';
 
 // Загрузка переменных окружения
 dotenv.config();
@@ -42,8 +44,13 @@ app.use((err: any, req: Request, res: Response, next: any) => {
   });
 });
 
+// Create HTTP server and initialize Socket.io
+const httpServer = createServer(app);
+const io = initializeSocket(httpServer);
+
 // Start server
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
   console.log(`🚀 Fuddly Backend running on http://localhost:${PORT}`);
   console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`🔌 Socket.io server initialized`);
 });
