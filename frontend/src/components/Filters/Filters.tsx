@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { SlidersHorizontal } from 'lucide-react';
+import { CATEGORY_NAMES } from '../../constants';
 import { useScrollLock } from '../../hooks/useScrollLock';
 import styles from './Filters.module.scss';
 
@@ -23,24 +24,6 @@ export function Filters({ onFilterChange }: FiltersProps) {
 
   // Блокировка скролла body когда панель фильтров открыта
   useScrollLock(showMobileFilters);
-
-  const categories = [
-    'Супы',
-    'Основные блюда',
-    'Салаты',
-    'Выпечка',
-    'Десерты',
-    'Напитки',
-  ];
-
-  const cuisines = [
-    'Русская',
-    'Итальянская',
-    'Азиатская',
-    'Грузинская',
-    'Европейская',
-    'Вегетарианская',
-  ];
 
   const handleCategoryToggle = (category: string) => {
     const newCategories = selectedCategories.includes(category)
@@ -99,7 +82,7 @@ export function Filters({ onFilterChange }: FiltersProps) {
       <div className={styles.section}>
         <div className={styles.sectionTitle}>Категория</div>
         <div className={styles.checkboxGroup}>
-          {categories.map(category => (
+          {CATEGORY_NAMES.map(category => (
             <label key={category} className={styles.checkbox}>
               <input
                 type="checkbox"
@@ -107,22 +90,6 @@ export function Filters({ onFilterChange }: FiltersProps) {
                 onChange={() => handleCategoryToggle(category)}
               />
               <span>{category}</span>
-            </label>
-          ))}
-        </div>
-      </div>
-
-      <div className={styles.section}>
-        <div className={styles.sectionTitle}>Кухня</div>
-        <div className={styles.checkboxGroup}>
-          {cuisines.map(cuisine => (
-            <label key={cuisine} className={styles.checkbox}>
-              <input
-                type="checkbox"
-                checked={selectedCuisines.includes(cuisine)}
-                onChange={() => handleCuisineToggle(cuisine)}
-              />
-              <span>{cuisine}</span>
             </label>
           ))}
         </div>

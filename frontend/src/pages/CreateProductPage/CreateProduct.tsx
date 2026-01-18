@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Upload,
   X,
@@ -12,6 +12,7 @@ import {
   Users,
   Check
 } from 'lucide-react';
+import { CATEGORY_NAMES } from '../../constants';
 import { storage, validateImageFiles } from '../../shared/api/storage';
 import styles from './CreateProduct.module.scss';
 
@@ -27,19 +28,6 @@ interface CreateProductProps {
   }) => void;
   isLoading?: boolean;
 }
-
-const categories = [
-  'Супы',
-  'Основные блюда',
-  'Салаты',
-  'Закуски',
-  'Выпечка',
-  'Торты',
-  'Десерты',
-  'Напитки',
-  'Заготовки',
-  'Другое'
-];
 
 const cuisineTypes = [
   'Русская',
@@ -441,7 +429,7 @@ export function CreateProduct({ onBack, onPublish, isLoading }: CreateProductPro
                       onChange={(e) => handleInputChange('category', e.target.value)}
                     >
                       <option value="">Выберите категорию</option>
-                      {categories.map(cat => (
+                      {CATEGORY_NAMES.map(cat => (
                         <option key={cat} value={cat}>{cat}</option>
                       ))}
                     </select>

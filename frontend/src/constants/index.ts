@@ -21,10 +21,17 @@ export const LEAD_STATUS = {
 
 // Категории товаров
 export const PRODUCT_CATEGORIES = [
-  'Выпечка',
-  'Основные блюда',
-  'Десерты',
-  'Напитки',
-  'Закуски',
-  'Другое'
+  { id: 'bakery', name: 'Выпечка' },
+  { id: 'desserts', name: 'Десерты' },
+  { id: 'snacks', name: 'Закуски' },
+  { id: 'hot-dishes', name: 'Горячие блюда' },
+  { id: 'soups', name: 'Супы' },
+  { id: 'salads', name: 'Салаты' },
+  { id: 'breakfast', name: 'Завтраки' },
+  { id: 'drinks', name: 'Напитки' },
+  { id: 'semi-finished', name: 'Полуфабрикаты' },
+  { id: 'preserves', name: 'Заготовки' },
 ] as const;
+
+// Массив только названий для форм
+export const CATEGORY_NAMES = PRODUCT_CATEGORIES.map(cat => cat.name);

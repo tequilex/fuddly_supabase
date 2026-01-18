@@ -1,25 +1,9 @@
-import React, { useState } from 'react';
-import { Search, ArrowLeft, Send, MoreVertical, Phone, Video } from 'lucide-react';
+import { useState } from 'react';
 import styles from './Messages.module.scss';
-
-interface Message {
-  id: string;
-  text: string;
-  time: string;
-  isOwn: boolean;
-}
-
-interface Chat {
-  id: string;
-  userName: string;
-  userAvatar: string;
-  lastMessage: string;
-  time: string;
-  unreadCount: number;
-  isOnline: boolean;
-  productName?: string;
-  productImage?: string;
-}
+import { MessagesList } from './sections/MessagesList/MessagesList';
+import { MessagesChat } from './sections/MessagesChat/MessagesChat';
+import type { Chat } from './sections/MessagesList/MessagesList';
+import type { Message } from './sections/MessagesChat/MessagesChat';
 
 const mockChats: Chat[] = [
   {
@@ -124,146 +108,22 @@ export function Messages({ onBack }: MessagesProps) {
   return (
     <div className={styles.messagesPage}>
       <div className={styles.container}>
-        {/* Список чатов */}
-        <div className={`${styles.chatList} ${selectedChat ? styles.chatListHidden : ''}`}>
-          <div className={styles.chatListHeader}>
-            <h1>Сообщения</h1>
-            <div className={styles.searchBox}>
-              <Search size={18} className={styles.searchIcon} />
-              <input
-                type="text"
-                placeholder="Поиск по сообщениям..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className={styles.searchInput}
-              />
-            </div>
-          </div>
+        <MessagesList
+          chats={filteredChats}
+          selectedChatId={selectedChat}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          onChatSelect={setSelectedChat}
+        />
 
-          <div className={styles.chats}>
-            {filteredChats.map(chat => (
-              <div
-                key={chat.id}
-                className={`${styles.chatItem} ${selectedChat === chat.id ? styles.chatItemActive : ''}`}
-                onClick={() => setSelectedChat(chat.id)}
-              >
-                <div className={styles.avatarWrapper}>
-                  <img src={chat.userAvatar} alt={chat.userName} className={styles.avatar} />
-                  {chat.isOnline && <span className={styles.onlineIndicator}></span>}
-                </div>
-
-                <div className={styles.chatInfo}>
-                  <div className={styles.chatHeader}>
-                    <h3 className={styles.chatName}>{chat.userName}</h3>
-                    <span className={styles.chatTime}>{chat.time}</span>
-                  </div>
-
-                  {chat.productName && (
-                    <div className={styles.productInfo}>
-                      {chat.productImage && (
-                        <img src={chat.productImage} alt={chat.productName} className={styles.productImage} />
-                      )}
-                      <span className={styles.productName}>{chat.productName}</span>
-                    </div>
-                  )}
-
-                  <div className={styles.chatFooter}>
-                    <p className={styles.lastMessage}>{chat.lastMessage}</p>
-                    {chat.unreadCount > 0 && (
-                      <span className={styles.unreadBadge}>{chat.unreadCount}</span>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Окно чата */}
-        <div className={`${styles.chatWindow} ${selectedChat ? styles.chatWindowActive : ''}`}>
-          {selectedChat && selectedChatData ? (
-            <>
-              <div className={styles.chatWindowHeader}>
-                <button className={styles.backButton} onClick={() => setSelectedChat(null)}>
-                  <ArrowLeft size={20} />
-                </button>
-
-                <div className={styles.chatUserInfo}>
-                  <div className={styles.avatarWrapper}>
-                    <img src={selectedChatData.userAvatar} alt={selectedChatData.userName} className={styles.avatar} />
-                    {selectedChatData.isOnline && <span className={styles.onlineIndicator}></span>}
-                  </div>
-                  <div>
-                    <h3 className={styles.chatUserName}>{selectedChatData.userName}</h3>
-                    <p className={styles.chatUserStatus}>
-                      {selectedChatData.isOnline ? 'В сети' : 'Не в сети'}
-                    </p>
-                  </div>
-                </div>
-
-                <div className={styles.chatActions}>
-                  <button className={styles.iconButton}>
-                    <Phone size={20} />
-                  </button>
-                  <button className={styles.iconButton}>
-                    <Video size={20} />
-                  </button>
-                  <button className={styles.iconButton}>
-                    <MoreVertical size={20} />
-                  </button>
-                </div>
-              </div>
-
-              {selectedChatData.productName && (
-                <div className={styles.productCard}>
-                  <img src={selectedChatData.productImage} alt={selectedChatData.productName} />
-                  <div className={styles.productCardInfo}>
-                    <h4>{selectedChatData.productName}</h4>
-                    <p>Обсуждение товара</p>
-                  </div>
-                  <button className={styles.productCardButton}>Открыть</button>
-                </div>
-              )}
-
-              <div className={styles.messages}>
-                {chatMessages.map(message => (
-                  <div
-                    key={message.id}
-                    className={`${styles.message} ${message.isOwn ? styles.messageOwn : styles.messageOther}`}
-                  >
-                    <div className={styles.messageBubble}>
-                      <p>{message.text}</p>
-                      <span className={styles.messageTime}>{message.time}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className={styles.messageInput}>
-                <input
-                  type="text"
-                  placeholder="Написать сообщение..."
-                  value={messageText}
-                  onChange={(e) => setMessageText(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                />
-                <button 
-                  className={styles.sendButton}
-                  onClick={handleSendMessage}
-                  disabled={!messageText.trim()}
-                >
-                  <Send size={20} />
-                </button>
-              </div>
-            </>
-          ) : (
-            <div className={styles.emptyState}>
-              <div className={styles.emptyStateIcon}>💬</div>
-              <h2>Выберите чат</h2>
-              <p>Выберите диалог из списка слева, чтобы начать общение</p>
-            </div>
-          )}
-        </div>
+        <MessagesChat
+          chat={selectedChatData || null}
+          messages={chatMessages}
+          messageText={messageText}
+          onMessageTextChange={setMessageText}
+          onSendMessage={handleSendMessage}
+          onBack={() => setSelectedChat(null)}
+        />
       </div>
     </div>
   );

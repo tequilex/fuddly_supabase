@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Croissant,
   IceCream,
@@ -10,8 +10,9 @@ import {
   Wine,
   Package,
   Archive,
-  LucideIcon
+  type LucideIcon
 } from 'lucide-react';
+import { PRODUCT_CATEGORIES } from '../../constants';
 import { CategoryTile } from '../CategoryTile/CategoryTile';
 import styles from './CategoriesBar.module.scss';
 
@@ -21,18 +22,26 @@ export interface Category {
   icon: LucideIcon;
 }
 
-const categories: Category[] = [
-  { id: 'bakery', name: 'Выпечка', icon: Croissant },
-  { id: 'desserts', name: 'Десерты', icon: IceCream },
-  { id: 'snacks', name: 'Закуски', icon: Pizza },
-  { id: 'hot-dishes', name: 'Горячие блюда', icon: Flame },
-  { id: 'soups', name: 'Супы', icon: Soup },
-  { id: 'salads', name: 'Салаты', icon: Salad },
-  { id: 'breakfast', name: 'Завтраки', icon: Coffee },
-  { id: 'drinks', name: 'Напитки', icon: Wine },
-  { id: 'semi-finished', name: 'Полуфабрикаты', icon: Package },
-  { id: 'preserves', name: 'Заготовки', icon: Archive },
-];
+// Маппинг id категорий к иконкам
+const categoryIcons: Record<string, LucideIcon> = {
+  'bakery': Croissant,
+  'desserts': IceCream,
+  'snacks': Pizza,
+  'hot-dishes': Flame,
+  'soups': Soup,
+  'salads': Salad,
+  'breakfast': Coffee,
+  'drinks': Wine,
+  'semi-finished': Package,
+  'preserves': Archive,
+};
+
+// Добавляем иконки к категориям из constants
+const categories: Category[] = PRODUCT_CATEGORIES.map(cat => ({
+  id: cat.id,
+  name: cat.name,
+  icon: categoryIcons[cat.id] || Pizza, // fallback
+}));
 
 interface CategoriesBarProps {
   onCategorySelect?: (categoryId: string | null) => void;

@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchProducts } from '../../store/slices/productsSlice';
+import { PRODUCT_CATEGORIES } from '../../constants';
 import { ProductCard } from '../../components/ProductCard/ProductCard';
 import { ProductCardSkeleton } from '../../components/skeletons';
 import { Filters, FilterState } from '../../components/Filters/Filters';
@@ -32,20 +33,6 @@ export default function Catalog() {
     dispatch(fetchProducts({ page: currentPage, limit: itemsPerPage }));
   }, [dispatch]);
 
-  // Маппинг ID категорий из CategoriesBar к названиям категорий в продуктах
-  const categoryMapping: Record<string, string> = {
-    bakery: 'Выпечка',
-    desserts: 'Десерты',
-    snacks: 'Закуски',
-    'hot-dishes': 'Основные блюда',
-    soups: 'Супы',
-    salads: 'Салаты',
-    breakfast: 'Завтраки',
-    drinks: 'Напитки',
-    'semi-finished': 'Полуфабрикаты',
-    preserves: 'Заготовки',
-  };
-
   // Обработчик выбора категории из CategoriesBar
   const handleCategorySelect = (categoryId: string | null) => {
     setSelectedCategory(categoryId);
@@ -58,7 +45,7 @@ export default function Catalog() {
 
     // Apply category filter from CategoriesBar
     if (selectedCategory) {
-      const categoryName = categoryMapping[selectedCategory];
+      const categoryName = PRODUCT_CATEGORIES.find(cat => cat.id === selectedCategory)?.name;
       // TODO: когда будет поле category в Product type, раскомментировать
       // result = result.filter(p => p.category === categoryName);
     }
