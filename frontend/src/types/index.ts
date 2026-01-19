@@ -61,19 +61,7 @@ export interface Product {
   seller: Seller; // Опционально для моков
   created_at?: string; // Опционально для моков
   updated_at?: string; // Опционально для моков
-
-
-
-
-  
-  // Поля для дизайна (временные, пока не добавлены в backend)
-  // image?: string; // Для совместимости с ProductCard
-  // chef?: { name: string; rating?: number }; // Для совместимости с ProductCard
-  // rating?: number;
-  // reviewsCount?: number;
-  // distance?: string;
 }
-
 
 export interface Message {
   id: string;

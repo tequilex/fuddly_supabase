@@ -32,6 +32,10 @@ export default function ProductDetailPage() {
     navigate(`/products/${productId}`);
   };
 
+  const handleChatClick = () => {
+    console.log('клик для перехода в чат');
+  }
+
   const handleSellerClick = () => {
     if (currentProduct?.seller_id) {
       navigate(`/seller/${currentProduct.seller_id}`);
@@ -65,6 +69,7 @@ export default function ProductDetailPage() {
       onBack={handleBack}
       onProductClick={handleProductClick}
       onSellerClick={handleSellerClick}
+      onChatClick={handleChatClick}
     />
   );
 }
