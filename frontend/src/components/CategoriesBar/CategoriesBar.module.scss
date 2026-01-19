@@ -1,0 +1,60 @@
+@import '../../styles/variables';
+
+.categoriesBar {
+  background: var(--color-bg-primary);
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--spacing-lg) 0;
+
+  @include tablet {
+    padding: var(--spacing-md) 0;
+  }
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-2xl);
+
+  @include tablet {
+    padding: 0;
+  }
+}
+
+.scrollWrapper {
+  overflow: hidden;
+
+  @include tablet {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+}
+
+.scrollWrapper::-webkit-scrollbar {
+  @include tablet {
+    display: none;
+  }
+}
+
+.categoriesGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: var(--spacing-sm);
+
+  @include desktop-only {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  @include tablet {
+    grid-template-columns: repeat(5, minmax(85px, 1fr));
+    grid-template-rows: repeat(2, 1fr);
+    gap: 10px;
+    padding: 0;
+    width: max-content;
+  }
+}

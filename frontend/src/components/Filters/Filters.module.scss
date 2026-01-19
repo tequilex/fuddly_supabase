@@ -1,0 +1,226 @@
+@import '../../styles/variables';
+
+.filters {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 100px;
+
+  @include desktop {
+    display: none !important;
+  }
+}
+
+.title {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  margin-bottom: var(--spacing-lg);
+  color: var(--color-text-primary);
+}
+
+.section {
+  margin-bottom: var(--spacing-lg);
+}
+
+.section:last-child {
+  margin-bottom: 0;
+}
+
+.sectionTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+  color: var(--color-text-primary);
+}
+
+.checkboxGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  cursor: pointer;
+}
+
+.checkbox input {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--color-accent-primary);
+}
+
+.checkbox label {
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+}
+
+.rangeInput {
+  width: 100%;
+  margin-top: var(--spacing-sm);
+  accent-color: var(--color-accent-primary);
+}
+
+.rangeLabel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  margin-top: var(--spacing-sm);
+}
+
+.select {
+  width: 100%;
+  padding: var(--spacing-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.select:focus {
+  outline: none;
+  border-color: var(--color-accent-primary);
+}
+
+.resetButton {
+  width: 100%;
+  padding: var(--spacing-sm);
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  transition: all 0.2s ease;
+  margin-top: var(--spacing-md);
+}
+
+.resetButton:hover {
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+}
+
+.mobileFiltersButton {
+  display: none;
+  width: 100%;
+  padding: 0.875rem;
+  background: var(--color-bg-card);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  font-weight: 600;
+  margin-bottom: var(--spacing-md);
+  box-shadow: var(--shadow-sm);
+  position: relative;
+
+  @include desktop {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+  }
+}
+
+.mobileFiltersButton:active {
+  transform: scale(0.98);
+}
+
+.filterBadge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--color-accent-primary);
+  color: white;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  box-shadow: var(--shadow-md);
+}
+
+.mobileOverlay {
+  display: none;
+
+  @include desktop {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    animation: fadeIn 0.2s ease;
+  }
+}
+
+.mobilePanel {
+  display: none;
+
+  @include desktop {
+    display: block;
+    position: fixed;
+    bottom: 55px;
+    left: 0;
+    right: 0;
+    background: var(--color-bg-card);
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    padding: var(--spacing-lg);
+    max-height: 50vh;
+    overflow-y: auto;
+    animation: slideUp 0.3s ease;
+    box-shadow: var(--shadow-lg);
+  }
+}
+
+.applyButton {
+  display: none;
+
+  @include desktop {
+    display: block;
+    width: 100%;
+    padding: var(--spacing-md);
+    background: var(--color-accent-primary);
+    color: white;
+    border-radius: var(--radius-lg);
+    font-weight: 600;
+    margin-top: var(--spacing-md);
+    transition: all 0.2s ease;
+  }
+}
+
+.applyButton:hover {
+  background: var(--color-accent-secondary);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}

@@ -1,0 +1,35 @@
+@import '../../styles/variables';
+
+.messagesPage {
+  min-height: calc(100vh - 70px);
+  background: var(--color-bg-primary);
+  padding: 0;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  height: calc(100vh - 70px);
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  background: var(--color-bg-secondary);
+  box-shadow: var(--shadow-md);
+}
+
+/* Адаптивность */
+@include desktop {
+  .container {
+    grid-template-columns: 320px 1fr;
+  }
+}
+
+@include tablet {
+  .messagesPage {
+    min-height: calc(100vh - 60px);
+  }
+
+  .container {
+    height: calc(100vh - 60px);
+    grid-template-columns: 1fr;
+  }
+}

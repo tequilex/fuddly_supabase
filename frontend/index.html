@@ -2,23 +2,65 @@
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Fuddly - B2B маркетплейс пищевой продукции</title>
+    <link rel="icon" type="image/svg+xml" href="./icons/icon-144x144.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <!-- Primary Meta Tags -->
+    <title>Fuddly</title>
+    <meta name="title" content="Fuddly - B2B маркетплейс пищевой продукции" />
+    <meta name="description" content="Платформа для покупки и продажи домашней еды оптом. Найдите качественную продукцию от частных поваров." />
+
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#ea580c" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Fuddly" />
+    <meta name="mobile-web-app-capable" content="yes" />
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192x192.png" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-72x72.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-72x72.png" />
+
+    <!-- Preload критичных шрифтов для минимизации FOIT/FOUT -->
+    <link
+      rel="preload"
+      href="/fonts/inter/inter-v20-cyrillic_cyrillic-ext_latin_latin-ext-regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/inter/inter-v20-cyrillic_cyrillic-ext_latin_latin-ext-600.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
 
     <!-- Anti-FOUC скрипт для предотвращения мерцания при загрузке темы -->
     <script>
       (function() {
         try {
+          // Отключаем transitions при загрузке
+          document.documentElement.classList.add('no-transitions');
+
           const theme = localStorage.getItem('fuddly-theme');
-          if (theme === 'dark' || theme === 'light') {
+          if (theme === 'light' || theme === 'dark') {
             document.documentElement.setAttribute('data-theme', theme);
-          } else if (!theme || theme === 'system') {
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            if (prefersDark) {
-              document.documentElement.setAttribute('data-theme', 'dark');
-            }
           }
+          // Если темы нет - используем светлую по умолчанию (CSS :root)
+
+          // Включаем transitions после загрузки
+          window.addEventListener('load', function() {
+            document.documentElement.classList.remove('no-transitions');
+          });
         } catch (e) {}
       })();
     </script>

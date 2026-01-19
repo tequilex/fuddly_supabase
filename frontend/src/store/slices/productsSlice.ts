@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { productsApi, ProductFilters } from '../../shared/api/products';
+import { productsApi, ProductFilters, CreateProductData } from '../../shared/api/products';
 import { Product } from '../../types';
 
 interface ProductsState {
@@ -53,6 +53,17 @@ export const fetchMyProducts = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       return await productsApi.getMyProducts();
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const createProduct = createAsyncThunk(
+  'products/createProduct',
+  async (data: CreateProductData, { rejectWithValue }) => {
+    try {
+      return await productsApi.createProduct(data);
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
@@ -114,6 +125,24 @@ const productsSlice = createSlice({
         state.myProducts = action.payload;
       })
       .addCase(fetchMyProducts.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
+
+    // Create product
+    builder
+      .addCase(createProduct.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createProduct.fulfilled, (state, action) => {
+        state.loading = false;
+        // Добавляем новый товар в список моих товаров
+        state.myProducts = [action.payload, ...state.myProducts];
+        // Также добавляем в общий список
+        state.products = [action.payload, ...state.products];
+      })
+      .addCase(createProduct.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

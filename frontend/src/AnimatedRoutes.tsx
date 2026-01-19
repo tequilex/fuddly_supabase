@@ -3,13 +3,23 @@ import { AnimatePresence } from 'framer-motion';
 import { useAppSelector } from './store/hooks';
 import PageTransition from './components/PageTransition/PageTransition';
 
-// Pages
-import HomePage from './pages/home/HomePage';
-import CatalogPage from './pages/catalog/CatalogPage';
-import ProductDetailPage from './pages/product-detail/ProductDetailPage';
-import ProfilePage from './pages/profile/ProfilePage';
-import LoginPage from './pages/auth/LoginPage';
-import RegisterPage from './pages/auth/RegisterPage';
+// Новые страницы из design
+import Catalog from './pages/CatalogPage/Catalog';
+import Auth from './pages/AuthPage/Auth';
+import ProductDetailPage from './pages/ProductDetailPage/ProductDetailPage';
+import ProfilePage from './pages/ProfilePage/ProfilePage';
+import FavoritesPage from './pages/FavoritesPage/FavoritesPage';
+import MessagesPage from './pages/MessagesPage/MessagesPage';
+import SellerProfilePage from './pages/SellerProfilePage/SellerProfilePage';
+import CreateProductPage from './pages/CreateProductPage/CreateProductPage';
+
+// Временно используем заглушки для страниц, которые ещё не адаптированы
+const PlaceholderPage = ({ title }: { title: string }) => (
+  <div style={{ padding: '2rem', textAlign: 'center' }}>
+    <h1>{title}</h1>
+    <p>Страница в разработке</p>
+  </div>
+);
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -18,19 +28,12 @@ const AnimatedRoutes = () => {
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
+        {/* Публичные маршруты */}
         <Route
           path="/"
           element={
             <PageTransition>
-              <CatalogPage />
-            </PageTransition>
-          }
-        />
-        <Route
-          path="/info"
-          element={
-            <PageTransition>
-              <HomePage />
+              <Catalog />
             </PageTransition>
           }
         />
@@ -43,19 +46,23 @@ const AnimatedRoutes = () => {
           }
         />
         <Route
-          path="/login"
+          path="/seller/:id"
           element={
             <PageTransition>
-              <LoginPage />
+              <SellerProfilePage />
             </PageTransition>
           }
         />
         <Route
-          path="/register"
+          path="/auth"
           element={
-            <PageTransition>
-              <RegisterPage />
-            </PageTransition>
+            isAuthenticated ? (
+              <Navigate to="/" />
+            ) : (
+              <PageTransition>
+                <Auth />
+              </PageTransition>
+            )
           }
         />
 
@@ -68,10 +75,50 @@ const AnimatedRoutes = () => {
                 <ProfilePage />
               </PageTransition>
             ) : (
-              <Navigate to="/login" />
+              <Navigate to="/auth" />
             )
           }
         />
+        <Route
+          path="/messages"
+          element={
+            isAuthenticated ? (
+              <PageTransition>
+                <MessagesPage />
+              </PageTransition>
+            ) : (
+              <Navigate to="/auth" />
+            )
+          }
+        />
+        <Route
+          path="/favorites"
+          element={
+            isAuthenticated ? (
+              <PageTransition>
+                <FavoritesPage />
+              </PageTransition>
+            ) : (
+              <Navigate to="/auth" />
+            )
+          }
+        />
+        <Route
+          path="/create-product"
+          element={
+            isAuthenticated ? (
+              <PageTransition>
+                <CreateProductPage />
+              </PageTransition>
+            ) : (
+              <Navigate to="/auth" />
+            )
+          }
+        />
+
+        {/* Редирект старых маршрутов */}
+        <Route path="/login" element={<Navigate to="/auth" replace />} />
+        <Route path="/register" element={<Navigate to="/auth" replace />} />
       </Routes>
     </AnimatePresence>
   );

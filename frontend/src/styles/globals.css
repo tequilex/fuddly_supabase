@@ -1,0 +1,232 @@
+/* ========================================
+   CUSTOM FONTS: Inter
+   ======================================== */
+
+/* Inter Regular (400) */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/inter/inter-v20-cyrillic_cyrillic-ext_latin_latin-ext-regular.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+                 U+02DC, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+/* Inter Medium (500) */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/inter/inter-v20-cyrillic_cyrillic-ext_latin_latin-ext-500.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+                 U+02DC, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+/* Inter SemiBold (600) */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/inter/inter-v20-cyrillic_cyrillic-ext_latin_latin-ext-600.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+                 U+02DC, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+/* Inter Bold (700) */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/inter/inter-v20-cyrillic_cyrillic-ext_latin_latin-ext-700.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+                 U+02DC, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Light theme colors - более нейтральные, как у реальных маркетплейсов */
+  --color-bg-primary: #F7F7F7;
+  --color-bg-secondary: #FFFFFF;
+  --color-bg-tertiary: #F0F0F0;
+  --color-bg-card: #FFFFFF;
+  
+  --color-text-primary: #1A1A1A;
+  --color-text-secondary: #555555;
+  --color-text-tertiary: #888888;
+  
+  --color-accent-primary: #FF6B35;
+  --color-accent-secondary: #FF8555;
+  --color-accent-tertiary: #FFA575;
+  
+  --color-success: #28A745;
+  --color-warning: #FFC107;
+  --color-error: #DC3545;
+  
+  --color-border: #E0E0E0;
+  --color-border-hover: #CCCCCC;
+  
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 8px 32px rgba(0, 0, 0, 0.12);
+  
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 16px;
+  --spacing-3xl: 64px;
+
+  /* Font sizes */
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 30px;
+
+  /* Breakpoints (для документации, не используются в runtime) */
+  /* --breakpoint-xs: 480px;  - Mobile */
+  /* --breakpoint-md: 768px;  - Tablet */
+  /* --breakpoint-lg: 1024px; - Desktop */
+  /* --breakpoint-xl: 1280px; - Large Desktop */
+}
+
+[data-theme="dark"] {
+  --color-bg-primary: #1C1612;
+  --color-bg-secondary: #2A2218;
+  --color-bg-tertiary: #352D24;
+  --color-bg-card: #2A2218;
+  
+  --color-text-primary: #F5EFE7;
+  --color-text-secondary: #D4C4B0;
+  --color-text-tertiary: #A39684;
+  
+  --color-accent-primary: #E67E50;
+  --color-accent-secondary: #F09268;
+  --color-accent-tertiary: #A38B73;
+  
+  --color-success: #6BA87E;
+  --color-warning: #E8A05F;
+  --color-error: #E87A73;
+  
+  --color-border: #403830;
+  --color-border-hover: #544B40;
+  
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Отключение transitions при первой загрузке для предотвращения FOUC */
+.no-transitions,
+.no-transitions * {
+  transition: none !important;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+    'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+p {
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+input, textarea, select {
+  font-family: inherit;
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  body {
+    font-size: 13px;
+  }
+
+  /* Добавляем padding для мобильной навигации */
+  main {
+    padding-bottom: 80px;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+  
+  h2 {
+    font-size: 1.25rem;
+  }
+  
+  h3 {
+    font-size: 1.125rem;
+  }
+
+  h4 {
+    font-size: 1rem;
+  }
+
+  p, button, input, textarea, select {
+    font-size: 13px;
+  }
+}

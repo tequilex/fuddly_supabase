@@ -1,58 +1,171 @@
+@import '../../styles/variables';
+
 .header {
-  background: var(--color-background);
-  border-bottom: 1px solid var(--color-border);
-  padding: $spacing-md 0;
   position: sticky;
   top: 0;
   z-index: 100;
-  // transition уже применён глобально через * в global.scss
+  background: var(--color-bg-secondary);
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
 }
 
-.content {
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: var(--spacing-sm) var(--spacing-md);
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: var(--spacing-md);
+
+  @include tablet {
+    gap: var(--spacing-sm);
+    padding: 10px var(--spacing-sm);
+  }
 }
 
 .logo {
-  font-size: $font-size-2xl;
+  font-size: var(--font-size-2xl);
   font-weight: 700;
-  color: var(--color-primary);
+  color: var(--color-accent-primary);
   text-decoration: none;
-  // Оставляем более быстрый transition для hover-эффекта
-  transition: color 0.2s ease;
+  white-space: nowrap;
+  font-style: italic;
+  flex-shrink: 0;
 
-  &:hover {
-    color: var(--color-primary-hover);
+  @include tablet {
+    font-size: var(--font-size-xl);
+  }
+}
+
+.search {
+  flex: 1;
+  max-width: 500px;
+  position: relative;
+
+  @include desktop {
+    max-width: 300px;
+  }
+
+  @include tablet {
+    flex: 1;
+    max-width: none;
+  }
+}
+
+.searchInput {
+  width: 100%;
+  padding: 10px var(--spacing-sm) 10px 40px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+  transition: all 0.2s ease;
+  font-size: var(--font-size-sm);
+
+  @include tablet {
+    padding: var(--spacing-sm) 10px var(--spacing-sm) 36px;
+  }
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: var(--color-accent-primary);
+  background: var(--color-bg-card);
+}
+
+.searchInput::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+.searchIcon {
+  position: absolute;
+  left: var(--spacing-sm);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-tertiary);
+  pointer-events: none;
+
+  @include tablet {
+    left: 10px;
   }
 }
 
 .nav {
   display: flex;
-  gap: $spacing-lg;
   align-items: center;
+  gap: var(--spacing-sm);
+  margin-left: auto;
 
-  a {
-    font-size: $font-size-base;
-    color: var(--color-text-primary);
-    transition: color 0.2s ease;
+  @include desktop {
+    gap: var(--spacing-xs);
+  }
 
-    &:hover {
-      color: var(--color-primary);
-    }
+  @include tablet {
+    gap: var(--spacing-xs);
   }
 }
 
-.logoutBtn {
-  background: none;
-  border: none;
-  color: var(--color-text-primary);
-  font-size: $font-size-base;
-  padding: 0;
-  cursor: pointer;
-  transition: color 0.2s ease;
+.navLink {
+  padding: var(--spacing-sm) var(--spacing-sm);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  font-weight: 500;
+  font-size: var(--font-size-sm);
 
-  &:hover {
-    color: var(--color-danger);
+  @include desktop {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.9rem;
   }
+
+  @include tablet {
+    display: none;
+  }
+}
+
+.navLink:hover {
+  color: var(--color-text-primary);
+  background: var(--color-bg-tertiary);
+}
+
+.navButton {
+  padding: 10px var(--spacing-lg);
+  background: var(--color-accent-primary);
+  color: white;
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  font-weight: 600;
+  border: none;
+  font-size: var(--font-size-sm);
+}
+
+.navButton:hover {
+  background: var(--color-accent-secondary);
+}
+
+.iconButton {
+  padding: var(--spacing-sm);
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @include tablet {
+    padding: 6px;
+  }
+}
+
+.iconButton:hover {
+  color: var(--color-text-primary);
+  background: var(--color-bg-tertiary);
+}
+
+.mobileMenuButton {
+  display: none;
 }

@@ -1,44 +1,108 @@
-// Colors
-$primary-color: #2563eb;
-$primary-hover: #1d4ed8;
-$secondary-color: #10b981;
-$danger-color: #ef4444;
-$warning-color: #f59e0b;
-$text-primary: #1f2937;
-$text-secondary: #6b7280;
-$background: #ffffff;
-$background-secondary: #f9fafb;
-$border-color: #e5e7eb;
+$breakpoint-xs: 480px;   // Mobile
+$breakpoint-md: 768px;   // Tablet
+$breakpoint-lg: 1024px;  // Desktop
+$breakpoint-xl: 1280px;  // Large Desktop
 
-// Spacing
-$spacing-xs: 4px;
-$spacing-sm: 8px;
-$spacing-md: 16px;
-$spacing-lg: 24px;
-$spacing-xl: 32px;
+// ----------------------------------------------------------------------------
+// Mobile-first mixins (min-width)
+// ----------------------------------------------------------------------------
 
-// Border radius
-$border-radius-sm: 4px;
-$border-radius-md: 8px;
-$border-radius-lg: 12px;
+@mixin mobile-up {
+  @media (min-width: $breakpoint-xs + 1) {
+    @content;
+  }
+}
 
-// Shadows
-$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+@mixin tablet-up {
+  @media (min-width: $breakpoint-md + 1) {
+    @content;
+  }
+}
 
-// Breakpoints
-$breakpoint-sm: 640px;
-$breakpoint-md: 768px;
-$breakpoint-lg: 1024px;
-$breakpoint-xl: 1280px;
+@mixin desktop-up {
+  @media (min-width: $breakpoint-lg + 1) {
+    @content;
+  }
+}
 
-// Typography
-$font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-$font-size-xs: 12px;
-$font-size-sm: 14px;
-$font-size-base: 16px;
-$font-size-lg: 18px;
-$font-size-xl: 20px;
-$font-size-2xl: 24px;
-$font-size-3xl: 30px;
+@mixin large-desktop-up {
+  @media (min-width: $breakpoint-xl + 1) {
+    @content;
+  }
+}
+
+// ----------------------------------------------------------------------------
+// Desktop-first mixins (max-width) - ОСНОВНЫЕ, используем эти
+// ----------------------------------------------------------------------------
+
+@mixin mobile {
+  @media (max-width: $breakpoint-xs) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (max-width: $breakpoint-md) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (max-width: $breakpoint-lg) {
+    @content;
+  }
+}
+
+@mixin large-desktop {
+  @media (max-width: $breakpoint-xl) {
+    @content;
+  }
+}
+
+// ----------------------------------------------------------------------------
+// Range mixins (between)
+// ----------------------------------------------------------------------------
+
+@mixin tablet-only {
+  @media (min-width: $breakpoint-xs + 1) and (max-width: $breakpoint-md) {
+    @content;
+  }
+}
+
+@mixin desktop-only {
+  @media (min-width: $breakpoint-md + 1) and (max-width: $breakpoint-lg) {
+    @content;
+  }
+}
+
+// ----------------------------------------------------------------------------
+// Custom range mixin
+// ----------------------------------------------------------------------------
+
+@mixin respond-between($min, $max) {
+  @media (min-width: $min) and (max-width: $max) {
+    @content;
+  }
+}
+
+// ============================================================================
+// USAGE EXAMPLES:
+// ============================================================================
+//
+// .header {
+//   padding: var(--spacing-lg);  // Из globals.css
+//
+//   @include desktop {            // Из variables.scss
+//     padding: var(--spacing-md);
+//   }
+//
+//   @include tablet {
+//     padding: var(--spacing-sm);
+//   }
+//
+//   @include mobile {
+//     padding: var(--spacing-xs);
+//   }
+// }
+//
+// ============================================================================

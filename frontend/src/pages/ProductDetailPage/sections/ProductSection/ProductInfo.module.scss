@@ -1,0 +1,117 @@
+@import '../../../../styles/variables';
+.productMainInfo {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border);
+  padding: var(--spacing-lg);
+}
+
+.categoryBadge {
+  display: inline-block;
+  padding: var(--spacing-sm) 1rem;
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: var(--spacing-md);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.productTitle {
+  font-size: 2rem;
+  margin: 0 0 1rem 0;
+  color: var(--color-text-primary);
+}
+
+.productMeta {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  color: var(--color-accent-primary);
+}
+
+.ratingValue {
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: var(--color-text-primary);
+}
+
+.reviewsCount {
+  color: var(--color-text-tertiary);
+  font-size: 0.95rem;
+}
+
+.productDetails {
+  display: flex;
+  gap: var(--spacing-lg);
+}
+
+.detailItem {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  color: var(--color-text-secondary);
+  font-size: 0.95rem;
+}
+
+.detailItem svg {
+  color: var(--color-accent-primary);
+}
+
+@include tablet {
+  .productMainInfo {
+    padding: 16px;
+    border-radius: var(--radius-lg);
+  }
+}
+
+@include tablet {
+  .categoryBadge {
+    font-size: 11px;
+    padding: 6px 12px;
+    margin-bottom: 10px;
+  }
+
+  .productTitle {
+    font-size: var(--font-size-xl);
+    margin-bottom: 10px;
+  }
+
+  .productMeta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .ratingValue {
+    font-size: var(--font-size-base);
+  }
+
+  .reviewsCount {
+    font-size: 13px;
+  }
+
+  .productDetails {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .detailItem {
+    font-size: 13px;
+  }
+}
+
+@include mobile {
+  .productMainInfo {
+    padding: 14px;
+  }
+}

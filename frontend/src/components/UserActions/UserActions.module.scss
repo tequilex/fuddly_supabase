@@ -1,0 +1,299 @@
+@import '../../styles/variables';
+
+.userActions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+
+  @include tablet {
+    display: none;
+  }
+}
+
+/* Кнопка авторизации */
+.authButton {
+  padding: 10px var(--spacing-lg);
+  background: var(--color-accent-primary);
+  color: white;
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  font-weight: 600;
+  border: none;
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+}
+
+.authButton:hover {
+  background: var(--color-accent-secondary);
+}
+
+/* Кнопка добавить объявление */
+.addButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px var(--spacing-md);
+  background: var(--color-accent-primary);
+  color: white;
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  font-weight: 600;
+  border: none;
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+
+  @include desktop {
+    padding: var(--spacing-sm);
+  }
+}
+
+.addButton:hover {
+  background: var(--color-accent-secondary);
+}
+
+.buttonText {
+  display: inline;
+
+  @include desktop {
+    display: none;
+  }
+}
+
+/* Иконочные кнопки */
+.iconButton {
+  position: relative;
+  padding: var(--spacing-sm);
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.iconButton:hover {
+  color: var(--color-text-primary);
+  background: var(--color-bg-tertiary);
+}
+
+/* Бейдж для уведомлений */
+.badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: var(--color-error);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 5px;
+  border-radius: 10px;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+/* Кнопка профиля */
+.userMenuWrapper {
+  position: relative;
+}
+
+.userButton {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: 6px var(--spacing-sm) 6px 6px;
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+  border-radius: var(--radius-full);
+  transition: all 0.2s ease;
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+
+  @include desktop {
+    padding: 6px;
+    border-radius: 50%;
+  }
+}
+
+.userButton:hover {
+  background: var(--color-bg-card);
+  border-color: var(--color-border-hover);
+}
+
+.userAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--color-accent-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.userNameContainer {
+  min-width: 80px;
+  max-width: 120px;
+
+  @include desktop {
+    display: none;
+  }
+}
+
+.userName {
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+}
+
+.chevron {
+  transition: transform 0.2s ease;
+  color: var(--color-text-tertiary);
+  flex-shrink: 0;
+
+  @include desktop {
+    display: none;
+  }
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+/* Overlay */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 99;
+}
+
+/* Выпадающее меню */
+.userMenu {
+  position: absolute;
+  top: calc(100% + var(--spacing-sm));
+  right: 0;
+  min-width: 240px;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  padding: var(--spacing-sm);
+  z-index: 100;
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.userMenuHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-sm);
+}
+
+.userMenuAvatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--color-accent-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.userMenuName {
+  font-weight: 600;
+  color: var(--color-text-primary);
+  font-size: 15px;
+  margin-bottom: 2px;
+}
+
+.userMenuRole {
+  font-size: 13px;
+  color: var(--color-text-tertiary);
+}
+
+.userMenuDivider {
+  height: 1px;
+  background: var(--color-border);
+  margin: var(--spacing-sm) 0;
+}
+
+.userMenuItem {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: 10px var(--spacing-sm);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.userMenuItem:hover {
+  background: var(--color-bg-tertiary);
+}
+
+.userMenuItem svg {
+  color: var(--color-text-tertiary);
+  flex-shrink: 0;
+}
+
+.logoutItem {
+  color: var(--color-error);
+}
+
+.logoutItem svg {
+  color: var(--color-error);
+}
+
+.logoutItem:hover {
+  background: rgba(220, 53, 69, 0.1);
+}
+
+.menuBadge {
+  margin-left: auto;
+  background: var(--color-error);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 10px;
+  min-width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
