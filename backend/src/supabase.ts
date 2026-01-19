@@ -50,8 +50,18 @@ export interface Product {
   updated_at: string;
 }
 
+export interface Conversation {
+  id: string;
+  product_id: string;
+  buyer_id: string;
+  seller_id: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Message {
   id: string;
+  conversation_id?: string;
   sender_id: string;
   receiver_id: string;
   text: string;
