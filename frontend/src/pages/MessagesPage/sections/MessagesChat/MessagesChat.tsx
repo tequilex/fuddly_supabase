@@ -1,17 +1,11 @@
 import { ArrowLeft, Send, MoreVertical, Phone, Video } from 'lucide-react';
 import styles from './MessagesChat.module.scss';
-import type { Chat } from '../MessagesList/MessagesList';
-
-export interface Message {
-  id: string;
-  text: string;
-  time: string;
-  isOwn: boolean;
-}
+import type { ChatConversation, Message } from '@/types';
 
 interface MessagesChatProps {
-  chat: Chat | null;
+  chat: ChatConversation | null;
   messages: Message[];
+  currentUserId: string; // ID текущего пользователя для определения своих сообщений
   messageText: string;
   onMessageTextChange: (text: string) => void;
   onSendMessage: () => void;
@@ -21,6 +15,7 @@ interface MessagesChatProps {
 export function MessagesChat({
   chat,
   messages,
+  currentUserId,
   messageText,
   onMessageTextChange,
   onSendMessage,
@@ -44,6 +39,8 @@ export function MessagesChat({
     );
   }
 
+  const isOnline = chat.user.status === 'ACTIVE';
+
   return (
     <div className={`${styles.chatWindow} ${chat ? styles.chatWindowActive : ''}`}>
       <div className={styles.chatWindowHeader}>
@@ -53,13 +50,13 @@ export function MessagesChat({
 
         <div className={styles.chatUserInfo}>
           <div className={styles.avatarWrapper}>
-            <img src={chat.userAvatar} alt={chat.userName} className={styles.avatar} />
-            {chat.isOnline && <span className={styles.onlineIndicator}></span>}
+            <img src={chat.user.avatar || '/default-avatar.png'} alt={chat.user.name} className={styles.avatar} />
+            {isOnline && <span className={styles.onlineIndicator}></span>}
           </div>
           <div>
-            <h3 className={styles.chatUserName}>{chat.userName}</h3>
+            <h3 className={styles.chatUserName}>{chat.user.name}</h3>
             <p className={styles.chatUserStatus}>
-              {chat.isOnline ? 'В сети' : 'Не в сети'}
+              {isOnline ? 'В сети' : 'Не в сети'}
             </p>
           </div>
         </div>
@@ -77,11 +74,11 @@ export function MessagesChat({
         </div>
       </div>
 
-      {chat.productName && (
+      {chat.product && (
         <div className={styles.productCard}>
-          <img src={chat.productImage} alt={chat.productName} />
+          <img src={chat.product.images[0]} alt={chat.product.title} />
           <div className={styles.productCardInfo}>
-            <h4>{chat.productName}</h4>
+            <h4>{chat.product.title}</h4>
             <p>Обсуждение товара</p>
           </div>
           <button className={styles.productCardButton}>Открыть</button>
@@ -89,17 +86,25 @@ export function MessagesChat({
       )}
 
       <div className={styles.messages}>
-        {messages.map(message => (
-          <div
-            key={message.id}
-            className={`${styles.message} ${message.isOwn ? styles.messageOwn : styles.messageOther}`}
-          >
-            <div className={styles.messageBubble}>
-              <p>{message.text}</p>
-              <span className={styles.messageTime}>{message.time}</span>
+        {messages.map(message => {
+          const isOwn = message.sender_id === currentUserId;
+          const messageTime = new Date(message.created_at).toLocaleTimeString('ru-RU', {
+            hour: '2-digit',
+            minute: '2-digit'
+          });
+
+          return (
+            <div
+              key={message.id}
+              className={`${styles.message} ${isOwn ? styles.messageOwn : styles.messageOther}`}
+            >
+              <div className={styles.messageBubble}>
+                <p>{message.text}</p>
+                <span className={styles.messageTime}>{messageTime}</span>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <div className={styles.messageInput}>

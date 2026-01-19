@@ -1,20 +1,9 @@
 import { Search } from 'lucide-react';
 import styles from './MessagesList.module.scss';
-
-export interface Chat {
-  id: string;
-  userName: string;
-  userAvatar: string;
-  lastMessage: string;
-  time: string;
-  unreadCount: number;
-  isOnline: boolean;
-  productName?: string;
-  productImage?: string;
-}
+import type { ChatConversation } from '@/types';
 
 interface MessagesListProps {
-  chats: Chat[];
+  chats: ChatConversation[];
   selectedChatId: string | null;
   searchQuery: string;
   onSearchChange: (query: string) => void;
@@ -45,41 +34,48 @@ export function MessagesList({
       </div>
 
       <div className={styles.chats}>
-        {chats.map(chat => (
-          <div
-            key={chat.id}
-            className={`${styles.chatItem} ${selectedChatId === chat.id ? styles.chatItemActive : ''}`}
-            onClick={() => onChatSelect(chat.id)}
-          >
-            <div className={styles.avatarWrapper}>
-              <img src={chat.userAvatar} alt={chat.userName} className={styles.avatar} />
-              {chat.isOnline && <span className={styles.onlineIndicator}></span>}
-            </div>
+        {chats.map(chat => {
+          const isOnline = chat.user.status === 'ACTIVE';
+          const lastMessageTime = chat.lastMessage
+            ? new Date(chat.lastMessage.created_at).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })
+            : '';
 
-            <div className={styles.chatInfo}>
-              <div className={styles.chatHeader}>
-                <h3 className={styles.chatName}>{chat.userName}</h3>
-                <span className={styles.chatTime}>{chat.time}</span>
+          return (
+            <div
+              key={chat.id}
+              className={`${styles.chatItem} ${selectedChatId === chat.id ? styles.chatItemActive : ''}`}
+              onClick={() => onChatSelect(chat.id)}
+            >
+              <div className={styles.avatarWrapper}>
+                <img src={chat.user.avatar || '/default-avatar.png'} alt={chat.user.name} className={styles.avatar} />
+                {isOnline && <span className={styles.onlineIndicator}></span>}
               </div>
 
-              {chat.productName && (
-                <div className={styles.productInfo}>
-                  {chat.productImage && (
-                    <img src={chat.productImage} alt={chat.productName} className={styles.productImage} />
-                  )}
-                  <span className={styles.productName}>{chat.productName}</span>
+              <div className={styles.chatInfo}>
+                <div className={styles.chatHeader}>
+                  <h3 className={styles.chatName}>{chat.user.name}</h3>
+                  <span className={styles.chatTime}>{lastMessageTime}</span>
                 </div>
-              )}
 
-              <div className={styles.chatFooter}>
-                <p className={styles.lastMessage}>{chat.lastMessage}</p>
-                {chat.unreadCount > 0 && (
-                  <span className={styles.unreadBadge}>{chat.unreadCount}</span>
+                {chat.product && (
+                  <div className={styles.productInfo}>
+                    {chat.product.images[0] && (
+                      <img src={chat.product.images[0]} alt={chat.product.title} className={styles.productImage} />
+                    )}
+                    <span className={styles.productName}>{chat.product.title}</span>
+                  </div>
                 )}
+
+                <div className={styles.chatFooter}>
+                  <p className={styles.lastMessage}>{chat.lastMessage?.text || ''}</p>
+                  {chat.unreadCount > 0 && (
+                    <span className={styles.unreadBadge}>{chat.unreadCount}</span>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

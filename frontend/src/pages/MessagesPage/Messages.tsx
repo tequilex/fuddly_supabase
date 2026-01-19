@@ -2,96 +2,164 @@ import { useState } from 'react';
 import styles from './Messages.module.scss';
 import { MessagesList } from './sections/MessagesList/MessagesList';
 import { MessagesChat } from './sections/MessagesChat/MessagesChat';
-import type { Chat } from './sections/MessagesList/MessagesList';
-import type { Message } from './sections/MessagesChat/MessagesChat';
+import type { ChatConversation, Message } from '@/types';
+import { UserStatus } from '@/types';
 
-const mockChats: Chat[] = [
+// Временный ID текущего пользователя (позже будет из Redux)
+const CURRENT_USER_ID = 'current-user-id';
+
+const mockChats: ChatConversation[] = [
   {
-    id: '1',
-    userName: 'Мария Петрова',
-    userAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop',
-    lastMessage: 'Добрый день! Торт еще актуален?',
-    time: '14:32',
+    id: 'user-1',
+    user: {
+      id: 'user-1',
+      email: 'maria@example.com',
+      name: 'Мария Петрова',
+      avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop',
+      status: UserStatus.ACTIVE,
+      created_at: '2026-01-15T10:00:00Z',
+    },
+    lastMessage: {
+      id: 'msg-1-5',
+      sender_id: 'user-1',
+      receiver_id: CURRENT_USER_ID,
+      text: 'Добрый день! Торт еще актуален?',
+      read: false,
+      created_at: '2026-01-19T14:32:00Z',
+    },
     unreadCount: 2,
-    isOnline: true,
-    productName: 'Наполеон домашний',
-    productImage: 'https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=100&h=100&fit=crop'
+    product: {
+      id: 'product-1',
+      title: 'Наполеон домашний',
+      description: 'Классический торт Наполеон',
+      price: 1500,
+      category: 'десерты',
+      images: ['https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=100&h=100&fit=crop'],
+      region: 'Москва',
+      status: 'APPROVED' as any,
+      seller: { id: CURRENT_USER_ID, name: 'Текущий пользователь' },
+    },
   },
   {
-    id: '2',
-    userName: 'Иван Смирнов',
-    userAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop',
-    lastMessage: 'Спасибо, очень вкусно было! Закажу еще',
-    time: '13:15',
+    id: 'user-2',
+    user: {
+      id: 'user-2',
+      email: 'ivan@example.com',
+      name: 'Иван Смирнов',
+      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop',
+      status: UserStatus.ACTIVE,
+      created_at: '2026-01-14T10:00:00Z',
+    },
+    lastMessage: {
+      id: 'msg-2-4',
+      sender_id: 'user-2',
+      receiver_id: CURRENT_USER_ID,
+      text: 'Спасибо, очень вкусно было! Закажу еще',
+      read: true,
+      created_at: '2026-01-19T13:15:00Z',
+    },
     unreadCount: 0,
-    isOnline: false,
-    productName: 'Борщ украинский',
-    productImage: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=100&h=100&fit=crop'
+    product: {
+      id: 'product-2',
+      title: 'Борщ украинский',
+      description: 'Домашний борщ',
+      price: 500,
+      category: 'супы',
+      images: ['https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=100&h=100&fit=crop'],
+      region: 'Москва',
+      status: 'APPROVED' as any,
+      seller: { id: CURRENT_USER_ID, name: 'Текущий пользователь' },
+    },
   },
-  {
-    id: '3',
-    userName: 'Анна Кузнецова',
-    userAvatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop',
-    lastMessage: 'Можно заказать на завтра на 6 человек?',
-    time: '12:48',
-    unreadCount: 1,
-    isOnline: true,
-    productName: 'Пельмени домашние',
-    productImage: 'https://images.unsplash.com/photo-1548340748-6d2b7d7da280?w=100&h=100&fit=crop'
-  },
-  {
-    id: '4',
-    userName: 'Дмитрий Волков',
-    userAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop',
-    lastMessage: 'Отлично, жду заказ!',
-    time: 'Вчера',
-    unreadCount: 0,
-    isOnline: false,
-    productName: 'Хачапури по-аджарски',
-    productImage: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=100&h=100&fit=crop'
-  },
-  {
-    id: '5',
-    userName: 'Елена Соколова',
-    userAvatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop',
-    lastMessage: 'Добрый вечер! А есть возможность доставки?',
-    time: 'Вчера',
-    unreadCount: 3,
-    isOnline: false,
-    productName: 'Шарлотка яблочная',
-    productImage: 'https://images.unsplash.com/photo-1568571780765-9276ac8b75a2?w=100&h=100&fit=crop'
-  }
 ];
 
 const mockMessages: { [key: string]: Message[] } = {
-  '1': [
-    { id: '1', text: 'Здравствуйте! Интересует Наполеон', time: '14:25', isOwn: false },
-    { id: '2', text: 'Добрый день! Да, конечно. Торт свежий, испекла сегодня утром', time: '14:27', isOwn: true },
-    { id: '3', text: 'Отлично! А сколько весит?', time: '14:28', isOwn: false },
-    { id: '4', text: 'Примерно 1.5 кг, на 8-10 человек хватит', time: '14:30', isOwn: true },
-    { id: '5', text: 'Добрый день! Торт еще актуален?', time: '14:32', isOwn: false },
+  'user-1': [
+    {
+      id: 'msg-1-1',
+      sender_id: 'user-1',
+      receiver_id: CURRENT_USER_ID,
+      text: 'Здравствуйте! Интересует Наполеон',
+      read: true,
+      created_at: '2026-01-19T14:25:00Z',
+    },
+    {
+      id: 'msg-1-2',
+      sender_id: CURRENT_USER_ID,
+      receiver_id: 'user-1',
+      text: 'Добрый день! Да, конечно. Торт свежий, испекла сегодня утром',
+      read: true,
+      created_at: '2026-01-19T14:27:00Z',
+    },
+    {
+      id: 'msg-1-3',
+      sender_id: 'user-1',
+      receiver_id: CURRENT_USER_ID,
+      text: 'Отлично! А сколько весит?',
+      read: true,
+      created_at: '2026-01-19T14:28:00Z',
+    },
+    {
+      id: 'msg-1-4',
+      sender_id: CURRENT_USER_ID,
+      receiver_id: 'user-1',
+      text: 'Примерно 1.5 кг, на 8-10 человек хватит',
+      read: true,
+      created_at: '2026-01-19T14:30:00Z',
+    },
+    {
+      id: 'msg-1-5',
+      sender_id: 'user-1',
+      receiver_id: CURRENT_USER_ID,
+      text: 'Добрый день! Торт еще актуален?',
+      read: false,
+      created_at: '2026-01-19T14:32:00Z',
+    },
   ],
-  '2': [
-    { id: '1', text: 'Здравствуйте! Хочу заказать борщ', time: '10:15', isOwn: false },
-    { id: '2', text: 'Добрый день! Сколько порций?', time: '10:20', isOwn: true },
-    { id: '3', text: '4 порции, пожалуйста', time: '10:22', isOwn: false },
-    { id: '4', text: 'Спасибо, очень вкусно было! Закажу еще', time: '13:15', isOwn: false },
-  ]
+  'user-2': [
+    {
+      id: 'msg-2-1',
+      sender_id: 'user-2',
+      receiver_id: CURRENT_USER_ID,
+      text: 'Здравствуйте! Хочу заказать борщ',
+      read: true,
+      created_at: '2026-01-19T10:15:00Z',
+    },
+    {
+      id: 'msg-2-2',
+      sender_id: CURRENT_USER_ID,
+      receiver_id: 'user-2',
+      text: 'Добрый день! Сколько порций?',
+      read: true,
+      created_at: '2026-01-19T10:20:00Z',
+    },
+    {
+      id: 'msg-2-3',
+      sender_id: 'user-2',
+      receiver_id: CURRENT_USER_ID,
+      text: '4 порции, пожалуйста',
+      read: true,
+      created_at: '2026-01-19T10:22:00Z',
+    },
+    {
+      id: 'msg-2-4',
+      sender_id: 'user-2',
+      receiver_id: CURRENT_USER_ID,
+      text: 'Спасибо, очень вкусно было! Закажу еще',
+      read: true,
+      created_at: '2026-01-19T13:15:00Z',
+    },
+  ],
 };
 
-interface MessagesProps {
-  onBack?: () => void;
-  onContactClick?: (userId: string) => void;
-}
-
-export function Messages({ onBack }: MessagesProps) {
+export function Messages() {
   const [selectedChat, setSelectedChat] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [messageText, setMessageText] = useState('');
 
   const filteredChats = mockChats.filter(chat =>
-    chat.userName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    chat.productName?.toLowerCase().includes(searchQuery.toLowerCase())
+    chat.user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    chat.product?.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const selectedChatData = mockChats.find(chat => chat.id === selectedChat);
@@ -119,6 +187,7 @@ export function Messages({ onBack }: MessagesProps) {
         <MessagesChat
           chat={selectedChatData || null}
           messages={chatMessages}
+          currentUserId={CURRENT_USER_ID}
           messageText={messageText}
           onMessageTextChange={setMessageText}
           onSendMessage={handleSendMessage}

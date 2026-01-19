@@ -74,6 +74,15 @@ export interface Message {
   created_at: string;
 }
 
+// Вспомогательные типы для UI компонентов чата
+export interface ChatConversation {
+  id: string; // ID другого пользователя
+  user: User; // Собеседник
+  lastMessage?: Message; // Последнее сообщение в диалоге
+  unreadCount: number; // Количество непрочитанных сообщений
+  product?: Product; // Товар, если обсуждается товар
+}
+
 export interface Report {
   id: string;
   reporter_id: string;
