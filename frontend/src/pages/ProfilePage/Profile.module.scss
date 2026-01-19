@@ -463,9 +463,12 @@
 }
 
 .emptyIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1.5rem;
   color: var(--color-text-tertiary);
   opacity: 0.5;
-  margin-bottom: 1.5rem;
 }
 
 .emptyIcon svg {

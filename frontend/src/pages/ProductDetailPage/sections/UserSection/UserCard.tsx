@@ -6,9 +6,10 @@ import { Seller } from "@/types";
 interface UserCardProps {
   userInfo: Seller;
   toSeller: () => void;
+  toChat: () => void;
 }
 
-const UserCard = ({ userInfo, toSeller }: UserCardProps) => {
+const UserCard = ({ userInfo, toSeller, toChat }: UserCardProps) => {
   return (
     <div className={styles.chefCard}>
       <div className={styles.chefCardHeader}>
@@ -46,10 +47,14 @@ const UserCard = ({ userInfo, toSeller }: UserCardProps) => {
         {userInfo?.chefBio ||
           "Кондитер с французским образованием. Готовлю свежую выпечку каждое утро по классическим рецептам."}
       </p>
-
-      <button className={styles.viewChefButton} onClick={toSeller}>
-        Все блюда повара
-      </button>
+        <div className={styles.btnWrap}>
+          <button className={styles.actionButton} onClick={toSeller}>
+            Все товары продавца
+          </button>
+          <button className={styles.actionButton} onClick={toChat}>
+            Написать продавцу
+          </button>
+        </div>
     </div>
   );
 };

@@ -90,7 +90,13 @@
   font-size: 0.95rem;
 }
 
-.viewChefButton {
+.btnWrap {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.actionButton {
   width: 100%;
   padding: var(--spacing-lg);
   border: 1.5px solid var(--color-border);
@@ -103,7 +109,7 @@
   font-size: 0.95rem;
 }
 
-.viewChefButton:hover {
+.actionButton:hover {
   border-color: var(--color-accent-primary);
   color: var(--color-accent-primary);
   background: rgba(230, 126, 80, 0.05);
@@ -138,6 +144,11 @@
 
   .chefBio {
     font-size: 13px;
+  }
+
+  .actionButton {
+    padding: var(--spacing-sm);
+    font-size: 0.9rem;
   }
 }
 

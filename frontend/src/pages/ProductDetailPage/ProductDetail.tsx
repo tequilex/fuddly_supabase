@@ -22,12 +22,13 @@ interface ProductDetailProps {
   onBack: () => void;
   onProductClick: (productId: string) => void;
   onSellerClick: () => void;
+  onChatClick: () => void;
   product: Product; // Товар из Redux
   similarProducts?: Product[]; // Похожие товары из Redux
   similarProductsLoading?: boolean; // Загрузка похожих товаров
 }
 
-export function ProductDetail({ onBack, onProductClick, onSellerClick, product, similarProducts, similarProductsLoading = false}: ProductDetailProps) {
+export function ProductDetail({ onBack, onProductClick, onSellerClick, onChatClick, product, similarProducts, similarProductsLoading = false}: ProductDetailProps) {
   const [selectedImage, setSelectedImage] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -66,7 +67,7 @@ export function ProductDetail({ onBack, onProductClick, onSellerClick, product, 
 
           <div className={styles.sideSection}>
             <ProductInfo product={product} />
-            <UserCard userInfo={product.seller} toSeller={onSellerClick} />
+            <UserCard userInfo={product.seller} toChat={onChatClick} toSeller={onSellerClick} />
           </div>
         </div>
 
