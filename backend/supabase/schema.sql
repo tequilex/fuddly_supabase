@@ -7,7 +7,6 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- Create ENUM types
 CREATE TYPE user_status AS ENUM ('ACTIVE', 'BLOCKED', 'PENDING_VERIFICATION');
 CREATE TYPE product_status AS ENUM ('PENDING', 'APPROVED', 'REJECTED');
-CREATE TYPE lead_status AS ENUM ('PENDING', 'CONTACTED', 'CLOSED');
 CREATE TYPE report_status AS ENUM ('OPEN', 'IN_PROGRESS', 'RESOLVED', 'REJECTED');
 
 -- Users table
@@ -35,17 +34,6 @@ CREATE TABLE IF NOT EXISTS products (
   region TEXT NOT NULL,
   status product_status DEFAULT 'PENDING',
   seller_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- Leads table
-CREATE TABLE IF NOT EXISTS leads (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  product_id UUID NOT NULL REFERENCES products(id) ON DELETE CASCADE,
-  buyer_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  message TEXT,
-  status lead_status DEFAULT 'PENDING',
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -78,9 +66,6 @@ CREATE INDEX IF NOT EXISTS idx_products_seller_id ON products(seller_id);
 CREATE INDEX IF NOT EXISTS idx_products_status ON products(status);
 CREATE INDEX IF NOT EXISTS idx_products_category ON products(category);
 CREATE INDEX IF NOT EXISTS idx_products_region ON products(region);
-CREATE INDEX IF NOT EXISTS idx_leads_product_id ON leads(product_id);
-CREATE INDEX IF NOT EXISTS idx_leads_buyer_id ON leads(buyer_id);
-CREATE INDEX IF NOT EXISTS idx_leads_status ON leads(status);
 CREATE INDEX IF NOT EXISTS idx_messages_sender_id ON messages(sender_id);
 CREATE INDEX IF NOT EXISTS idx_messages_receiver_id ON messages(receiver_id);
 CREATE INDEX IF NOT EXISTS idx_messages_created_at ON messages(created_at);
@@ -104,8 +89,6 @@ CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON users
 CREATE TRIGGER update_products_updated_at BEFORE UPDATE ON products
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
-CREATE TRIGGER update_leads_updated_at BEFORE UPDATE ON leads
-  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 CREATE TRIGGER update_reports_updated_at BEFORE UPDATE ON reports
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
@@ -113,7 +96,6 @@ CREATE TRIGGER update_reports_updated_at BEFORE UPDATE ON reports
 -- Row Level Security (RLS) Policies
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE products ENABLE ROW LEVEL SECURITY;
-ALTER TABLE leads ENABLE ROW LEVEL SECURITY;
 ALTER TABLE messages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE reports ENABLE ROW LEVEL SECURITY;
 
@@ -139,20 +121,6 @@ CREATE POLICY "Users can update their own products" ON products
 
 CREATE POLICY "Users can delete their own products" ON products
   FOR DELETE USING (auth.uid() = seller_id);
-
--- Leads policies
-CREATE POLICY "Users can view their own leads" ON leads
-  FOR SELECT USING (buyer_id = auth.uid() OR product_id IN (
-    SELECT id FROM products WHERE seller_id = auth.uid()
-  ));
-
-CREATE POLICY "Users can create leads" ON leads
-  FOR INSERT WITH CHECK (auth.uid() = buyer_id);
-
-CREATE POLICY "Product sellers can update leads" ON leads
-  FOR UPDATE USING (product_id IN (
-    SELECT id FROM products WHERE seller_id = auth.uid()
-  ));
 
 -- Messages policies
 CREATE POLICY "Users can view their own messages" ON messages

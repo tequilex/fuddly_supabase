@@ -12,13 +12,6 @@ export const PRODUCT_STATUS = {
   REJECTED: 'REJECTED'
 } as const;
 
-// Статусы откликов
-export const LEAD_STATUS = {
-  PENDING: 'PENDING',
-  CONTACTED: 'CONTACTED',
-  CLOSED: 'CLOSED'
-} as const;
-
 // Категории товаров
 export const PRODUCT_CATEGORIES = [
   { id: 'bakery', name: 'Выпечка' },

@@ -21,7 +21,6 @@ export const supabase = createClient(supabaseUrl, supabaseServiceKey, {
 // Database types
 export type UserStatus = 'ACTIVE' | 'BLOCKED' | 'PENDING_VERIFICATION';
 export type ProductStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
-export type LeadStatus = 'PENDING' | 'CONTACTED' | 'CLOSED';
 export type ReportStatus = 'OPEN' | 'IN_PROGRESS' | 'RESOLVED' | 'REJECTED';
 
 export interface User {
@@ -47,16 +46,6 @@ export interface Product {
   region: string;
   status: ProductStatus;
   seller_id: string;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface Lead {
-  id: string;
-  product_id: string;
-  buyer_id: string;
-  message?: string;
-  status: LeadStatus;
   created_at: string;
   updated_at: string;
 }

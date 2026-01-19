@@ -11,12 +11,6 @@ export enum ProductStatus {
   REJECTED = 'REJECTED',
 }
 
-export enum LeadStatus {
-  PENDING = 'PENDING',
-  CONTACTED = 'CONTACTED',
-  CLOSED = 'CLOSED',
-}
-
 export enum ReportStatus {
   OPEN = 'OPEN',
   IN_PROGRESS = 'IN_PROGRESS',
@@ -34,7 +28,6 @@ export interface User {
   avatar?: string;
   status: UserStatus;
   is_admin?: boolean;
-  role?: 'buyer' | 'seller'; // Добавлено для дизайна
   created_at: string;
   updated_at?: string;
 }
@@ -81,17 +74,6 @@ export interface Product {
   // distance?: string;
 }
 
-export interface Lead {
-  id: string;
-  product_id: string;
-  product?: Product;
-  buyer_id: string;
-  buyer?: User;
-  message?: string;
-  status: LeadStatus;
-  created_at: string;
-  updated_at?: string;
-}
 
 export interface Message {
   id: string;

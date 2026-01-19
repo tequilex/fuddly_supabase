@@ -94,7 +94,6 @@ make clean      # Очистка node_modules
 ### Таблицы
 - **users** - пользователи (продавцы и покупатели)
 - **products** - товары (еда)
-- **leads** - отклики покупателей на товары
 - **messages** - личные сообщения
 - **reports** - жалобы
 
@@ -150,11 +149,6 @@ fuddly_supabase/
 - `GET /api/products/my` - мои товары
 - `PATCH /api/products/:id` - обновить
 - `DELETE /api/products/:id` - удалить
-
-### Отклики
-- `POST /api/leads` - откликнуться на товар
-- `GET /api/leads/my` - мои отклики
-- `GET /api/leads/my-products` - отклики на мои товары
 
 ### Сообщения
 - `POST /api/messages` - отправить сообщение
