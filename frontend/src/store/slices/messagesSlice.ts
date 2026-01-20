@@ -1,5 +1,6 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../index';
+import { conversationsApi } from '../../shared/api/conversations';
 
 // Интерфейс для Message
 export interface Message {
@@ -26,6 +27,28 @@ const initialState: MessagesState = {
   loading: false,
   error: null,
 };
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Async Thunks
+// ═══════════════════════════════════════════════════════════════════════════
+
+// Загрузить сообщения для conversation
+export const fetchConversationMessages = createAsyncThunk(
+  'messages/fetchConversationMessages',
+  async ({ conversationId, limit, offset }: { conversationId: string; limit?: number; offset?: number }) => {
+    const messages = await conversationsApi.getMessages(conversationId, limit, offset);
+    return { conversationId, messages };
+  }
+);
+
+// Пометить сообщения как прочитанные
+export const markMessagesAsRead = createAsyncThunk(
+  'messages/markAsRead',
+  async ({ conversationId, userId }: { conversationId: string; userId: string }) => {
+    await conversationsApi.markAsRead(conversationId, userId);
+    return conversationId;
+  }
+);
 
 // Slice
 const messagesSlice = createSlice({
@@ -109,6 +132,35 @@ const messagesSlice = createSlice({
       state.error = action.payload;
       state.loading = false;
     },
+  },
+  extraReducers: (builder) => {
+    // Загрузка сообщений
+    builder
+      .addCase(fetchConversationMessages.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchConversationMessages.fulfilled, (state, action) => {
+        const { conversationId, messages } = action.payload;
+        state.byChatId[conversationId] = messages.sort(
+          (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+        );
+        state.loading = false;
+      })
+      .addCase(fetchConversationMessages.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Failed to load messages';
+      })
+      // Пометить как прочитанное
+      .addCase(markMessagesAsRead.fulfilled, (state, action) => {
+        const conversationId = action.payload;
+        const messages = state.byChatId[conversationId];
+        if (messages) {
+          messages.forEach((msg) => {
+            msg.read = true;
+          });
+        }
+      });
   },
 });
 

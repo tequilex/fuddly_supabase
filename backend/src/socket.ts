@@ -1,6 +1,7 @@
 import { Server as SocketIOServer } from 'socket.io';
 import { Server as HTTPServer } from 'http';
-import { supabase } from './supabase';
+import { createClient } from '@supabase/supabase-js';
+import { supabaseAdmin } from './supabase';
 
 // Интерфейсы для Socket.io событий
 interface SendMessagePayload {
@@ -37,7 +38,13 @@ export function initializeSocket(httpServer: HTTPServer) {
     }
 
     try {
-      const { data: { user }, error } = await supabase.auth.getUser(token);
+      // Создаем временный клиент для проверки токена
+      const supabaseAuth = createClient(
+        process.env.SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_KEY!
+      );
+
+      const { data: { user }, error } = await supabaseAuth.auth.getUser(token);
 
       if (error || !user) {
         return next(new Error('Invalid or expired token'));
@@ -73,8 +80,8 @@ export function initializeSocket(httpServer: HTTPServer) {
           return;
         }
 
-        // 1. Вставка сообщения в базу данных
-        const { data: newMessage, error: insertError } = await supabase
+        // 1. Вставка сообщения в базу данных (используем ADMIN клиент для обхода RLS)
+        const { data: newMessage, error: insertError } = await supabaseAdmin
           .from('messages')
           .insert({
             conversation_id: conversationId,
@@ -92,8 +99,8 @@ export function initializeSocket(httpServer: HTTPServer) {
           return;
         }
 
-        // 2. Обновление updated_at в conversations
-        const { error: updateError } = await supabase
+        // 2. Обновление updated_at в conversations (также через ADMIN)
+        const { error: updateError } = await supabaseAdmin
           .from('conversations')
           .update({ updated_at: new Date().toISOString() })
           .eq('id', conversationId);

@@ -12,16 +12,31 @@ const SOCKET_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3003';
 export const useSocket = () => {
   const dispatch = useAppDispatch();
   const socketRef = useRef<Socket | null>(null);
+  const activeChatIdRef = useRef<string | null>(null);
 
   // Получаем токен и userId из Redux
   const { token, user } = useAppSelector((state) => state.auth);
   const activeChatId = useAppSelector(selectActiveChatId);
 
-  console.log(token, user);
+  // Обновляем ref при изменении activeChatId (БЕЗ пересоздания socket)
+  activeChatIdRef.current = activeChatId;
+
   useEffect(() => {
     // Если нет токена или пользователя, не подключаемся
     if (!token || !user) {
       console.log('⚠️ No token or user, skipping socket connection');
+      // Если сокет был создан ранее, отключаем его
+      if (socketRef.current) {
+        console.log('🔌 Disconnecting existing socket due to missing auth...');
+        socketRef.current.disconnect();
+        socketRef.current = null;
+      }
+      return;
+    }
+
+    // Если сокет уже существует, не создаем новый
+    if (socketRef.current) {
+      console.log('✅ Socket already exists:', socketRef.current.id);
       return;
     }
 
@@ -41,7 +56,6 @@ export const useSocket = () => {
     // ═════════════════════════════════════════════════════════════════════
     socket.on('connect', () => {
       console.log('✅ Socket connected:', socket.id);
-      toast.success('Подключено к чату');
     });
 
     // ═════════════════════════════════════════════════════════════════════
@@ -62,7 +76,7 @@ export const useSocket = () => {
       );
 
       // Если сообщение НЕ из активного чата, показываем уведомление
-      if (message.conversation_id !== activeChatId) {
+      if (message.conversation_id !== activeChatIdRef.current) {
         toast.info('Новое сообщение', {
           description: message.text.substring(0, 50) + (message.text.length > 50 ? '...' : ''),
           duration: 3000,
@@ -122,7 +136,7 @@ export const useSocket = () => {
       socket.disconnect();
       socketRef.current = null;
     };
-  }, [token, user, dispatch, activeChatId]);
+  }, [token, user, dispatch]); // activeChatId убран из зависимостей!
 
   // Функция для отправки сообщения
   const sendMessage = (payload: {

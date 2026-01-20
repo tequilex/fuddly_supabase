@@ -53,20 +53,20 @@ EXECUTE FUNCTION update_updated_at_column();
 ALTER TABLE conversations ENABLE ROW LEVEL SECURITY;
 
 -- Пользователи могут видеть разговоры, в которых они участвуют
-CREATE POLICY "Users can view their conversations" ON conversations
-  FOR SELECT USING (
-    auth.uid() = buyer_id OR auth.uid() = seller_id
-  );
+-- CREATE POLICY "Users can view their conversations" ON conversations
+--   FOR SELECT USING (
+--     auth.uid() = buyer_id OR auth.uid() = seller_id
+--   );
 
--- Пользователи могут создавать разговоры как покупатели
-CREATE POLICY "Users can create conversations as buyers" ON conversations
-  FOR INSERT WITH CHECK (auth.uid() = buyer_id);
+-- -- Пользователи могут создавать разговоры как покупатели
+-- CREATE POLICY "Users can create conversations as buyers" ON conversations
+--   FOR INSERT WITH CHECK (auth.uid() = buyer_id);
 
--- Обновлять могут только участники разговора (для updated_at)
-CREATE POLICY "Participants can update conversations" ON conversations
-  FOR UPDATE USING (
-    auth.uid() = buyer_id OR auth.uid() = seller_id
-  );
+-- -- Обновлять могут только участники разговора (для updated_at)
+-- CREATE POLICY "Participants can update conversations" ON conversations
+--   FOR UPDATE USING (
+--     auth.uid() = buyer_id OR auth.uid() = seller_id
+--   );
 
 -- ═══════════════════════════════════════════════════════════════════════════
 -- STEP 6: Update messages policies to work with conversations
@@ -77,25 +77,25 @@ CREATE POLICY "Participants can update conversations" ON conversations
 -- DROP POLICY IF EXISTS "Users can send messages" ON messages;
 
 -- Новая политика: пользователи видят сообщения из своих разговоров
-CREATE POLICY "Users can view messages from their conversations" ON messages
-  FOR SELECT USING (
-    EXISTS (
-      SELECT 1 FROM conversations
-      WHERE conversations.id = messages.conversation_id
-      AND (conversations.buyer_id = auth.uid() OR conversations.seller_id = auth.uid())
-    )
-  );
+-- CREATE POLICY "Users can view messages from their conversations" ON messages
+--   FOR SELECT USING (
+--     EXISTS (
+--       SELECT 1 FROM conversations
+--       WHERE conversations.id = messages.conversation_id
+--       AND (conversations.buyer_id = auth.uid() OR conversations.seller_id = auth.uid())
+--     )
+--   );
 
 -- Новая политика: пользователи могут отправлять сообщения в свои разговоры
-CREATE POLICY "Users can send messages in their conversations" ON messages
-  FOR INSERT WITH CHECK (
-    EXISTS (
-      SELECT 1 FROM conversations
-      WHERE conversations.id = messages.conversation_id
-      AND (conversations.buyer_id = auth.uid() OR conversations.seller_id = auth.uid())
-    )
-    AND auth.uid() = sender_id
-  );
+-- CREATE POLICY "Users can send messages in their conversations" ON messages
+--   FOR INSERT WITH CHECK (
+--     EXISTS (
+--       SELECT 1 FROM conversations
+--       WHERE conversations.id = messages.conversation_id
+--       AND (conversations.buyer_id = auth.uid() OR conversations.seller_id = auth.uid())
+--     )
+--     AND auth.uid() = sender_id
+--   );
 
 -- ═══════════════════════════════════════════════════════════════════════════
 -- NOTES / ПРИМЕЧАНИЯ

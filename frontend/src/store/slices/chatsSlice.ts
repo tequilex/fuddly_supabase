@@ -1,5 +1,6 @@
-import { createSlice, createEntityAdapter, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createEntityAdapter, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../index';
+import { conversationsApi } from '../../shared/api/conversations';
 
 // Интерфейс для Conversation
 export interface Conversation {
@@ -30,6 +31,26 @@ const initialState = chatsAdapter.getInitialState<ChatsState>({
   loading: false,
   error: null,
 });
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Async Thunks
+// ═══════════════════════════════════════════════════════════════════════════
+
+// Загрузить все чаты пользователя
+export const fetchUserChats = createAsyncThunk(
+  'chats/fetchUserChats',
+  async (userId: string) => {
+    return await conversationsApi.getUserConversations(userId);
+  }
+);
+
+// Создать или получить conversation
+export const getOrCreateConversation = createAsyncThunk(
+  'chats/getOrCreate',
+  async (data: { productId: string; buyerId: string; sellerId: string }) => {
+    return await conversationsApi.getOrCreate(data);
+  }
+);
 
 // Slice
 const chatsSlice = createSlice({
@@ -86,6 +107,27 @@ const chatsSlice = createSlice({
       state.activeChatId = null;
       state.error = null;
     },
+  },
+  extraReducers: (builder) => {
+    // Загрузка чатов
+    builder
+      .addCase(fetchUserChats.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchUserChats.fulfilled, (state, action) => {
+        chatsAdapter.setAll(state, action.payload);
+        state.loading = false;
+      })
+      .addCase(fetchUserChats.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Failed to load chats';
+      })
+      // Создание/получение conversation
+      .addCase(getOrCreateConversation.fulfilled, (state, action) => {
+        chatsAdapter.upsertOne(state, action.payload);
+        state.activeChatId = action.payload.id;
+      });
   },
 });
 

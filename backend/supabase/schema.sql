@@ -1,15 +1,48 @@
--- Fuddly Database Schema for Supabase
--- Выполните этот SQL скрипт в Supabase SQL Editor
+-- ═══════════════════════════════════════════════════════════════════════════
+-- Fuddly Database Schema (Complete All-in-One)
+-- Автор: Fuddly Team
+-- Описание: Единый скрипт для развертывания всей структуры БД
+-- Стек: Supabase (PostgreSQL)
+-- ═══════════════════════════════════════════════════════════════════════════
 
--- Enable UUID extension
+-- 1. CONFIGURATION & EXTENSIONS
+-- ═══════════════════════════════════════════════════════════════════════════
+
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
--- Create ENUM types
-CREATE TYPE user_status AS ENUM ('ACTIVE', 'BLOCKED', 'PENDING_VERIFICATION');
-CREATE TYPE product_status AS ENUM ('PENDING', 'APPROVED', 'REJECTED');
-CREATE TYPE report_status AS ENUM ('OPEN', 'IN_PROGRESS', 'RESOLVED', 'REJECTED');
+-- Типы данных (Enums)
+DO $$ BEGIN
+    CREATE TYPE user_status AS ENUM ('ACTIVE', 'BLOCKED', 'PENDING_VERIFICATION');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
--- Users table
+DO $$ BEGIN
+    CREATE TYPE product_status AS ENUM ('PENDING', 'APPROVED', 'REJECTED');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+
+DO $$ BEGIN
+    CREATE TYPE report_status AS ENUM ('OPEN', 'IN_PROGRESS', 'RESOLVED', 'REJECTED');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+
+-- Функция для обновления updated_at
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- ═══════════════════════════════════════════════════════════════════════════
+-- 2. TABLES (Создание таблиц в правильном порядке зависимостей)
+-- ═══════════════════════════════════════════════════════════════════════════
+
+-- [1] USERS
 CREATE TABLE IF NOT EXISTS users (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   email TEXT UNIQUE NOT NULL,
@@ -23,7 +56,7 @@ CREATE TABLE IF NOT EXISTS users (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Products table
+-- [2] PRODUCTS
 CREATE TABLE IF NOT EXISTS products (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   title TEXT NOT NULL,
@@ -38,17 +71,31 @@ CREATE TABLE IF NOT EXISTS products (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Messages table
+-- [3] CONVERSATIONS (Связывает покупателя, продавца и товар)
+CREATE TABLE IF NOT EXISTS conversations (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  product_id UUID NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+  buyer_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  seller_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  
+  -- Уникальность: один чат на конкретный товар между двумя людьми
+  CONSTRAINT unique_conversation UNIQUE (product_id, buyer_id, seller_id)
+);
+
+-- [4] MESSAGES (Теперь сразу ссылается на conversations)
 CREATE TABLE IF NOT EXISTS messages (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  conversation_id UUID REFERENCES conversations(id) ON DELETE CASCADE, -- Новое поле
   sender_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  receiver_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  receiver_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE, -- Можно оставить для совместимости или быстрой выборки
   text TEXT NOT NULL,
   read BOOLEAN DEFAULT false,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Reports table
+-- [5] REPORTS
 CREATE TABLE IF NOT EXISTS reports (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   reporter_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -59,47 +106,64 @@ CREATE TABLE IF NOT EXISTS reports (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Create indexes for better performance
+-- ═══════════════════════════════════════════════════════════════════════════
+-- 3. INDEXES (Для производительности)
+-- ═══════════════════════════════════════════════════════════════════════════
+
+-- Users indexes
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_users_status ON users(status);
+
+-- Products indexes
 CREATE INDEX IF NOT EXISTS idx_products_seller_id ON products(seller_id);
 CREATE INDEX IF NOT EXISTS idx_products_status ON products(status);
 CREATE INDEX IF NOT EXISTS idx_products_category ON products(category);
 CREATE INDEX IF NOT EXISTS idx_products_region ON products(region);
+
+-- Conversations indexes
+CREATE INDEX IF NOT EXISTS idx_conversations_product_id ON conversations(product_id);
+CREATE INDEX IF NOT EXISTS idx_conversations_buyer_id ON conversations(buyer_id);
+CREATE INDEX IF NOT EXISTS idx_conversations_seller_id ON conversations(seller_id);
+CREATE INDEX IF NOT EXISTS idx_conversations_updated_at ON conversations(updated_at);
+
+-- Messages indexes
+CREATE INDEX IF NOT EXISTS idx_messages_conversation_id ON messages(conversation_id);
 CREATE INDEX IF NOT EXISTS idx_messages_sender_id ON messages(sender_id);
 CREATE INDEX IF NOT EXISTS idx_messages_receiver_id ON messages(receiver_id);
 CREATE INDEX IF NOT EXISTS idx_messages_created_at ON messages(created_at);
+
+-- Reports indexes
 CREATE INDEX IF NOT EXISTS idx_reports_reporter_id ON reports(reporter_id);
 CREATE INDEX IF NOT EXISTS idx_reports_product_id ON reports(product_id);
-CREATE INDEX IF NOT EXISTS idx_reports_status ON reports(status);
 
--- Create updated_at trigger function
-CREATE OR REPLACE FUNCTION update_updated_at_column()
-RETURNS TRIGGER AS $$
-BEGIN
-  NEW.updated_at = NOW();
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+-- ═══════════════════════════════════════════════════════════════════════════
+-- 4. TRIGGERS (Автоматическое обновление updated_at)
+-- ═══════════════════════════════════════════════════════════════════════════
 
--- Add triggers for updated_at
 CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON users
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 CREATE TRIGGER update_products_updated_at BEFORE UPDATE ON products
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
+CREATE TRIGGER update_conversations_updated_at BEFORE UPDATE ON conversations
+  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 CREATE TRIGGER update_reports_updated_at BEFORE UPDATE ON reports
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
--- Row Level Security (RLS) Policies
+-- ═══════════════════════════════════════════════════════════════════════════
+-- 5. ROW LEVEL SECURITY (RLS)
+-- ═══════════════════════════════════════════════════════════════════════════
+
+-- Включаем RLS на всех таблицах
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE products ENABLE ROW LEVEL SECURITY;
+ALTER TABLE conversations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE messages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE reports ENABLE ROW LEVEL SECURITY;
 
--- Users policies
+-- --- USERS POLICIES ---
 CREATE POLICY "Users can view all active users" ON users
   FOR SELECT USING (status = 'ACTIVE');
 
@@ -109,7 +173,7 @@ CREATE POLICY "Users can update their own profile" ON users
 CREATE POLICY "Allow user registration" ON users
   FOR INSERT WITH CHECK (auth.uid() = id);
 
--- Products policies
+-- --- PRODUCTS POLICIES ---
 CREATE POLICY "Anyone can view approved products" ON products
   FOR SELECT USING (status = 'APPROVED' OR seller_id = auth.uid());
 
@@ -122,17 +186,56 @@ CREATE POLICY "Users can update their own products" ON products
 CREATE POLICY "Users can delete their own products" ON products
   FOR DELETE USING (auth.uid() = seller_id);
 
--- Messages policies
-CREATE POLICY "Users can view their own messages" ON messages
-  FOR SELECT USING (sender_id = auth.uid() OR receiver_id = auth.uid());
+-- --- CONVERSATIONS POLICIES ---
+CREATE POLICY "Users can view their conversations" ON conversations
+  FOR SELECT USING (auth.uid() = buyer_id OR auth.uid() = seller_id);
 
-CREATE POLICY "Users can send messages" ON messages
-  FOR INSERT WITH CHECK (auth.uid() = sender_id);
+CREATE POLICY "Users can create conversations as buyers" ON conversations
+  FOR INSERT WITH CHECK (auth.uid() = buyer_id);
 
-CREATE POLICY "Users can update received messages" ON messages
-  FOR UPDATE USING (auth.uid() = receiver_id);
+CREATE POLICY "Participants can update conversations" ON conversations
+  FOR UPDATE USING (auth.uid() = buyer_id OR auth.uid() = seller_id);
 
--- Reports policies
+-- --- MESSAGES POLICIES (С поддержкой conversation_id) ---
+
+-- 1. Просмотр сообщений
+CREATE POLICY "Users can view messages from their conversations" ON messages
+  FOR SELECT USING (
+    (conversation_id IS NOT NULL AND EXISTS (
+      SELECT 1 FROM conversations
+      WHERE conversations.id = messages.conversation_id
+      AND (conversations.buyer_id = auth.uid() OR conversations.seller_id = auth.uid())
+    ))
+    OR
+    (conversation_id IS NULL AND (sender_id = auth.uid() OR receiver_id = auth.uid()))
+  );
+
+-- 2. Отправка сообщений
+CREATE POLICY "Users can send messages in their conversations" ON messages
+  FOR INSERT WITH CHECK (
+    (conversation_id IS NOT NULL AND EXISTS (
+      SELECT 1 FROM conversations
+      WHERE conversations.id = messages.conversation_id
+      AND (conversations.buyer_id = auth.uid() OR conversations.seller_id = auth.uid())
+    )
+    AND auth.uid() = sender_id)
+    OR
+    (conversation_id IS NULL AND auth.uid() = sender_id)
+  );
+
+-- 3. Обновление сообщений (прочитано)
+CREATE POLICY "Users can update messages in their conversations" ON messages
+  FOR UPDATE USING (
+    (conversation_id IS NOT NULL AND EXISTS (
+      SELECT 1 FROM conversations
+      WHERE conversations.id = messages.conversation_id
+      AND (conversations.buyer_id = auth.uid() OR conversations.seller_id = auth.uid())
+    ))
+    OR
+    (conversation_id IS NULL AND receiver_id = auth.uid())
+  );
+
+-- --- REPORTS POLICIES ---
 CREATE POLICY "Users can create reports" ON reports
   FOR INSERT WITH CHECK (auth.uid() = reporter_id);
 
@@ -140,21 +243,12 @@ CREATE POLICY "Users can view their own reports" ON reports
   FOR SELECT USING (reporter_id = auth.uid());
 
 -- ═══════════════════════════════════════════════════════════════════════════
--- STORAGE POLICIES (для загрузки изображений)
+-- 6. STORAGE POLICIES
 -- ═══════════════════════════════════════════════════════════════════════════
+-- Примечание: Bucket 'product-images' должен быть создан вручную или через API.
+-- Этот SQL только настраивает права доступа.
 
--- Создание bucket для изображений продуктов
--- ВАЖНО: Это нужно выполнить через Supabase Dashboard или через их API
--- так как CREATE BUCKET не является стандартной SQL командой
---
--- Настройки bucket:
--- - Name: product-images
--- - Public: true
--- - File size limit: 5MB
--- - Allowed MIME types: image/jpeg, image/png, image/webp
-
--- Политика для загрузки изображений
--- Разрешает авторизованным пользователям загружать файлы в папку products
+-- Разрешить загрузку (Authenticated)
 CREATE POLICY "Authenticated users can upload images"
 ON storage.objects FOR INSERT
 TO authenticated
@@ -163,16 +257,19 @@ WITH CHECK (
   (storage.foldername(name))[1] = 'products'
 );
 
--- Политика для чтения изображений
--- Разрешает всем читать изображения (публичный bucket)
+-- Разрешить чтение всем (Public)
 CREATE POLICY "Public read access"
 ON storage.objects FOR SELECT
 TO public
 USING (bucket_id = 'product-images');
 
--- Политика для удаления изображений
--- Разрешает авторизованным пользователям удалять файлы
+-- Разрешить удаление (Owner)
 CREATE POLICY "Users can delete their own images"
 ON storage.objects FOR DELETE
 TO authenticated
-USING (bucket_id = 'product-images');
+USING (bucket_id = 'product-images'); -- Здесь в реальном проекте часто добавляют проверку на owner_id
+
+-- Автоматическое создание бакета
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('product-images', 'product-images', true)
+ON CONFLICT (id) DO NOTHING;

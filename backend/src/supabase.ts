@@ -10,13 +10,16 @@ if (!supabaseUrl || !supabaseServiceKey) {
   throw new Error('Missing Supabase environment variables');
 }
 
-// Supabase client with service role key (for backend operations)
-export const supabase = createClient(supabaseUrl, supabaseServiceKey, {
+// Supabase ADMIN client with service role key (bypasses RLS)
+export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
   auth: {
     autoRefreshToken: false,
     persistSession: false
   }
 });
+
+// Для обратной совместимости
+export const supabase = supabaseAdmin;
 
 // Database types
 export type UserStatus = 'ACTIVE' | 'BLOCKED' | 'PENDING_VERIFICATION';
