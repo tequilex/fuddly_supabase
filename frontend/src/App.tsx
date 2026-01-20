@@ -4,7 +4,6 @@ import { Toaster } from 'sonner';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import { getMe } from './store/slices/authSlice';
 import { useTheme } from './hooks/useTheme';
-import { useSocket } from './hooks/useSocket';
 import AnimatedRoutes from './AnimatedRoutes';
 
 // Новые компоненты из design
@@ -18,9 +17,6 @@ function App() {
 
   // Инициализация темы
   useTheme();
-
-  // Инициализация Socket.io для real-time чата
-  useSocket();
 
   // Автоматическая загрузка пользователя при наличии токена
   useEffect(() => {

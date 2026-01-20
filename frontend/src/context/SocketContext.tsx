@@ -1,31 +1,36 @@
-import { useEffect, useRef } from 'react';
+import { createContext, useContext, useEffect, useRef, ReactNode } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { addMessage, Message } from '../store/slices/messagesSlice';
 import { updateChat } from '../store/slices/chatsSlice';
-import { selectActiveChatId } from '../store/slices/chatsSlice';
 import { toast } from 'sonner';
 
-// URL backend сервера
 const SOCKET_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3003';
 
-export const useSocket = () => {
+interface SocketContextValue {
+  socket: Socket | null;
+  sendMessage: (payload: {
+    conversationId: string;
+    text: string;
+    receiverId: string;
+  }) => void;
+  isConnected: boolean;
+}
+
+const SocketContext = createContext<SocketContextValue | undefined>(undefined);
+
+export function SocketProvider({ children }: { children: ReactNode }) {
   const dispatch = useAppDispatch();
   const socketRef = useRef<Socket | null>(null);
-  const activeChatIdRef = useRef<string | null>(null);
 
-  // Получаем токен и userId из Redux
   const { token, user } = useAppSelector((state) => state.auth);
-  const activeChatId = useAppSelector(selectActiveChatId);
 
-  // Обновляем ref при изменении activeChatId (БЕЗ пересоздания socket)
-  activeChatIdRef.current = activeChatId;
 
   useEffect(() => {
     // Если нет токена или пользователя, не подключаемся
     if (!token || !user) {
       console.log('⚠️ No token or user, skipping socket connection');
-      // Если сокет был создан ранее, отключаем его
+
       if (socketRef.current) {
         console.log('🔌 Disconnecting existing socket due to missing auth...');
         socketRef.current.disconnect();
@@ -75,13 +80,10 @@ export const useSocket = () => {
         })
       );
 
-      // Если сообщение НЕ из активного чата, показываем уведомление
-      if (message.conversation_id !== activeChatIdRef.current) {
-        toast.info('Новое сообщение', {
-          description: message.text.substring(0, 50) + (message.text.length > 50 ? '...' : ''),
-          duration: 3000,
-        });
-      }
+      toast.info('Новое сообщение', {
+        description: message.text.substring(0, 50) + (message.text.length > 50 ? '...' : ''),
+        duration: 3000,
+      });
     });
 
     // ═════════════════════════════════════════════════════════════════════
@@ -130,13 +132,13 @@ export const useSocket = () => {
       toast.error('Не удалось подключиться к чату');
     });
 
-    // Cleanup при размонтировании компонента
+    // Cleanup при размонтировании Provider (только когда закрывается приложение)
     return () => {
       console.log('🔌 Disconnecting socket...');
       socket.disconnect();
       socketRef.current = null;
     };
-  }, [token, user, dispatch]); // activeChatId убран из зависимостей!
+  }, [token, user, dispatch]);
 
   // Функция для отправки сообщения
   const sendMessage = (payload: {
@@ -158,8 +160,24 @@ export const useSocket = () => {
     });
   };
 
-  return {
+  const value: SocketContextValue = {
     socket: socketRef.current,
     sendMessage,
+    isConnected: socketRef.current?.connected || false,
   };
-};
+
+  return (
+    <SocketContext.Provider value={value}>
+      {children}
+    </SocketContext.Provider>
+  );
+}
+
+// Легковесный хук для доступа к сокету
+export function useSocketContext() {
+  const context = useContext(SocketContext);
+  if (!context) {
+    throw new Error('useSocketContext must be used within SocketProvider');
+  }
+  return context;
+}

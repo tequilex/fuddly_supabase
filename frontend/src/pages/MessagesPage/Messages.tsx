@@ -15,7 +15,7 @@ import {
   selectMessagesByChatId,
   markMessagesAsRead,
 } from '@/store/slices/messagesSlice';
-import { useSocket } from '@/hooks/useSocket';
+import { useSocketContext } from '@/context/SocketContext';
 
 export function Messages() {
   const dispatch = useAppDispatch();
@@ -34,7 +34,8 @@ export function Messages() {
   const [searchQuery, setSearchQuery] = useState('');
   const [messageText, setMessageText] = useState('');
 
-  // const { sendMessage } = useSocket();
+  // Получаем метод отправки сообщений из Socket Context
+  const { sendMessage } = useSocketContext();
 
   // Загрузка conversations при монтировании
   useEffect(() => {
