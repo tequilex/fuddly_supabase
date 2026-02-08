@@ -2,6 +2,7 @@ import React from "react";
 import { ChefHat, Star, ShoppingCart, MapPin } from "lucide-react";
 import styles from "./UserCard.module.scss";
 import { Seller } from "@/types";
+import { useAppSelector } from "@/store/hooks";
 
 interface UserCardProps {
   userInfo: Seller;
@@ -9,7 +10,10 @@ interface UserCardProps {
   toChat: () => void;
 }
 
+
 const UserCard = ({ userInfo, toSeller, toChat }: UserCardProps) => {
+  const { currentProduct } = useAppSelector((state) => state.products);
+  const { user } = useAppSelector((state) => state.auth);
   return (
     <div className={styles.chefCard}>
       <div className={styles.chefCardHeader}>
@@ -51,9 +55,13 @@ const UserCard = ({ userInfo, toSeller, toChat }: UserCardProps) => {
           <button className={styles.actionButton} onClick={toSeller}>
             Все товары продавца
           </button>
-          <button className={styles.actionButton} onClick={toChat}>
-            Написать продавцу
-          </button>
+          {
+            currentProduct?.seller_id === user?.id ? null : (
+              <button className={styles.actionButton} onClick={toChat}>
+                Написать продавцу
+              </button>
+            ) 
+          }
         </div>
     </div>
   );

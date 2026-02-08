@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { logout } from '../../store/slices/authSlice';
 import { toggleTheme } from '../../store/slices/uiSlice';
 import { UserActions } from '../UserActions/UserActions';
+import logo from '/icons/Document.svg';
 import styles from './Header.module.scss';
 
 export function Header() {
@@ -26,7 +27,7 @@ export function Header() {
     <header className={styles.header}>
       <div className={styles.container}>
         <Link to="/" className={styles.logo}>
-          Fuddly
+          <img src={logo} style={{ width: 100, height: 100 }} alt="Fuddly Logo" />
         </Link>
 
         <div className={styles.search}>
