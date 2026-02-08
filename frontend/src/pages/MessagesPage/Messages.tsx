@@ -4,6 +4,8 @@ import { MessagesList } from './sections/MessagesList/MessagesList';
 import { MessagesChat } from './sections/MessagesChat/MessagesChat';
 import type { ChatConversation } from '@/types';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { useLayoutConfig } from '@/hooks/useLayoutConfig';
+import { useIsTablet } from '@/hooks/useMediaQuery';
 import {
   chatsSelectors,
   selectActiveChatId,
@@ -23,10 +25,19 @@ import { useSocketContext } from '@/context/SocketContext';
 export function Messages() {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
+  const isTablet = useIsTablet();
 
   // Получаем данные из Redux
   const allChats = useAppSelector(chatsSelectors.selectAll);
   const activeChatId = useAppSelector(selectActiveChatId);
+
+  // Скрываем header и navmenu только когда открыт чат на мобильных устройствах
+  const shouldHideLayout = isTablet && activeChatId !== null;
+
+  useLayoutConfig({
+    hideHeader: shouldHideLayout,
+    hideMobileBottomNav: shouldHideLayout,
+  });
   const activeChat = useAppSelector((state) =>
     activeChatId ? chatsSelectors.selectById(state, activeChatId) : null
   );
@@ -155,8 +166,14 @@ export function Messages() {
   }
 
   return (
-    <div className={styles.messagesPage}>
-      <div className={styles.container}>
+    <div
+      className={styles.messagesPage}
+      data-full-height={shouldHideLayout ? 'true' : 'false'}
+    >
+      <div
+        className={styles.container}
+        data-full-height={shouldHideLayout ? 'true' : 'false'}
+      >
         <MessagesList
           chats={uiChats}
           selectedChatId={activeChatId}

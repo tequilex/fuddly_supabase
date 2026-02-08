@@ -2,8 +2,15 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export type Theme = 'light' | 'dark';
 
+export interface LayoutConfig {
+  header: { visible: boolean };
+  footer: { visible: boolean };
+  mobileBottomNav: { visible: boolean };
+}
+
 export interface UIState {
   theme: Theme;
+  layout: LayoutConfig;
 }
 
 // Helper: Get theme from localStorage
@@ -19,8 +26,16 @@ const getStoredTheme = (): Theme => {
   return 'light'; // Default to light theme
 };
 
+// Default layout configuration
+const defaultLayoutConfig: LayoutConfig = {
+  header: { visible: true },
+  footer: { visible: true },
+  mobileBottomNav: { visible: true },
+};
+
 const initialState: UIState = {
   theme: getStoredTheme(),
+  layout: defaultLayoutConfig,
 };
 
 const uiSlice = createSlice({
@@ -47,12 +62,25 @@ const uiSlice = createSlice({
         console.error('Failed to save theme to localStorage:', error);
       }
     },
+    setLayoutConfig: (state, action: PayloadAction<Partial<LayoutConfig>>) => {
+      state.layout = {
+        ...state.layout,
+        ...action.payload,
+      };
+    },
+    resetLayoutConfig: (state) => {
+      state.layout = defaultLayoutConfig;
+    },
   },
 });
 
-export const { setTheme, toggleTheme } = uiSlice.actions;
+export const { setTheme, toggleTheme, setLayoutConfig, resetLayoutConfig } = uiSlice.actions;
 
 // Selectors
 export const selectTheme = (state: { ui: UIState }) => state.ui.theme;
+export const selectLayoutConfig = (state: { ui: UIState }) => state.ui.layout;
+export const selectHeaderVisible = (state: { ui: UIState }) => state.ui.layout.header.visible;
+export const selectFooterVisible = (state: { ui: UIState }) => state.ui.layout.footer.visible;
+export const selectMobileBottomNavVisible = (state: { ui: UIState }) => state.ui.layout.mobileBottomNav.visible;
 
 export default uiSlice.reducer;

@@ -4,6 +4,11 @@
   min-height: calc(100vh - 70px);
   background: var(--color-bg-primary);
   padding: 0;
+
+  &[data-full-height="true"] {
+    min-height: 100vh;
+    min-height: 100dvh; // Dynamic viewport height для mobile
+  }
 }
 
 .container {
@@ -14,6 +19,11 @@
   grid-template-columns: 380px 1fr;
   background: var(--color-bg-secondary);
   box-shadow: var(--shadow-md);
+
+  &[data-full-height="true"] {
+    height: 100vh;
+    height: 100dvh;
+  }
 }
 
 /* Адаптивность */
@@ -26,10 +36,20 @@
 @include tablet {
   .messagesPage {
     min-height: calc(100vh - 60px);
+
+    &[data-full-height="true"] {
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
   }
 
   .container {
     height: calc(100vh - 60px);
     grid-template-columns: 1fr;
+
+    &[data-full-height="true"] {
+      height: 100vh;
+      height: 100dvh;
+    }
   }
 }

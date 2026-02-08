@@ -98,6 +98,9 @@
   --font-size-sm: 14px;
   --font-size-base: 16px;
   --font-size-lg: 18px;
+
+  /* Layout dimensions */
+  --mobile-nav-height: 70px;
   --font-size-xl: 20px;
   --font-size-2xl: 24px;
   --font-size-3xl: 30px;
@@ -207,9 +210,13 @@ input, textarea, select {
     font-size: 13px;
   }
 
-  /* Добавляем padding для мобильной навигации */
-  main {
+  /* Добавляем padding для мобильной навигации только когда она видима */
+  main[data-mobile-nav-visible="true"] {
     padding-bottom: 80px;
+  }
+
+  main[data-mobile-nav-visible="false"] {
+    padding-bottom: 0;
   }
 
   h1 {
