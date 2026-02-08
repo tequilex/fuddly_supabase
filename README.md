@@ -94,7 +94,6 @@ make clean      # Очистка node_modules
 ### Таблицы
 - **users** - пользователи (продавцы и покупатели)
 - **products** - товары (еда)
-- **leads** - отклики покупателей на товары
 - **messages** - личные сообщения
 - **reports** - жалобы
 
@@ -151,12 +150,7 @@ fuddly_supabase/
 - `PATCH /api/products/:id` - обновить
 - `DELETE /api/products/:id` - удалить
 
-### Отклики
-- `POST /api/leads` - откликнуться на товар
-- `GET /api/leads/my` - мои отклики
-- `GET /api/leads/my-products` - отклики на мои товары
-
 ### Сообщения
-- `POST /api/messages` - отправить сообщение
-- `GET /api/messages/conversations` - список диалогов
-- `GET /api/messages/conversation/:userId` - диалог
+- `GET /api/conversations` - список диалогов (с last_message и unread_count)
+- `GET /api/conversations/:conversationId/messages` - сообщения диалога (пагинация)
+- `PUT /api/conversations/:conversationId/read` - отметить сообщения как прочитанные

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, Sun, Moon } from 'lucide-react';
+import { Search, Sun, Moon, ChevronDown, LayoutGrid, MapPin } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { logout } from '../../store/slices/authSlice';
 import { toggleTheme } from '../../store/slices/uiSlice';
@@ -24,36 +24,62 @@ export function Header() {
 
   return (
     <header className={styles.header}>
-      <div className={styles.container}>
-        <Link to="/" className={styles.logo}>
-          Fuddly
-        </Link>
-
-        <div className={styles.search}>
-          <Search className={styles.searchIcon} size={20} />
-          <input
-            type="text"
-            placeholder="Найти домашнюю еду..."
-            className={styles.searchInput}
-          />
-        </div>
-
-        <nav className={styles.nav}>
-          <Link to="/" className={styles.navLink}>
-            Каталог
+      <div className={styles.topRow}>
+        <div className={styles.container}>
+          <Link to="/" className={styles.logo}>
+            Fuddly
           </Link>
 
-          <button className={styles.iconButton} onClick={handleToggleTheme}>
-            {theme === 'light' ? <Sun size={22} /> : <Moon size={22} />}
+          <button className={styles.catalogButton}>
+            <LayoutGrid size={18} />
+            <span className={styles.catalogText}>Каталог</span>
           </button>
 
-          <UserActions
-            isAuthenticated={isAuthenticated}
-            user={user}
-            onLogout={handleLogout}
-            loading={loading}
-          />
-        </nav>
+          <div className={styles.searchBar}>
+            <button className={styles.searchCategory}>
+              <span>Везде</span>
+              <ChevronDown size={16} />
+            </button>
+            <input
+              type="text"
+              placeholder="Искать в Fuddly"
+              className={styles.searchInput}
+            />
+            <button className={styles.searchButton} aria-label="Поиск">
+              <Search size={18} />
+            </button>
+          </div>
+
+          <div className={styles.actions}>
+            <button className={styles.iconButton} onClick={handleToggleTheme}>
+              {theme === 'light' ? <Sun size={20} /> : <Moon size={20} />}
+            </button>
+
+            <UserActions
+              isAuthenticated={isAuthenticated}
+              user={user}
+              onLogout={handleLogout}
+              loading={loading}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.bottomRow}>
+        <div className={styles.container}>
+          <nav className={styles.quickLinks}>
+            <Link to="/" className={styles.quickLink}>Fuddly fresh</Link>
+            <Link to="/" className={styles.quickLink}>Готовая еда</Link>
+            <Link to="/" className={styles.quickLink}>Сертификаты</Link>
+            <Link to="/" className={styles.quickLink}>Для бизнеса</Link>
+            <Link to="/" className={styles.quickLink}>Помощь</Link>
+          </nav>
+
+          <div className={styles.location}>
+            <MapPin size={16} />
+            <span>Пункт выдачи · ул. 1 Мая, 430/2</span>
+          </div>
+        </div>
       </div>
     </header>
   );

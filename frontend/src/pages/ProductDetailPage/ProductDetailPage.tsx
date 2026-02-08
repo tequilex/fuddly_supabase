@@ -2,6 +2,8 @@ import { useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchProduct } from '../../store/slices/productsSlice';
+import { getOrCreateConversation } from '../../store/slices/chatsSlice';
+import { toast } from 'sonner';
 import { ProductDetail } from './ProductDetail';
 
 export default function ProductDetailPage() {
@@ -9,6 +11,7 @@ export default function ProductDetailPage() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { currentProduct, products, loading } = useAppSelector((state) => state.products);
+  const { user } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
     if (id) {
@@ -30,6 +33,39 @@ export default function ProductDetailPage() {
 
   const handleProductClick = (productId: string) => {
     navigate(`/products/${productId}`);
+  };
+
+  const handleChatClick = async () => {
+    // Проверяем авторизацию
+    if (!user) {
+      toast.error('Войдите в аккаунт, чтобы написать продавцу');
+      navigate('/auth');
+      return;
+    }
+
+    // Проверяем, что это не свой товар
+    if (currentProduct?.seller_id === user.id) {
+      toast.warning('Вы не можете написать сами себе');
+      return;
+    }
+
+    try {
+      // Создаем или получаем conversation через Redux thunk
+      await dispatch(
+        getOrCreateConversation({
+          productId: currentProduct!.id,
+          buyerId: user.id,
+          sellerId: currentProduct!.seller_id!,
+        })
+      ).unwrap();
+
+      // Переходим на страницу чата
+      navigate('/messages');
+      toast.success('Чат открыт');
+    } catch (error) {
+      console.error('Error creating conversation:', error);
+      toast.error('Не удалось открыть чат');
+    }
   };
 
   const handleSellerClick = () => {
@@ -65,6 +101,7 @@ export default function ProductDetailPage() {
       onBack={handleBack}
       onProductClick={handleProductClick}
       onSellerClick={handleSellerClick}
+      onChatClick={handleChatClick}
     />
   );
 }

@@ -1,128 +1,181 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './Messages.module.scss';
 import { MessagesList } from './sections/MessagesList/MessagesList';
 import { MessagesChat } from './sections/MessagesChat/MessagesChat';
-import type { Chat } from './sections/MessagesList/MessagesList';
-import type { Message } from './sections/MessagesChat/MessagesChat';
+import type { ChatConversation } from '@/types';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import {
+  chatsSelectors,
+  selectActiveChatId,
+  setActiveChat,
+  fetchUserChats,
+  resetUnreadCount,
+} from '@/store/slices/chatsSlice';
+import {
+  fetchConversationMessages,
+  selectMessagesByChatId,
+  markMessagesAsRead,
+  clearAllMessages,
+  selectMessagesMeta,
+} from '@/store/slices/messagesSlice';
+import { useSocketContext } from '@/context/SocketContext';
 
-const mockChats: Chat[] = [
-  {
-    id: '1',
-    userName: 'Мария Петрова',
-    userAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop',
-    lastMessage: 'Добрый день! Торт еще актуален?',
-    time: '14:32',
-    unreadCount: 2,
-    isOnline: true,
-    productName: 'Наполеон домашний',
-    productImage: 'https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=100&h=100&fit=crop'
-  },
-  {
-    id: '2',
-    userName: 'Иван Смирнов',
-    userAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop',
-    lastMessage: 'Спасибо, очень вкусно было! Закажу еще',
-    time: '13:15',
-    unreadCount: 0,
-    isOnline: false,
-    productName: 'Борщ украинский',
-    productImage: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=100&h=100&fit=crop'
-  },
-  {
-    id: '3',
-    userName: 'Анна Кузнецова',
-    userAvatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop',
-    lastMessage: 'Можно заказать на завтра на 6 человек?',
-    time: '12:48',
-    unreadCount: 1,
-    isOnline: true,
-    productName: 'Пельмени домашние',
-    productImage: 'https://images.unsplash.com/photo-1548340748-6d2b7d7da280?w=100&h=100&fit=crop'
-  },
-  {
-    id: '4',
-    userName: 'Дмитрий Волков',
-    userAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop',
-    lastMessage: 'Отлично, жду заказ!',
-    time: 'Вчера',
-    unreadCount: 0,
-    isOnline: false,
-    productName: 'Хачапури по-аджарски',
-    productImage: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=100&h=100&fit=crop'
-  },
-  {
-    id: '5',
-    userName: 'Елена Соколова',
-    userAvatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop',
-    lastMessage: 'Добрый вечер! А есть возможность доставки?',
-    time: 'Вчера',
-    unreadCount: 3,
-    isOnline: false,
-    productName: 'Шарлотка яблочная',
-    productImage: 'https://images.unsplash.com/photo-1568571780765-9276ac8b75a2?w=100&h=100&fit=crop'
-  }
-];
+export function Messages() {
+  const dispatch = useAppDispatch();
+  const { user } = useAppSelector((state) => state.auth);
 
-const mockMessages: { [key: string]: Message[] } = {
-  '1': [
-    { id: '1', text: 'Здравствуйте! Интересует Наполеон', time: '14:25', isOwn: false },
-    { id: '2', text: 'Добрый день! Да, конечно. Торт свежий, испекла сегодня утром', time: '14:27', isOwn: true },
-    { id: '3', text: 'Отлично! А сколько весит?', time: '14:28', isOwn: false },
-    { id: '4', text: 'Примерно 1.5 кг, на 8-10 человек хватит', time: '14:30', isOwn: true },
-    { id: '5', text: 'Добрый день! Торт еще актуален?', time: '14:32', isOwn: false },
-  ],
-  '2': [
-    { id: '1', text: 'Здравствуйте! Хочу заказать борщ', time: '10:15', isOwn: false },
-    { id: '2', text: 'Добрый день! Сколько порций?', time: '10:20', isOwn: true },
-    { id: '3', text: '4 порции, пожалуйста', time: '10:22', isOwn: false },
-    { id: '4', text: 'Спасибо, очень вкусно было! Закажу еще', time: '13:15', isOwn: false },
-  ]
-};
-
-interface MessagesProps {
-  onBack?: () => void;
-  onContactClick?: (userId: string) => void;
-}
-
-export function Messages({ onBack }: MessagesProps) {
-  const [selectedChat, setSelectedChat] = useState<string | null>(null);
+  // Получаем данные из Redux
+  const allChats = useAppSelector(chatsSelectors.selectAll);
+  const activeChatId = useAppSelector(selectActiveChatId);
+  const activeChat = useAppSelector((state) =>
+    activeChatId ? chatsSelectors.selectById(state, activeChatId) : null
+  );
+  const chatMessages = useAppSelector(selectMessagesByChatId(activeChatId || ''));
+  const chatMeta = useAppSelector(selectMessagesMeta(activeChatId || ''));
+  const chatsLoading = useAppSelector((state) => state.chats.loading);
+  // Локальное состояние
   const [searchQuery, setSearchQuery] = useState('');
   const [messageText, setMessageText] = useState('');
 
-  const filteredChats = mockChats.filter(chat =>
-    chat.userName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    chat.productName?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Получаем метод отправки сообщений из Socket Context
+  const { sendMessage } = useSocketContext();
 
-  const selectedChatData = mockChats.find(chat => chat.id === selectedChat);
-  const chatMessages = selectedChat ? mockMessages[selectedChat] || [] : [];
+  // Загрузка conversations при монтировании
+  useEffect(() => {
+    dispatch(fetchUserChats());
+  }, [dispatch]);
 
-  const handleSendMessage = () => {
-    if (messageText.trim()) {
-      // Здесь будет логика отправки сообщения
-      console.log('Sending message:', messageText);
-      setMessageText('');
+  // Загрузка сообщений при выборе чата
+  useEffect(() => {
+    if (activeChatId && user?.id) {
+      dispatch(fetchConversationMessages({ conversationId: activeChatId }));
+
+      // Помечаем сообщения как прочитанные
+      dispatch(markMessagesAsRead({ conversationId: activeChatId }));
+      dispatch(resetUnreadCount(activeChatId));
     }
+  }, [activeChatId, user?.id, dispatch]);
+
+  // Очистка сообщений при уходе со страницы
+  useEffect(() => {
+    return () => {
+      dispatch(clearAllMessages());
+    };
+  }, [dispatch]);
+
+  // Фильтрация чатов по поисковому запросу
+  const filteredChats = allChats.filter((chat) => {
+    if (!user) return false;
+
+    // Определяем собеседника
+    const partner = chat.buyer_id === user.id ? chat.seller : chat.buyer;
+
+    const searchLower = searchQuery.toLowerCase();
+    return (
+      partner?.name?.toLowerCase().includes(searchLower) ||
+      chat.product?.title?.toLowerCase().includes(searchLower)
+    );
+  });
+
+  // Преобразуем conversations в формат ChatConversation для UI
+  const uiChats: ChatConversation[] = filteredChats.map((chat) => {
+    const partner = chat.buyer_id === user?.id ? chat.seller : chat.buyer;
+
+    return {
+      id: chat.id,
+      user: partner || { id: '', name: 'Неизвестный пользователь', email: '', status: 'ACTIVE' as any, created_at: '' },
+      lastMessage: chat.last_message || undefined,
+      unreadCount: chat.unread_count || 0,
+      product: chat.product,
+    };
+  });
+
+  // Обработчик отправки сообщения
+  const handleSendMessage = () => {
+    if (!messageText.trim() || !activeChatId || !activeChat || !user) {
+      return;
+    }
+
+    // Определяем получателя
+    const receiverId =
+      activeChat.buyer_id === user.id
+        ? activeChat.seller_id
+        : activeChat.buyer_id;
+
+    // Отправляем через Socket.io
+    sendMessage({
+      conversationId: activeChatId,
+      text: messageText.trim(),
+      receiverId,
+    });
+
+    // Очищаем поле ввода
+    setMessageText('');
   };
+
+  // Обработчик выбора чата
+  const handleChatSelect = (chatId: string) => {
+    dispatch(setActiveChat(chatId));
+  };
+
+  const handleLoadOlder = () => {
+    if (!activeChatId || chatMeta.loading || !chatMeta.hasMore) return;
+    dispatch(
+      fetchConversationMessages({
+        conversationId: activeChatId,
+        offset: chatMeta.nextOffset,
+        mode: 'older',
+      })
+    );
+  };
+
+  // Преобразуем activeChat в формат ChatConversation для UI
+  const selectedChatData: ChatConversation | null = activeChat
+    ? {
+        id: activeChat.id,
+        user:
+          activeChat.buyer_id === user?.id
+            ? activeChat.seller || { id: '', name: 'Неизвестный', email: '', status: 'ACTIVE' as any, created_at: '' }
+            : activeChat.buyer || { id: '', name: 'Неизвестный', email: '', status: 'ACTIVE' as any, created_at: '' },
+        product: activeChat.product,
+        unreadCount: 0,
+      }
+    : null;
+
+  if (chatsLoading && allChats.length === 0) {
+    return (
+      <div className={styles.messagesPage}>
+        <div className={styles.container}>
+          <div style={{ padding: '2rem', textAlign: 'center' }}>
+            <h2>Загрузка чатов...</h2>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.messagesPage}>
       <div className={styles.container}>
         <MessagesList
-          chats={filteredChats}
-          selectedChatId={selectedChat}
+          chats={uiChats}
+          selectedChatId={activeChatId}
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
-          onChatSelect={setSelectedChat}
+          onChatSelect={handleChatSelect}
         />
 
         <MessagesChat
-          chat={selectedChatData || null}
+          chat={selectedChatData}
           messages={chatMessages}
+          currentUserId={user?.id || ''}
           messageText={messageText}
           onMessageTextChange={setMessageText}
           onSendMessage={handleSendMessage}
-          onBack={() => setSelectedChat(null)}
+          onBack={() => dispatch(setActiveChat(null))}
+          onLoadOlder={handleLoadOlder}
+          hasMore={chatMeta.hasMore}
+          loadingOlder={chatMeta.loading}
         />
       </div>
     </div>

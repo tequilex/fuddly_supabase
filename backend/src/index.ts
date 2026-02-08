@@ -4,8 +4,7 @@ import dotenv from 'dotenv';
 import { createServer } from 'http';
 import authRoutes from './routes/auth';
 import productRoutes from './routes/products';
-import leadRoutes from './routes/leads';
-import messageRoutes from './routes/messages';
+import conversationRoutes from './routes/conversations';
 import { initializeSocket } from './socket';
 
 // Загрузка переменных окружения
@@ -28,8 +27,7 @@ app.get('/health', (req: Request, res: Response) => {
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
-app.use('/api/leads', leadRoutes);
-app.use('/api/messages', messageRoutes);
+app.use('/api/conversations', conversationRoutes);
 
 // 404 handler
 app.use((req: Request, res: Response) => {

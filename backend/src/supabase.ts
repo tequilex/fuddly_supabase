@@ -10,18 +10,20 @@ if (!supabaseUrl || !supabaseServiceKey) {
   throw new Error('Missing Supabase environment variables');
 }
 
-// Supabase client with service role key (for backend operations)
-export const supabase = createClient(supabaseUrl, supabaseServiceKey, {
+// Supabase ADMIN client with service role key (bypasses RLS)
+export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
   auth: {
     autoRefreshToken: false,
     persistSession: false
   }
 });
 
+// Для обратной совместимости
+export const supabase = supabaseAdmin;
+
 // Database types
 export type UserStatus = 'ACTIVE' | 'BLOCKED' | 'PENDING_VERIFICATION';
 export type ProductStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
-export type LeadStatus = 'PENDING' | 'CONTACTED' | 'CLOSED';
 export type ReportStatus = 'OPEN' | 'IN_PROGRESS' | 'RESOLVED' | 'REJECTED';
 
 export interface User {
@@ -51,18 +53,18 @@ export interface Product {
   updated_at: string;
 }
 
-export interface Lead {
+export interface Conversation {
   id: string;
   product_id: string;
   buyer_id: string;
-  message?: string;
-  status: LeadStatus;
+  seller_id: string;
   created_at: string;
   updated_at: string;
 }
 
 export interface Message {
   id: string;
+  conversation_id: string;
   sender_id: string;
   receiver_id: string;
   text: string;

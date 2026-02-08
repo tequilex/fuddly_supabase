@@ -1,6 +1,24 @@
 import { Server as SocketIOServer } from 'socket.io';
 import { Server as HTTPServer } from 'http';
-import { supabase } from './supabase';
+import { supabaseAdmin } from './supabase';
+
+// Интерфейсы для Socket.io событий
+interface SendMessagePayload {
+  conversationId: string;
+  text: string;
+  senderId?: string;
+  receiverId?: string;
+}
+
+interface MessageResponse {
+  id: string;
+  conversation_id: string;
+  sender_id: string;
+  receiver_id: string;
+  text: string;
+  read: boolean;
+  created_at: string;
+}
 
 export function initializeSocket(httpServer: HTTPServer) {
   const io = new SocketIOServer(httpServer, {
@@ -19,7 +37,7 @@ export function initializeSocket(httpServer: HTTPServer) {
     }
 
     try {
-      const { data: { user }, error } = await supabase.auth.getUser(token);
+      const { data: { user }, error } = await supabaseAdmin.auth.getUser(token);
 
       if (error || !user) {
         return next(new Error('Invalid or expired token'));
@@ -39,6 +57,86 @@ export function initializeSocket(httpServer: HTTPServer) {
     const userId = socket.data.userId;
     console.log(`✅ User connected: ${userId}, socket: ${socket.id}`);
 
+    // Пользователь присоединяется к своей приватной комнате
+    socket.join(userId);
+
+    // ═════════════════════════════════════════════════════════════════════
+    // Событие: send_message
+    // ═════════════════════════════════════════════════════════════════════
+    socket.on('send_message', async (payload: SendMessagePayload) => {
+      try {
+        const { conversationId, text } = payload;
+
+        if (!conversationId || !text || !text.trim()) {
+          socket.emit('error', { message: 'Invalid message payload' });
+          return;
+        }
+
+        // Проверяем, что пользователь участник conversation
+        const { data: conversation, error: convError } = await supabaseAdmin
+          .from('conversations')
+          .select('id, buyer_id, seller_id')
+          .eq('id', conversationId)
+          .single();
+
+        if (convError || !conversation) {
+          socket.emit('error', { message: 'Conversation not found' });
+          return;
+        }
+
+        if (conversation.buyer_id !== userId && conversation.seller_id !== userId) {
+          socket.emit('error', { message: 'Access denied' });
+          return;
+        }
+
+        const receiverId =
+          conversation.buyer_id === userId ? conversation.seller_id : conversation.buyer_id;
+
+        // 1. Вставка сообщения в базу данных (используем ADMIN клиент для обхода RLS)
+        const { data: newMessage, error: insertError } = await supabaseAdmin
+          .from('messages')
+          .insert({
+            conversation_id: conversationId,
+            sender_id: userId,
+            receiver_id: receiverId,
+            text: text.trim(),
+            read: false,
+          })
+          .select()
+          .single();
+
+        if (insertError || !newMessage) {
+          console.error('Error inserting message:', insertError);
+          socket.emit('error', { message: 'Failed to send message' });
+          return;
+        }
+
+        // 2. Обновление updated_at в conversations (также через ADMIN)
+        const { error: updateError } = await supabaseAdmin
+          .from('conversations')
+          .update({ updated_at: new Date().toISOString() })
+          .eq('id', conversationId);
+
+        if (updateError) {
+          console.error('Error updating conversation:', updateError);
+        }
+
+        // 3. Отправка сообщения получателю (в его приватную комнату)
+        io.to(receiverId).emit('receive_message', newMessage);
+
+        // 4. Подтверждение отправителю
+        socket.emit('message_sent', newMessage);
+
+        console.log(`💬 Message sent: ${userId} -> ${receiverId} in conversation ${conversationId}`);
+      } catch (error) {
+        console.error('Error in send_message:', error);
+        socket.emit('error', { message: 'Internal server error' });
+      }
+    });
+
+    // ═════════════════════════════════════════════════════════════════════
+    // Событие: disconnect
+    // ═════════════════════════════════════════════════════════════════════
     socket.on('disconnect', () => {
       console.log(`❌ User disconnected: ${userId}, socket: ${socket.id}`);
     });
