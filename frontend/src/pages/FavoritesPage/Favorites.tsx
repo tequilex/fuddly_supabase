@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Heart, Trash2, ShoppingCart } from 'lucide-react';
+import { Heart, Trash2 } from 'lucide-react';
 import { ProductCard } from '../../components/ProductCard/ProductCard';
-import { Product } from '../../types';
+import { ProductGrid } from '../../components/ProductGrid/ProductGrid';
+import { Product, ProductStatus } from '../../types';
 import styles from './Favorites.module.scss';
 
 const mockFavorites: Product[] = [
@@ -11,11 +12,14 @@ const mockFavorites: Product[] = [
     description: 'Классический торт с нежным кремом и тонкими коржами',
     price: 850,
     image: 'https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=400&h=300&fit=crop',
+    images: ['https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=400&h=300&fit=crop'],
     category: 'Торты',
     rating: 4.9,
     reviewsCount: 23,
     distance: '1.2 км',
-    chef: { name: 'Мария Петрова' }
+    chef: { name: 'Мария Петрова' },
+    region: 'Москва',
+    status: ProductStatus.APPROVED,
   },
   {
     id: '2',
@@ -23,11 +27,14 @@ const mockFavorites: Product[] = [
     description: 'Наваристый борщ на говяжьем бульоне со сметаной',
     price: 350,
     image: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=400&h=300&fit=crop',
+    images: ['https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=400&h=300&fit=crop'],
     category: 'Супы',
     rating: 4.8,
     reviewsCount: 45,
     distance: '0.8 км',
-    chef: { name: 'Анна Смирнова' }
+    chef: { name: 'Анна Смирнова' },
+    region: 'Москва',
+    status: ProductStatus.APPROVED,
   },
   {
     id: '3',
@@ -35,11 +42,14 @@ const mockFavorites: Product[] = [
     description: 'Ручная лепка, сочная начинка из говядины и свинины',
     price: 450,
     image: 'https://images.unsplash.com/photo-1548340748-6d2b7d7da280?w=400&h=300&fit=crop',
+    images: ['https://images.unsplash.com/photo-1548340748-6d2b7d7da280?w=400&h=300&fit=crop'],
     category: 'Основные блюда',
     rating: 5.0,
     reviewsCount: 38,
     distance: '2.1 км',
-    chef: { name: 'Елена Васильева' }
+    chef: { name: 'Елена Васильева' },
+    region: 'Москва',
+    status: ProductStatus.APPROVED,
   },
   {
     id: '4',
@@ -47,11 +57,14 @@ const mockFavorites: Product[] = [
     description: 'Лодочка из теста с сыром, маслом и яйцом',
     price: 400,
     image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=300&fit=crop',
+    images: ['https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=300&fit=crop'],
     category: 'Выпечка',
     rating: 4.7,
     reviewsCount: 19,
     distance: '1.5 км',
-    chef: { name: 'Георгий Давидян' }
+    chef: { name: 'Георгий Давидян' },
+    region: 'Москва',
+    status: ProductStatus.APPROVED,
   },
   {
     id: '5',
@@ -59,11 +72,14 @@ const mockFavorites: Product[] = [
     description: 'Нежный пирог с сочными яблоками и корицей',
     price: 300,
     image: 'https://images.unsplash.com/photo-1568571780765-9276ac8b75a2?w=400&h=300&fit=crop',
+    images: ['https://images.unsplash.com/photo-1568571780765-9276ac8b75a2?w=400&h=300&fit=crop'],
     category: 'Выпечка',
     rating: 4.6,
     reviewsCount: 12,
     distance: '1.8 км',
-    chef: { name: 'Ольга Николаева' }
+    chef: { name: 'Ольга Николаева' },
+    region: 'Москва',
+    status: ProductStatus.APPROVED,
   },
   {
     id: '6',
@@ -71,11 +87,14 @@ const mockFavorites: Product[] = [
     description: 'Многослойный торт с медовыми коржами и кремом',
     price: 750,
     image: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&h=300&fit=crop',
+    images: ['https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&h=300&fit=crop'],
     category: 'Торты',
     rating: 4.9,
     reviewsCount: 31,
     distance: '0.9 км',
-    chef: { name: 'Мария Петрова' }
+    chef: { name: 'Мария Петрова' },
+    region: 'Москва',
+    status: ProductStatus.APPROVED,
   },
 ];
 
@@ -142,14 +161,16 @@ export function Favorites({ onProductClick, onBrowseCatalog }: FavoritesProps) {
 
         {/* Список избранных товаров */}
         {favorites.length > 0 ? (
-          <div className={styles.productsGrid}>
-            {favorites.map(product => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                onClick={() => onProductClick?.(product.id)}
-              />
-            ))}
+          <div className={styles.gridWrap}>
+            <ProductGrid>
+              {favorites.map(product => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  onClick={() => onProductClick?.(product.id)}
+                />
+              ))}
+            </ProductGrid>
           </div>
         ) : (
           <div className={styles.emptyState}>

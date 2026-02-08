@@ -59,6 +59,11 @@ export interface Product {
   status: ProductStatus;
   seller_id?: string;
   seller?: Seller;
+  image?: string;
+  rating?: number;
+  reviewsCount?: number;
+  distance?: string;
+  chef?: { name: string };
   created_at?: string;
   updated_at?: string;
 }

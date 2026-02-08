@@ -3,17 +3,17 @@
   margin-top: 1rem;
 }
 
+.gridWrap {
+  background: var(--color-bg-secondary);
+  border-radius: 20px;
+  padding: var(--spacing-md);
+  box-shadow: var(--shadow-sm);
+}
+
 .similarGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: var(--spacing-lg);
   margin-top: 1.5rem;
 }
 
-
-@include desktop {
-  
-}
 
 @include tablet {
   .similarSection {
@@ -25,10 +25,18 @@
     margin-bottom: 12px;
   }
 
+  .gridWrap {
+    padding: var(--spacing-sm);
+  }
+
   .similarGrid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
     margin-top: 12px;
+  }
+}
+
+@include mobile {
+  .gridWrap {
+    padding: 10px;
   }
 }
 

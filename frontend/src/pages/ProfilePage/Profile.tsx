@@ -5,10 +5,7 @@ import {
   Star, 
   Package, 
   Archive, 
-  Edit, 
-  Trash2, 
   Eye, 
-  EyeOff,
   Settings,
   Camera,
   Phone,
@@ -19,22 +16,11 @@ import {
   MessageSquare
 } from 'lucide-react';
 import { Product as ReduxProduct } from '../../types';
+import { ProductGrid } from '../../components/ProductGrid/ProductGrid';
+import { ProfileProductCard, ProfileProductCardData } from '../../components/ProfileProductCard/ProfileProductCard';
 import styles from './Profile.module.scss';
 
-interface ProfileProduct {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-  category: string;
-  views: number;
-  likes: number;
-  orders: number;
-  createdAt: string;
-  status: 'active' | 'archived';
-}
-
-const mockProducts: ProfileProduct[] = [
+const mockProducts: ProfileProductCardData[] = [
   {
     id: '1',
     name: 'Наполеон домашний',
@@ -117,7 +103,7 @@ interface ProfileProps {
 }
 
 // Адаптер для преобразования ReduxProduct в ProfileProduct
-const adaptProduct = (p: ReduxProduct): ProfileProduct => ({
+const adaptProduct = (p: ReduxProduct): ProfileProductCardData => ({
   id: p.id,
   name: p.title, // title -> name
   price: p.price,
@@ -135,7 +121,7 @@ export function Profile({ user, products: productsFromProps, onProductClick, onC
   const [productsFilter, setProductsFilter] = useState<'active' | 'archived'>('active');
 
   // Адаптируем товары из Redux к формату ProfileProduct
-  const products: ProfileProduct[] = productsFromProps
+  const products: ProfileProductCardData[] = productsFromProps
     ? productsFromProps.map(adaptProduct)
     : mockProducts;
 
@@ -310,78 +296,12 @@ export function Profile({ user, products: productsFromProps, onProductClick, onC
 
               {/* Список объявлений */}
               {displayProducts.length > 0 ? (
-                <div className={styles.productsGrid}>
-                  {displayProducts.map(product => (
-                    <div key={product.id} className={styles.productCard}>
-                      <div className={styles.productImage}>
-                        <img src={product.image} alt={product.name} />
-                        {productsFilter === 'archived' && (
-                          <div className={styles.archivedBadge}>В архиве</div>
-                        )}
-                      </div>
-
-                      <div className={styles.productContent}>
-                        <h3 className={styles.productName}>{product.name}</h3>
-                        <div className={styles.productPrice}>{product.price} ₽</div>
-                        <div className={styles.productCategory}>{product.category}</div>
-
-                        <div className={styles.productStats}>
-                          <span className={styles.productStat}>
-                            <Eye size={14} />
-                            {product.views}
-                          </span>
-                          <span className={styles.productStat}>
-                            <Star size={14} />
-                            {product.likes}
-                          </span>
-                          <span className={styles.productStat}>
-                            <Package size={14} />
-                            {product.orders}
-                          </span>
-                        </div>
-
-                        <div className={styles.productActions}>
-                          {productsFilter === 'active' ? (
-                            <>
-                              <button 
-                                className={styles.actionButton}
-                                title="Скрыть объявление"
-                              >
-                                <EyeOff size={16} />
-                              </button>
-                              <button 
-                                className={styles.actionButton}
-                                title="Редактировать"
-                              >
-                                <Edit size={16} />
-                              </button>
-                              <button 
-                                className={styles.actionButton}
-                                title="В архив"
-                              >
-                                <Archive size={16} />
-                              </button>
-                            </>
-                          ) : (
-                            <>
-                              <button 
-                                className={styles.actionButton}
-                                title="Восстановить"
-                              >
-                                <Package size={16} />
-                              </button>
-                              <button 
-                                className={`${styles.actionButton} ${styles.actionButtonDanger}`}
-                                title="Удалить"
-                              >
-                                <Trash2 size={16} />
-                              </button>
-                            </>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                <div className={styles.gridWrap}>
+                  <ProductGrid className={styles.productsGrid}>
+                    {displayProducts.map(product => (
+                      <ProfileProductCard key={product.id} product={product} />
+                    ))}
+                  </ProductGrid>
                 </div>
               ) : (
                 <div className={styles.emptyState}>

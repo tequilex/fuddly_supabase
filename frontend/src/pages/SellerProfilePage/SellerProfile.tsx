@@ -4,23 +4,15 @@ import {
   MapPin, 
   Calendar, 
   Package, 
-  Heart,
   MessageCircle,
   Award,
   TrendingUp,
   ThumbsUp
 } from 'lucide-react';
+import { Product, ProductStatus } from '../../types';
+import { ProductCard } from '../../components/ProductCard/ProductCard';
+import { ProductGrid } from '../../components/ProductGrid/ProductGrid';
 import styles from './SellerProfile.module.scss';
-
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-  category: string;
-  rating: number;
-  reviews: number;
-}
 
 interface Review {
   id: string;
@@ -32,60 +24,104 @@ interface Review {
   productName: string;
 }
 
+const MOCK_SELLER = { id: 'seller-1', name: 'Мария Петрова' };
+
 const mockProducts: Product[] = [
   {
     id: '1',
-    name: 'Наполеон домашний',
+    title: 'Наполеон домашний',
+    description: 'Классический торт с нежным кремом и тонкими коржами',
     price: 850,
-    image: 'https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=400&h=300&fit=crop',
     category: 'Торты',
+    image: 'https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=400&h=300&fit=crop',
+    images: ['https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=400&h=300&fit=crop'],
     rating: 4.9,
-    reviews: 23
+    reviewsCount: 23,
+    distance: '1.2 км',
+    region: 'Москва',
+    status: ProductStatus.APPROVED,
+    seller_id: MOCK_SELLER.id,
+    seller: MOCK_SELLER,
   },
   {
     id: '2',
-    name: 'Борщ украинский с пампушками',
+    title: 'Борщ украинский с пампушками',
+    description: 'Наваристый борщ на говяжьем бульоне со сметаной',
     price: 350,
-    image: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=400&h=300&fit=crop',
     category: 'Супы',
+    image: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=400&h=300&fit=crop',
+    images: ['https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=400&h=300&fit=crop'],
     rating: 4.8,
-    reviews: 45
+    reviewsCount: 45,
+    distance: '0.8 км',
+    region: 'Москва',
+    status: ProductStatus.APPROVED,
+    seller_id: MOCK_SELLER.id,
+    seller: MOCK_SELLER,
   },
   {
     id: '3',
-    name: 'Пельмени домашние',
+    title: 'Пельмени домашние',
+    description: 'Ручная лепка, сочная начинка из говядины и свинины',
     price: 450,
-    image: 'https://images.unsplash.com/photo-1548340748-6d2b7d7da280?w=400&h=300&fit=crop',
     category: 'Основные блюда',
+    image: 'https://images.unsplash.com/photo-1548340748-6d2b7d7da280?w=400&h=300&fit=crop',
+    images: ['https://images.unsplash.com/photo-1548340748-6d2b7d7da280?w=400&h=300&fit=crop'],
     rating: 5.0,
-    reviews: 38
+    reviewsCount: 38,
+    distance: '2.1 км',
+    region: 'Москва',
+    status: ProductStatus.APPROVED,
+    seller_id: MOCK_SELLER.id,
+    seller: MOCK_SELLER,
   },
   {
     id: '4',
-    name: 'Хачапури по-аджарски',
+    title: 'Хачапури по-аджарски',
+    description: 'Лодочка из теста с сыром, маслом и яйцом',
     price: 400,
-    image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=300&fit=crop',
     category: 'Выпечка',
+    image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=300&fit=crop',
+    images: ['https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=300&fit=crop'],
     rating: 4.7,
-    reviews: 19
+    reviewsCount: 19,
+    distance: '1.5 км',
+    region: 'Москва',
+    status: ProductStatus.APPROVED,
+    seller_id: MOCK_SELLER.id,
+    seller: MOCK_SELLER,
   },
   {
     id: '5',
-    name: 'Шарлотка яблочная',
+    title: 'Шарлотка яблочная',
+    description: 'Нежный пирог с сочными яблоками и корицей',
     price: 300,
-    image: 'https://images.unsplash.com/photo-1568571780765-9276ac8b75a2?w=400&h=300&fit=crop',
     category: 'Выпечка',
+    image: 'https://images.unsplash.com/photo-1568571780765-9276ac8b75a2?w=400&h=300&fit=crop',
+    images: ['https://images.unsplash.com/photo-1568571780765-9276ac8b75a2?w=400&h=300&fit=crop'],
     rating: 4.6,
-    reviews: 12
+    reviewsCount: 12,
+    distance: '1.8 км',
+    region: 'Москва',
+    status: ProductStatus.APPROVED,
+    seller_id: MOCK_SELLER.id,
+    seller: MOCK_SELLER,
   },
   {
     id: '6',
-    name: 'Медовик классический',
+    title: 'Медовик классический',
+    description: 'Многослойный торт с медовыми коржами и кремом',
     price: 750,
-    image: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&h=300&fit=crop',
     category: 'Торты',
+    image: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&h=300&fit=crop',
+    images: ['https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&h=300&fit=crop'],
     rating: 4.9,
-    reviews: 31
+    reviewsCount: 31,
+    distance: '0.9 км',
+    region: 'Москва',
+    status: ProductStatus.APPROVED,
+    seller_id: MOCK_SELLER.id,
+    seller: MOCK_SELLER,
   },
 ];
 
@@ -150,7 +186,7 @@ export function SellerProfile({ sellerId, onProductClick, onBack }: SellerProfil
   const [activeTab, setActiveTab] = useState<'products' | 'reviews'>('products');
 
   const sellerInfo = {
-    name: 'Мария Петрова',
+    name: MOCK_SELLER.name,
     avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop',
     rating: 4.8,
     reviewsCount: 168,
@@ -162,7 +198,8 @@ export function SellerProfile({ sellerId, onProductClick, onBack }: SellerProfil
     description: 'Профессиональный повар с 15-летним стажем. Специализируюсь на традиционной русской и грузинской кухне. Все блюда готовлю из свежих продуктов, без полуфабрикатов. Работаю по всем санитарным нормам. Возможна доставка по Москве.'
   };
 
-  const totalRating = mockProducts.reduce((sum, p) => sum + p.rating, 0) / mockProducts.length;
+  const totalRating =
+    mockProducts.reduce((sum, p) => sum + (p.rating ?? 0), 0) / (mockProducts.length || 1);
 
   return (
     <div className={styles.sellerProfilePage}>
@@ -290,34 +327,16 @@ export function SellerProfile({ sellerId, onProductClick, onBack }: SellerProfil
         {/* Контент табов */}
         {activeTab === 'products' ? (
           <div className={styles.productsSection}>
-            <div className={styles.productsGrid}>
-              {mockProducts.map(product => (
-                <div 
-                  key={product.id} 
-                  className={styles.productCard}
-                  onClick={() => onProductClick?.(product.id)}
-                >
-                  <div className={styles.productImage}>
-                    <img src={product.image} alt={product.name} />
-                    <button className={styles.favoriteButton}>
-                      <Heart size={20} />
-                    </button>
-                  </div>
-
-                  <div className={styles.productContent}>
-                    <div className={styles.productCategory}>{product.category}</div>
-                    <h3 className={styles.productName}>{product.name}</h3>
-                    
-                    <div className={styles.productRating}>
-                      <Star size={14} fill="#FF6B35" color="#FF6B35" />
-                      <span>{product.rating}</span>
-                      <span className={styles.reviewsCount}>({product.reviews})</span>
-                    </div>
-
-                    <div className={styles.productPrice}>{product.price} ₽</div>
-                  </div>
-                </div>
-              ))}
+            <div className={styles.gridWrap}>
+              <ProductGrid className={styles.productsGrid}>
+                {mockProducts.map((product) => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    onClick={() => onProductClick?.(product.id)}
+                  />
+                ))}
+              </ProductGrid>
             </div>
           </div>
         ) : (

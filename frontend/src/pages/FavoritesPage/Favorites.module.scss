@@ -97,11 +97,19 @@
   color: var(--color-accent-primary);
 }
 
-/* Сетка товаров */
-.productsGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.5rem;
+.gridWrap {
+  background: var(--color-bg-secondary);
+  border-radius: 20px;
+  padding: var(--spacing-md);
+  box-shadow: var(--shadow-sm);
+
+  @include tablet {
+    padding: var(--spacing-sm);
+  }
+
+  @include mobile {
+    padding: 10px;
+  }
 }
 
 /* Empty state */
@@ -150,12 +158,6 @@
 }
 
 /* Адаптивность */
-@include desktop {
-  .productsGrid {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  }
-}
-
 @include tablet {
   .favoritesPage {
     min-height: calc(100vh - 60px);
@@ -196,12 +198,6 @@
   .summary {
     flex-direction: column;
     gap: 1rem;
-  }
-
-  /* 2 карточки в ряд на мобильном */
-  .productsGrid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
   }
 
   .emptyState {

@@ -1,19 +1,22 @@
 @import '../../../styles/variables';
 
 .card {
-  background: var(--color-bg-card);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  border: 1px solid var(--color-border);
+  background: transparent;
+  border-radius: 16px;
+  overflow: visible;
+  border: none;
   display: flex;
   flex-direction: column;
 }
 
 .imageContainer {
   width: 100%;
-  padding-top: 70%; // aspect-ratio 70:100 (как в ProductCard)
+  padding-top: 126%;
   position: relative;
   background: var(--color-bg-tertiary);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
 
   > div {
     position: absolute;
@@ -25,25 +28,27 @@
 }
 
 .content {
-  padding: var(--spacing-md);
+  padding: 10px 2px 6px;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xs);
+  gap: 6px;
 
   @include mobile {
-    padding: var(--spacing-sm);
+    padding: 8px 2px 4px;
   }
 }
 
-.meta {
+.topRow {
   display: flex;
-  gap: var(--spacing-sm);
-  margin-top: var(--spacing-xs);
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 2px;
 }
 
-.footer {
+.metaRow {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-top: var(--spacing-xs);
+  gap: 12px;
+  margin-top: auto;
 }

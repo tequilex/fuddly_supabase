@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchProducts } from '../../store/slices/productsSlice';
 import { PRODUCT_CATEGORIES } from '../../constants';
 import { ProductCard } from '../../components/ProductCard/ProductCard';
+import { ProductGrid } from '../../components/ProductGrid/ProductGrid';
 import { ProductCardSkeleton } from '../../components/skeletons';
 import { Filters, FilterState } from '../../components/Filters/Filters';
 import { CategoriesBar } from '../../components/CategoriesBar/CategoriesBar';
@@ -100,10 +101,10 @@ export default function Catalog() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleFilterChange = (newFilters: FilterState) => {
-    setFilters(newFilters);
-    setCurrentPage(1);
-  };
+  // const handleFilterChange = (newFilters: FilterState) => {
+  //   setFilters(newFilters);
+  //   setCurrentPage(1);
+  // };
 
   const handleProductClick = (productId: string) => {
     navigate(`/products/${productId}`);
@@ -120,9 +121,9 @@ export default function Catalog() {
       </div>
 
       <div className={styles.content}>
-        <aside className={styles.sidebar}>
+        {/* <aside className={styles.sidebar}>
           <Filters onFilterChange={handleFilterChange} />
-        </aside>
+        </aside> */}
 
         <main className={styles.main}>
           <div className={styles.topBar}>
@@ -139,17 +140,21 @@ export default function Catalog() {
           </div>
 
           {showSkeleton ? (
-            <div className={styles.grid}>
-              {Array.from({ length: 12 }).map((_, i) => (
-                <ProductCardSkeleton key={i} />
-              ))}
+            <div className={styles.gridWrap}>
+              <ProductGrid>
+                {Array.from({ length: 12 }).map((_, i) => (
+                  <ProductCardSkeleton key={i} />
+                ))}
+              </ProductGrid>
             </div>
           ) : currentProducts.length > 0 ? (
             <>
-              <div className={styles.grid}>
-                {currentProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} onClick={() => handleProductClick(product.id)} />
-                ))}
+              <div className={styles.gridWrap}>
+                <ProductGrid>
+                  {currentProducts.map((product) => (
+                    <ProductCard  key={product.id} product={product} onClick={() => handleProductClick(product.id)} />
+                  ))}
+                </ProductGrid>
               </div>
 
               {totalPages > 1 && (

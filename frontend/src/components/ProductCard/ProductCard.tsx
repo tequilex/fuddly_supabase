@@ -1,5 +1,5 @@
-import React from 'react';
-import { Star, MapPin, ChefHat } from 'lucide-react';
+import React, { useState } from 'react';
+import { Star, Heart, MessageCircle } from 'lucide-react';
 import { Product } from '../../types';
 import styles from './ProductCard.module.scss';
 
@@ -9,50 +9,51 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, onClick }: ProductCardProps) {
+  const [liked, setLiked] = useState(false);
+
   // Адаптация данных для отображения
   const image = product.image || product.images?.[0] || '/placeholder.jpg';
-  const chef = product.chef || { name: product.seller?.name || 'Неизвестно' };
-  const rating = product.rating || 0;
-  const reviewsCount = product.reviewsCount || 0;
-  const distance = product.distance || 'н/д';
-
+  const rating = product.rating || 5;
+  const reviewsCount = product.reviewsCount || 10;
   const displayProduct = {
     ...product,
     image,
-    chef,
     rating,
     reviewsCount,
-    distance,
   };
   return (
     <div className={styles.card} onClick={onClick}>
       <div className={styles.imageWrapper}>
         <img src={displayProduct.image} alt={displayProduct.title} className={styles.image} />
         <div className={styles.category}>{displayProduct.category}</div>
+        <button
+          className={`${styles.likeButton} ${liked ? styles.likeButtonActive : ''}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            setLiked((prev) => !prev);
+          }}
+          aria-label={liked ? 'Убрать из избранного' : 'Добавить в избранное'}
+        >
+          <Heart size={18} strokeWidth={2.25} />
+        </button>
       </div>
 
-      <div className={styles.content}>
+      <div className={`${styles.content} ${styles.variantPriceFirst}`}>
+        <div className={styles.topRow}>
+          <div className={styles.price}>{displayProduct.price} ₽</div>
+        </div>
         <h3 className={styles.title}>{displayProduct.title}</h3>
         <p className={styles.description}>{displayProduct.description}</p>
 
-        <div className={styles.meta}>
+        <div className={styles.metaRow}>
           <div className={styles.rating}>
             <Star size={16} fill="currentColor" />
             <span>{displayProduct.rating}</span>
-            <span className={styles.reviews}>({displayProduct.reviewsCount})</span>
           </div>
-          <div className={styles.distance}>
-            <MapPin size={14} />
-            <span>{displayProduct.distance}</span>
+          <div className={styles.reviews}>
+            <MessageCircle size={14} />
+            <span>{displayProduct.reviewsCount} отзывов</span>
           </div>
-        </div>
-
-        <div className={styles.footer}>
-          <div className={styles.chef}>
-            <ChefHat size={16} />
-            <span>{displayProduct.chef.name}</span>
-          </div>
-          <div className={styles.price}>{displayProduct.price} ₽</div>
         </div>
       </div>
     </div>

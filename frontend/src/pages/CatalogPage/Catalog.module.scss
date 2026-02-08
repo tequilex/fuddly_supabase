@@ -6,7 +6,7 @@
   padding: 0;
 
   @include tablet {
-    padding: var(--spacing-sm)
+    padding: 0;
   }
 }
 
@@ -16,11 +16,12 @@
   padding: var(--spacing-2xl) var(--spacing-2xl) var(--spacing-lg);
 
   @include tablet {
-    padding: var(--spacing-md) 0;
+    padding: var(--spacing-md) var(--spacing-sm);
     margin-bottom: var(--spacing-md);
   }
 
   @include mobile {
+    padding: var(--spacing-sm) 10px;
     margin-bottom: var(--spacing-sm);
   }
 }
@@ -52,17 +53,14 @@
   max-width: 1280px;
   margin: 0 auto;
   padding: 0 var(--spacing-2xl);
-  display: grid;
-  grid-template-columns: 260px 1fr;
-  gap: var(--spacing-lg);
-  align-items: start;
-
-  @include desktop {
-    grid-template-columns: 1fr;
-  }
+  display: block;
 
   @include tablet {
-    padding: 0 ;
+    padding: 0 var(--spacing-sm);
+  }
+
+  @include mobile {
+    padding: 0 10px;
   }
 }
 
@@ -117,23 +115,18 @@
   border-color: var(--color-accent-primary);
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: var(--spacing-md);
-
-  @include desktop {
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: var(--spacing-md);
-  }
+.gridWrap {
+  background: var(--color-bg-secondary);
+  border-radius: 20px;
+  padding: var(--spacing-md);
+  box-shadow: var(--shadow-sm);
 
   @include tablet {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+    padding: var(--spacing-sm);
   }
 
   @include mobile {
-    gap: var(--spacing-sm);
+    padding: 10px;
   }
 }
 
