@@ -4,7 +4,6 @@ import dotenv from 'dotenv';
 import { createServer } from 'http';
 import authRoutes from './routes/auth';
 import productRoutes from './routes/products';
-import messageRoutes from './routes/messages';
 import conversationRoutes from './routes/conversations';
 import { initializeSocket } from './socket';
 
@@ -28,7 +27,6 @@ app.get('/health', (req: Request, res: Response) => {
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
-app.use('/api/messages', messageRoutes);
 app.use('/api/conversations', conversationRoutes);
 
 // 404 handler

@@ -1,14 +1,13 @@
 import { Server as SocketIOServer } from 'socket.io';
 import { Server as HTTPServer } from 'http';
-import { createClient } from '@supabase/supabase-js';
 import { supabaseAdmin } from './supabase';
 
 // Интерфейсы для Socket.io событий
 interface SendMessagePayload {
   conversationId: string;
   text: string;
-  senderId: string;
-  receiverId: string;
+  senderId?: string;
+  receiverId?: string;
 }
 
 interface MessageResponse {
@@ -38,13 +37,7 @@ export function initializeSocket(httpServer: HTTPServer) {
     }
 
     try {
-      // Создаем временный клиент для проверки токена
-      const supabaseAuth = createClient(
-        process.env.SUPABASE_URL!,
-        process.env.SUPABASE_SERVICE_KEY!
-      );
-
-      const { data: { user }, error } = await supabaseAuth.auth.getUser(token);
+      const { data: { user }, error } = await supabaseAdmin.auth.getUser(token);
 
       if (error || !user) {
         return next(new Error('Invalid or expired token'));
@@ -72,22 +65,41 @@ export function initializeSocket(httpServer: HTTPServer) {
     // ═════════════════════════════════════════════════════════════════════
     socket.on('send_message', async (payload: SendMessagePayload) => {
       try {
-        const { conversationId, text, senderId, receiverId } = payload;
+        const { conversationId, text } = payload;
 
-        // Проверка: отправитель должен совпадать с userId из сокета
-        if (senderId !== userId) {
-          socket.emit('error', { message: 'Sender ID mismatch' });
+        if (!conversationId || !text || !text.trim()) {
+          socket.emit('error', { message: 'Invalid message payload' });
           return;
         }
+
+        // Проверяем, что пользователь участник conversation
+        const { data: conversation, error: convError } = await supabaseAdmin
+          .from('conversations')
+          .select('id, buyer_id, seller_id')
+          .eq('id', conversationId)
+          .single();
+
+        if (convError || !conversation) {
+          socket.emit('error', { message: 'Conversation not found' });
+          return;
+        }
+
+        if (conversation.buyer_id !== userId && conversation.seller_id !== userId) {
+          socket.emit('error', { message: 'Access denied' });
+          return;
+        }
+
+        const receiverId =
+          conversation.buyer_id === userId ? conversation.seller_id : conversation.buyer_id;
 
         // 1. Вставка сообщения в базу данных (используем ADMIN клиент для обхода RLS)
         const { data: newMessage, error: insertError } = await supabaseAdmin
           .from('messages')
           .insert({
             conversation_id: conversationId,
-            sender_id: senderId,
+            sender_id: userId,
             receiver_id: receiverId,
-            text: text,
+            text: text.trim(),
             read: false,
           })
           .select()
@@ -115,7 +127,7 @@ export function initializeSocket(httpServer: HTTPServer) {
         // 4. Подтверждение отправителю
         socket.emit('message_sent', newMessage);
 
-        console.log(`💬 Message sent: ${senderId} -> ${receiverId} in conversation ${conversationId}`);
+        console.log(`💬 Message sent: ${userId} -> ${receiverId} in conversation ${conversationId}`);
       } catch (error) {
         console.error('Error in send_message:', error);
         socket.emit('error', { message: 'Internal server error' });

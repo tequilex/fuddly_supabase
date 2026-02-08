@@ -151,6 +151,6 @@ fuddly_supabase/
 - `DELETE /api/products/:id` - удалить
 
 ### Сообщения
-- `POST /api/messages` - отправить сообщение
-- `GET /api/messages/conversations` - список диалогов
-- `GET /api/messages/conversation/:userId` - диалог
+- `GET /api/conversations` - список диалогов (с last_message и unread_count)
+- `GET /api/conversations/:conversationId/messages` - сообщения диалога (пагинация)
+- `PUT /api/conversations/:conversationId/read` - отметить сообщения как прочитанные

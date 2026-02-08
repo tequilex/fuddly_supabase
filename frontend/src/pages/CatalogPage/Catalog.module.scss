@@ -5,8 +5,8 @@
   margin: 0 auto;
   padding: 0;
 
-  @include mobile {
-    padding: 10px;
+  @include tablet {
+    padding: var(--spacing-sm)
   }
 }
 

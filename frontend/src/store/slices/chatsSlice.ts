@@ -1,19 +1,10 @@
 import { createSlice, createEntityAdapter, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../index';
 import { conversationsApi } from '../../shared/api/conversations';
-
-// Интерфейс для Conversation
-export interface Conversation {
-  id: string;
-  product_id: string;
-  buyer_id: string;
-  seller_id: string;
-  created_at: string;
-  updated_at: string;
-}
+import type { ConversationSummary, Message } from '../../types';
 
 // Entity Adapter для нормализации данных
-const chatsAdapter = createEntityAdapter<Conversation>({
+const chatsAdapter = createEntityAdapter<ConversationSummary>({
   selectId: (chat) => chat.id,
   // Сортировка по updated_at (новые сверху)
   sortComparer: (a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime(),
@@ -39,8 +30,8 @@ const initialState = chatsAdapter.getInitialState<ChatsState>({
 // Загрузить все чаты пользователя
 export const fetchUserChats = createAsyncThunk(
   'chats/fetchUserChats',
-  async (userId: string) => {
-    return await conversationsApi.getUserConversations(userId);
+  async () => {
+    return await conversationsApi.getUserConversations();
   }
 );
 
@@ -63,22 +54,59 @@ const chatsSlice = createSlice({
     },
 
     // Установить все чаты (при загрузке)
-    setChats: (state, action: PayloadAction<Conversation[]>) => {
+    setChats: (state, action: PayloadAction<ConversationSummary[]>) => {
       chatsAdapter.setAll(state, action.payload);
       state.loading = false;
       state.error = null;
     },
 
     // Добавить один чат
-    addChat: (state, action: PayloadAction<Conversation>) => {
+    addChat: (state, action: PayloadAction<ConversationSummary>) => {
       chatsAdapter.addOne(state, action.payload);
     },
 
     // Обновить чат (например, updated_at при новом сообщении)
-    updateChat: (state, action: PayloadAction<{ id: string; changes: Partial<Conversation> }>) => {
+    updateChat: (state, action: PayloadAction<{ id: string; changes: Partial<ConversationSummary> }>) => {
       chatsAdapter.updateOne(state, {
         id: action.payload.id,
         changes: action.payload.changes,
+      });
+    },
+
+    // Обновить last_message
+    setChatLastMessage: (state, action: PayloadAction<{ id: string; message: Message }>) => {
+      chatsAdapter.updateOne(state, {
+        id: action.payload.id,
+        changes: {
+          last_message: action.payload.message,
+          updated_at: action.payload.message.created_at,
+        },
+      });
+    },
+
+    // Увеличить unread_count
+    incrementUnreadCount: (state, action: PayloadAction<{ id: string; by?: number }>) => {
+      const current = state.entities[action.payload.id];
+      if (!current) return;
+      const increment = action.payload.by ?? 1;
+      chatsAdapter.updateOne(state, {
+        id: action.payload.id,
+        changes: {
+          unread_count: (current.unread_count || 0) + increment,
+          updated_at: current.updated_at,
+        },
+      });
+    },
+
+    // Сбросить unread_count
+    resetUnreadCount: (state, action: PayloadAction<string>) => {
+      const current = state.entities[action.payload];
+      if (!current) return;
+      chatsAdapter.updateOne(state, {
+        id: action.payload,
+        changes: {
+          unread_count: 0,
+        },
       });
     },
 
@@ -137,6 +165,9 @@ export const {
   setChats,
   addChat,
   updateChat,
+  setChatLastMessage,
+  incrementUnreadCount,
+  resetUnreadCount,
   removeChat,
   setChatsLoading,
   setChatsError,

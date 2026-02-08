@@ -87,9 +87,9 @@ CREATE TABLE IF NOT EXISTS conversations (
 -- [4] MESSAGES (Теперь сразу ссылается на conversations)
 CREATE TABLE IF NOT EXISTS messages (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  conversation_id UUID REFERENCES conversations(id) ON DELETE CASCADE, -- Новое поле
+  conversation_id UUID NOT NULL REFERENCES conversations(id) ON DELETE CASCADE,
   sender_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  receiver_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE, -- Можно оставить для совместимости или быстрой выборки
+  receiver_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   text TEXT NOT NULL,
   read BOOLEAN DEFAULT false,
   created_at TIMESTAMPTZ DEFAULT NOW()
@@ -131,6 +131,8 @@ CREATE INDEX IF NOT EXISTS idx_messages_conversation_id ON messages(conversation
 CREATE INDEX IF NOT EXISTS idx_messages_sender_id ON messages(sender_id);
 CREATE INDEX IF NOT EXISTS idx_messages_receiver_id ON messages(receiver_id);
 CREATE INDEX IF NOT EXISTS idx_messages_created_at ON messages(created_at);
+CREATE INDEX IF NOT EXISTS idx_messages_conversation_created_at_desc ON messages(conversation_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_messages_conversation_receiver_read ON messages(conversation_id, receiver_id, read);
 
 -- Reports indexes
 CREATE INDEX IF NOT EXISTS idx_reports_reporter_id ON reports(reporter_id);
@@ -151,6 +153,60 @@ CREATE TRIGGER update_conversations_updated_at BEFORE UPDATE ON conversations
 
 CREATE TRIGGER update_reports_updated_at BEFORE UPDATE ON reports
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- ═══════════════════════════════════════════════════════════════════════════
+-- 4.1 FUNCTIONS (Conversation summaries)
+-- ═══════════════════════════════════════════════════════════════════════════
+
+CREATE OR REPLACE FUNCTION get_conversation_summaries(p_user_id UUID)
+RETURNS TABLE (
+  id UUID,
+  product_id UUID,
+  buyer_id UUID,
+  seller_id UUID,
+  created_at TIMESTAMPTZ,
+  updated_at TIMESTAMPTZ,
+  product JSONB,
+  buyer JSONB,
+  seller JSONB,
+  last_message JSONB,
+  unread_count INTEGER
+)
+LANGUAGE sql
+AS $$
+  SELECT
+    c.id,
+    c.product_id,
+    c.buyer_id,
+    c.seller_id,
+    c.created_at,
+    c.updated_at,
+    to_jsonb(p) AS product,
+    to_jsonb(b) AS buyer,
+    to_jsonb(s) AS seller,
+    to_jsonb(lm) AS last_message,
+    COALESCE(uc.unread_count, 0) AS unread_count
+  FROM conversations c
+  JOIN products p ON p.id = c.product_id
+  JOIN users b ON b.id = c.buyer_id
+  JOIN users s ON s.id = c.seller_id
+  LEFT JOIN LATERAL (
+    SELECT m.*
+    FROM messages m
+    WHERE m.conversation_id = c.id
+    ORDER BY m.created_at DESC
+    LIMIT 1
+  ) lm ON TRUE
+  LEFT JOIN LATERAL (
+    SELECT COUNT(*) AS unread_count
+    FROM messages m
+    WHERE m.conversation_id = c.id
+      AND m.receiver_id = p_user_id
+      AND m.read = FALSE
+  ) uc ON TRUE
+  WHERE c.buyer_id = p_user_id OR c.seller_id = p_user_id
+  ORDER BY c.updated_at DESC;
+$$;
 
 -- ═══════════════════════════════════════════════════════════════════════════
 -- 5. ROW LEVEL SECURITY (RLS)
@@ -201,38 +257,32 @@ CREATE POLICY "Participants can update conversations" ON conversations
 -- 1. Просмотр сообщений
 CREATE POLICY "Users can view messages from their conversations" ON messages
   FOR SELECT USING (
-    (conversation_id IS NOT NULL AND EXISTS (
+    EXISTS (
       SELECT 1 FROM conversations
       WHERE conversations.id = messages.conversation_id
       AND (conversations.buyer_id = auth.uid() OR conversations.seller_id = auth.uid())
-    ))
-    OR
-    (conversation_id IS NULL AND (sender_id = auth.uid() OR receiver_id = auth.uid()))
+    )
   );
 
 -- 2. Отправка сообщений
 CREATE POLICY "Users can send messages in their conversations" ON messages
   FOR INSERT WITH CHECK (
-    (conversation_id IS NOT NULL AND EXISTS (
+    EXISTS (
       SELECT 1 FROM conversations
       WHERE conversations.id = messages.conversation_id
       AND (conversations.buyer_id = auth.uid() OR conversations.seller_id = auth.uid())
     )
-    AND auth.uid() = sender_id)
-    OR
-    (conversation_id IS NULL AND auth.uid() = sender_id)
+    AND auth.uid() = sender_id
   );
 
 -- 3. Обновление сообщений (прочитано)
 CREATE POLICY "Users can update messages in their conversations" ON messages
   FOR UPDATE USING (
-    (conversation_id IS NOT NULL AND EXISTS (
+    EXISTS (
       SELECT 1 FROM conversations
       WHERE conversations.id = messages.conversation_id
       AND (conversations.buyer_id = auth.uid() OR conversations.seller_id = auth.uid())
-    ))
-    OR
-    (conversation_id IS NULL AND receiver_id = auth.uid())
+    )
   );
 
 -- --- REPORTS POLICIES ---

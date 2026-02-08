@@ -10,6 +10,9 @@ interface MessagesChatProps {
   onMessageTextChange: (text: string) => void;
   onSendMessage: () => void;
   onBack: () => void;
+  onLoadOlder?: () => void;
+  hasMore?: boolean;
+  loadingOlder?: boolean;
 }
 
 export function MessagesChat({
@@ -20,6 +23,9 @@ export function MessagesChat({
   onMessageTextChange,
   onSendMessage,
   onBack,
+  onLoadOlder,
+  hasMore = false,
+  loadingOlder = false,
 }: MessagesChatProps) {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -86,6 +92,23 @@ export function MessagesChat({
       )}
 
       <div className={styles.messages}>
+        {hasMore && (
+          <div style={{ textAlign: 'center', padding: '0.5rem 0' }}>
+            <button
+              onClick={onLoadOlder}
+              disabled={loadingOlder}
+              style={{
+                background: 'transparent',
+                border: '1px solid #ddd',
+                borderRadius: '8px',
+                padding: '0.4rem 0.8rem',
+                cursor: loadingOlder ? 'not-allowed' : 'pointer',
+              }}
+            >
+              {loadingOlder ? 'Загрузка...' : 'Показать более ранние'}
+            </button>
+          </div>
+        )}
         {messages.map(message => {
           const isOwn = message.sender_id === currentUserId;
           const messageTime = new Date(message.created_at).toLocaleTimeString('ru-RU', {

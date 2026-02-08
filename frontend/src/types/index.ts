@@ -54,17 +54,18 @@ export interface Product {
   description: string;
   price: number;
   category: string;
-  images: string[]; // Опционально для моков
-  region: string; // Опционально для моков
-  status: ProductStatus; // Опционально для моков
-  seller_id?: string; // Опционально для моков
-  seller: Seller; // Опционально для моков
-  created_at?: string; // Опционально для моков
-  updated_at?: string; // Опционально для моков
+  images: string[];
+  region: string;
+  status: ProductStatus;
+  seller_id?: string;
+  seller?: Seller;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface Message {
   id: string;
+  conversation_id: string;
   sender_id: string;
   sender?: User;
   receiver_id: string;
@@ -76,11 +77,36 @@ export interface Message {
 
 // Вспомогательные типы для UI компонентов чата
 export interface ChatConversation {
-  id: string; // ID другого пользователя
+  id: string; // ID conversation
   user: User; // Собеседник
   lastMessage?: Message; // Последнее сообщение в диалоге
   unreadCount: number; // Количество непрочитанных сообщений
   product?: Product; // Товар, если обсуждается товар
+}
+
+// Базовый conversation (без join-данных)
+export interface Conversation {
+  id: string;
+  product_id: string;
+  buyer_id: string;
+  seller_id: string;
+  created_at: string;
+  updated_at: string;
+}
+
+// Summary для списка чатов
+export interface ConversationSummary {
+  id: string;
+  product_id: string;
+  buyer_id: string;
+  seller_id: string;
+  created_at: string;
+  updated_at: string;
+  product: Product;
+  buyer: User;
+  seller: User;
+  last_message?: Message | null;
+  unread_count: number;
 }
 
 export interface Report {

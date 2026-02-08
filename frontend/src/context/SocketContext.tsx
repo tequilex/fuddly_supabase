@@ -1,8 +1,11 @@
 import { createContext, useContext, useEffect, useRef, ReactNode } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { addMessage, Message } from '../store/slices/messagesSlice';
-import { updateChat } from '../store/slices/chatsSlice';
+import { addMessage } from '../store/slices/messagesSlice';
+import type { Message } from '../types';
+import { updateChat, incrementUnreadCount, resetUnreadCount } from '../store/slices/chatsSlice';
+import { selectActiveChatId } from '../store/slices/chatsSlice';
+import { markMessagesAsRead } from '../store/slices/messagesSlice';
 import { toast } from 'sonner';
 
 const SOCKET_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3003';
@@ -22,8 +25,14 @@ const SocketContext = createContext<SocketContextValue | undefined>(undefined);
 export function SocketProvider({ children }: { children: ReactNode }) {
   const dispatch = useAppDispatch();
   const socketRef = useRef<Socket | null>(null);
+  const activeChatIdRef = useRef<string | null>(null);
 
   const { token, user } = useAppSelector((state) => state.auth);
+  const activeChatId = useAppSelector(selectActiveChatId);
+
+  useEffect(() => {
+    activeChatIdRef.current = activeChatId;
+  }, [activeChatId]);
 
 
   useEffect(() => {
@@ -72,13 +81,24 @@ export function SocketProvider({ children }: { children: ReactNode }) {
       // Добавляем сообщение в Redux
       dispatch(addMessage(message));
 
-      // Обновляем updated_at в чате
+      // Обновляем updated_at и last_message в чате
       dispatch(
         updateChat({
           id: message.conversation_id,
-          changes: { updated_at: message.created_at },
+          changes: { updated_at: message.created_at, last_message: message },
         })
       );
+
+      // Если это не активный чат - увеличиваем unread
+      if (message.conversation_id !== activeChatIdRef.current && message.receiver_id === user?.id) {
+        dispatch(incrementUnreadCount({ id: message.conversation_id, by: 1 }));
+      }
+
+      // Если активный чат - сразу помечаем как прочитанное
+      if (message.conversation_id === activeChatIdRef.current && message.receiver_id === user?.id) {
+        dispatch(markMessagesAsRead({ conversationId: message.conversation_id }));
+        dispatch(resetUnreadCount(message.conversation_id));
+      }
 
       toast.info('Новое сообщение', {
         description: message.text.substring(0, 50) + (message.text.length > 50 ? '...' : ''),
@@ -95,11 +115,11 @@ export function SocketProvider({ children }: { children: ReactNode }) {
       // Добавляем сообщение в Redux (если его еще нет)
       dispatch(addMessage(message));
 
-      // Обновляем updated_at в чате
+      // Обновляем updated_at и last_message в чате
       dispatch(
         updateChat({
           id: message.conversation_id,
-          changes: { updated_at: message.created_at },
+          changes: { updated_at: message.created_at, last_message: message },
         })
       );
     });

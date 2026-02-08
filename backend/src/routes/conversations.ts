@@ -1,12 +1,20 @@
 import { Router } from 'express';
 import {
+  getConversationSummaries,
   getOrCreateConversation,
   getUserConversations,
   getConversationMessages,
   markMessagesAsRead,
 } from '../controllers/conversationController';
+import { authenticateToken } from '../middleware/auth';
 
 const router = Router();
+
+// Все эндпоинты требуют авторизации
+router.use(authenticateToken);
+
+// GET /api/conversations - Получить список conversations (для текущего пользователя)
+router.get('/', getConversationSummaries);
 
 // POST /api/conversations - Получить или создать conversation
 router.post('/', getOrCreateConversation);

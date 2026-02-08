@@ -1,31 +1,31 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../index';
 import { conversationsApi } from '../../shared/api/conversations';
-
-// Интерфейс для Message
-export interface Message {
-  id: string;
-  conversation_id: string;
-  sender_id: string;
-  receiver_id: string;
-  text: string;
-  read: boolean;
-  created_at: string;
-}
+import type { Message } from '../../types';
 
 // State структура: сообщения сгруппированы по conversationId
+interface ChatMessagesMeta {
+  loading: boolean;
+  error: string | null;
+  hasMore: boolean;
+  nextOffset: number;
+}
+
 interface MessagesState {
   byChatId: {
     [conversationId: string]: Message[];
   };
-  loading: boolean;
-  error: string | null;
+  metaByChatId: {
+    [conversationId: string]: ChatMessagesMeta;
+  };
 }
+
+const DEFAULT_PAGE_SIZE = 50;
+const MAX_MESSAGES_PER_CHAT = 500;
 
 const initialState: MessagesState = {
   byChatId: {},
-  loading: false,
-  error: null,
+  metaByChatId: {},
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -35,17 +35,27 @@ const initialState: MessagesState = {
 // Загрузить сообщения для conversation
 export const fetchConversationMessages = createAsyncThunk(
   'messages/fetchConversationMessages',
-  async ({ conversationId, limit, offset }: { conversationId: string; limit?: number; offset?: number }) => {
+  async ({
+    conversationId,
+    limit = DEFAULT_PAGE_SIZE,
+    offset = 0,
+    mode = 'initial',
+  }: {
+    conversationId: string;
+    limit?: number;
+    offset?: number;
+    mode?: 'initial' | 'older';
+  }) => {
     const messages = await conversationsApi.getMessages(conversationId, limit, offset);
-    return { conversationId, messages };
+    return { conversationId, messages, limit, offset, mode };
   }
 );
 
 // Пометить сообщения как прочитанные
 export const markMessagesAsRead = createAsyncThunk(
   'messages/markAsRead',
-  async ({ conversationId, userId }: { conversationId: string; userId: string }) => {
-    await conversationsApi.markAsRead(conversationId, userId);
+  async ({ conversationId }: { conversationId: string }) => {
+    await conversationsApi.markAsRead(conversationId);
     return conversationId;
   }
 );
@@ -62,8 +72,12 @@ const messagesSlice = createSlice({
       state.byChatId[conversationId] = messages.sort(
         (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
       );
-      state.loading = false;
-      state.error = null;
+      state.metaByChatId[conversationId] = {
+        loading: false,
+        error: null,
+        hasMore: messages.length === DEFAULT_PAGE_SIZE,
+        nextOffset: messages.length,
+      };
     },
 
     // Добавить одно сообщение в чат (realtime update)
@@ -79,6 +93,13 @@ const messagesSlice = createSlice({
       const exists = state.byChatId[conversationId].some((msg) => msg.id === message.id);
       if (!exists) {
         state.byChatId[conversationId].push(message);
+      }
+
+      // Ограничиваем размер кэша
+      if (state.byChatId[conversationId].length > MAX_MESSAGES_PER_CHAT) {
+        state.byChatId[conversationId] = state.byChatId[conversationId].slice(
+          -MAX_MESSAGES_PER_CHAT
+        );
       }
     },
 
@@ -114,42 +135,104 @@ const messagesSlice = createSlice({
     clearChatMessages: (state, action: PayloadAction<string>) => {
       const conversationId = action.payload;
       delete state.byChatId[conversationId];
+      delete state.metaByChatId[conversationId];
     },
 
     // Очистить все сообщения
     clearAllMessages: (state) => {
       state.byChatId = {};
-      state.error = null;
+      state.metaByChatId = {};
     },
 
     // Установить loading
-    setMessagesLoading: (state, action: PayloadAction<boolean>) => {
-      state.loading = action.payload;
+    setMessagesLoading: (
+      state,
+      action: PayloadAction<{ conversationId: string; loading: boolean }>
+    ) => {
+      const { conversationId, loading } = action.payload;
+      const meta = state.metaByChatId[conversationId] || {
+        loading: false,
+        error: null,
+        hasMore: false,
+        nextOffset: 0,
+      };
+      state.metaByChatId[conversationId] = { ...meta, loading };
     },
 
     // Установить ошибку
-    setMessagesError: (state, action: PayloadAction<string | null>) => {
-      state.error = action.payload;
-      state.loading = false;
+    setMessagesError: (
+      state,
+      action: PayloadAction<{ conversationId: string; error: string | null }>
+    ) => {
+      const { conversationId, error } = action.payload;
+      const meta = state.metaByChatId[conversationId] || {
+        loading: false,
+        error: null,
+        hasMore: false,
+        nextOffset: 0,
+      };
+      state.metaByChatId[conversationId] = { ...meta, error, loading: false };
     },
   },
   extraReducers: (builder) => {
     // Загрузка сообщений
     builder
-      .addCase(fetchConversationMessages.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+      .addCase(fetchConversationMessages.pending, (state, action) => {
+        const { conversationId } = action.meta.arg;
+        const meta = state.metaByChatId[conversationId] || {
+          loading: false,
+          error: null,
+          hasMore: false,
+          nextOffset: 0,
+        };
+        state.metaByChatId[conversationId] = { ...meta, loading: true, error: null };
       })
       .addCase(fetchConversationMessages.fulfilled, (state, action) => {
-        const { conversationId, messages } = action.payload;
-        state.byChatId[conversationId] = messages.sort(
+        const { conversationId, messages, limit, offset, mode } = action.payload;
+        const existing = state.byChatId[conversationId] || [];
+
+        let combined: Message[];
+        if (mode === 'older') {
+          combined = [...messages, ...existing];
+        } else {
+          combined = messages;
+        }
+
+        // Дедупликация по id
+        const uniqueMap = new Map<string, Message>();
+        for (const msg of combined) {
+          uniqueMap.set(msg.id, msg);
+        }
+        const deduped = Array.from(uniqueMap.values()).sort(
           (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
         );
-        state.loading = false;
+
+        // Ограничиваем размер кэша
+        const trimmed = deduped.length > MAX_MESSAGES_PER_CHAT
+          ? deduped.slice(-MAX_MESSAGES_PER_CHAT)
+          : deduped;
+
+        state.byChatId[conversationId] = trimmed;
+        state.metaByChatId[conversationId] = {
+          loading: false,
+          error: null,
+          hasMore: messages.length === limit,
+          nextOffset: offset + messages.length,
+        };
       })
       .addCase(fetchConversationMessages.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message || 'Failed to load messages';
+        const { conversationId } = action.meta.arg;
+        const meta = state.metaByChatId[conversationId] || {
+          loading: false,
+          error: null,
+          hasMore: false,
+          nextOffset: 0,
+        };
+        state.metaByChatId[conversationId] = {
+          ...meta,
+          loading: false,
+          error: action.error.message || 'Failed to load messages',
+        };
       })
       // Пометить как прочитанное
       .addCase(markMessagesAsRead.fulfilled, (state, action) => {
@@ -166,22 +249,27 @@ const messagesSlice = createSlice({
 
 // Экспорт actions
 export const {
-  setMessages,
-  addMessage,
-  updateMessage,
-  markChatAsRead,
-  clearChatMessages,
-  clearAllMessages,
-  setMessagesLoading,
-  setMessagesError,
-} = messagesSlice.actions;
+    setMessages,
+    addMessage,
+    updateMessage,
+    markChatAsRead,
+    clearChatMessages,
+    clearAllMessages,
+    setMessagesLoading,
+    setMessagesError,
+  } = messagesSlice.actions;
 
 // Селекторы
 export const selectMessagesByChatId = (conversationId: string) => (state: RootState) =>
   state.messages.byChatId[conversationId] || [];
 
-export const selectMessagesLoading = (state: RootState) => state.messages.loading;
-export const selectMessagesError = (state: RootState) => state.messages.error;
+export const selectMessagesMeta = (conversationId: string) => (state: RootState) =>
+  state.messages.metaByChatId[conversationId] || {
+    loading: false,
+    error: null,
+    hasMore: false,
+    nextOffset: 0,
+  };
 
 // Селектор для подсчета непрочитанных сообщений в чате
 export const selectUnreadCountByChatId = (conversationId: string) => (state: RootState) => {

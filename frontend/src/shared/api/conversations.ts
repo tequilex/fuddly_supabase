@@ -1,6 +1,5 @@
 import { apiClient } from './client';
-import { Conversation } from '../../store/slices/chatsSlice';
-import { Message } from '../../store/slices/messagesSlice';
+import type { ConversationSummary, Message } from '../../types';
 
 export interface CreateConversationData {
   productId: string;
@@ -10,13 +9,13 @@ export interface CreateConversationData {
 
 export const conversationsApi = {
   // Получить или создать conversation
-  getOrCreate: (data: CreateConversationData): Promise<Conversation> => {
-    return apiClient.post<Conversation>('/conversations', data);
+  getOrCreate: (data: CreateConversationData): Promise<ConversationSummary> => {
+    return apiClient.post<ConversationSummary>('/conversations', data);
   },
 
   // Получить все conversations пользователя
-  getUserConversations: (userId: string): Promise<Conversation[]> => {
-    return apiClient.get<Conversation[]>(`/conversations/user/${userId}`);
+  getUserConversations: (): Promise<ConversationSummary[]> => {
+    return apiClient.get<ConversationSummary[]>('/conversations');
   },
 
   // Получить сообщения conversation
@@ -28,10 +27,9 @@ export const conversationsApi = {
   },
 
   // Пометить сообщения как прочитанные
-  markAsRead: (conversationId: string, userId: string): Promise<{ success: boolean }> => {
+  markAsRead: (conversationId: string): Promise<{ success: boolean }> => {
     return apiClient.request<{ success: boolean }>(`/conversations/${conversationId}/read`, {
       method: 'PUT',
-      body: JSON.stringify({ userId }),
     });
   },
 };
